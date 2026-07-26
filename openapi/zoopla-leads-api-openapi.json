@@ -1,0 +1,1138 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "## Introduction\nThis API is used by agents to retrieve leads. Applicant and Appraisal leads are available via different endpoints and return data in separate structures.\n### Integration URLs:\n- Production URL: services.zoopla.co.uk\n## Authentication\nThe REST API uses OAuth2 authentication and at this time alternatives are not available. The authentication endpoint is https://services-auth.services.zoopla.co.uk - please see example request below:\n```\n  curl --request POST \\\n    --url https://services-auth.services.zoopla.co.uk/oauth2/token \\\n    --header ‘Content-Type: application/x-www-form-urlencoded’ \\\n    --data grant_type=client_credentials \\\n    --data client_id=123 \\\n    --data client_secret=456 \\\n    --data audience=https://services.zoopla.co.uk\n```\nYour `client_id` and `client_secret` will be provided to you by us. The `audience` will be the relevant integration URL, as specified above, and `grant_type` will always be `client_credentials`. A successful response will provide a token which can then be added under an `Authorization` header in requests to the data endpoint. The fields above are all form encoded URL data and are no longer provided via the JSON body.\n### Service busy\nThere are times when you may receive a 429 error if the service is especially busy. In this instance, the best thing to do is to wait and retry.\nTo try and mitigate this error, the best practice is to ensure that you're using your access tokens correctly. When the access token is returned it has an expiry time, try to ensure that you are caching this token for the length of its expiry time and only requesting a new one when the old has expired. This will reduce the number of calls required and free up the services\n## Poll Requests\nBy default, the API will return all leads submitted in the last 24 hours, however we retain leads for 30 days. Query parameters can be added to the request URL in order to only retrieve leads from a specific time period, please refer to either the [appraisal-leads](/reference/get_appraisal-leads) or [applicant-leads](/reference/get_applicant-leads) specs for more information.\n### Filters\nAs mentioned above, if you have more than one branch, brand, company, or group configured for your setup then the API will require you to filter based on a singular branch, brand, company, or group id. These IDs are specifically Zoopla internal IDs so we are able to retrieve the correct leads for your request.\n## Response Objects\nIf you are unsure about any of the fields that appear in the 200 response, we have an exhaustive list of the available fields, and their definitions in the [Field Definitions](../docs/field-definitions). The success response can also be seen in the [Push Service](../docs/push-service) section as they share a payload.\nAn example error response would be the following: \n```\n  {\n    \"errors\": [\n      {\n        \"message\": \"product not one of available enum values\",\n        \"code\": \"invalid_valuation_lead_product\",\n        \"links\": []\n      }\n    ]\n  }\n```\n## Contact\nFor any enquiries please contact the [Zoopla Leads Team](mailto:z-software-leads-team@zpg.co.uk?subject=[ReadMe]%20Request)\n",
+    "title": "Leads API",
+    "version": "0.1"
+  },
+  "host": "services.zoopla.co.uk",
+  "paths": {
+    "/applicant-leads": {
+      "get": {
+        "tags": [
+          "REST Endpoints"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "format": "date-time",
+            "description": "Restricts the returned leads to only include those on or after the specified date time. In the format `2006-01-02T15:04:05Z`",
+            "name": "from-time",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "format": "date-time",
+            "description": "Restricts the returned leads to only include those on or before the specified date time. In the format `2006-01-02T15:04:05Z`",
+            "name": "to-time",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Restricts the returned leads to only include those with this specified internal Zoopla group id",
+            "name": "group-id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Restricts the returned leads to only include those with this specified internal Zoopla company id",
+            "name": "company-id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Restricts the returned leads to only include those with this specified internal Zoopla brand id",
+            "name": "brand-id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Restricts the returned leads to only include those with this specified internal Zoopla branch id",
+            "name": "branch-id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation.",
+            "schema": {
+              "$ref": "#/definitions/ApplicantList"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorised request.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "429": {
+            "description": "Too many requests."
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "leads/list:applicant-leads"
+            ]
+          }
+        ]
+      }
+    },
+    "/appraisal-leads": {
+      "get": {
+        "tags": [
+          "REST Endpoints"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "format": "date-time",
+            "description": "Restricts the returned leads to only include those on or after the specified date time. In the format `2006-01-02T15:04:05Z`",
+            "name": "from-time",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "format": "date-time",
+            "description": "Restricts the returned leads to only include those on or before the specified date time. In the format `2006-01-02T15:04:05Z`",
+            "name": "to-time",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Restricts the returned leads to only include those with this specified internal Zoopla group id",
+            "name": "group-id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Restricts the returned leads to only include those with this specified internal Zoopla company id",
+            "name": "company-id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Restricts the returned leads to only include those with this specified internal Zoopla brand id",
+            "name": "brand-id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Restricts the returned leads to only include those with this specified internal Zoopla branch id",
+            "name": "branch-id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation.",
+            "schema": {
+              "$ref": "#/definitions/AppraisalList"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorised request.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "429": {
+            "description": "Too many requests."
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "leads/list:appraisal-leads"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Applicant": {
+      "type": "object",
+      "properties": {
+        "consumerPostcode": {
+          "type": "string",
+          "x-go-name": "ConsumerPostcode"
+        },
+        "consumerSituation": {
+          "type": "string",
+          "enum": [
+            "CONSUMER_SITUATION_UNSPECIFIED",
+            "CONSUMER_SITUATION_OTHER",
+            "CONSUMER_SITUATION_PROPERTY_TO_SELL",
+            "CONSUMER_SITUATION_PROPERTY_TO_LET",
+            "CONSUMER_SITUATION_OFFER_ON_OWN_PROPERTY",
+            "CONSUMER_SITUATION_RECENTLY_SOLD",
+            "CONSUMER_SITUATION_FIRST_TIME_BUYER",
+            "CONSUMER_SITUATION_BUYER_NOT_FIRST_TIME",
+            "CONSUMER_SITUATION_LOOKING_TO_INVEST",
+            "CONSUMER_SITUATION_NO_PROPERTY_TO_SELL"
+          ],
+          "x-go-enum-desc": "CONSUMER_SITUATION_UNSPECIFIED Unspecified\nCONSUMER_SITUATION_OTHER Other\nCONSUMER_SITUATION_PROPERTY_TO_SELL PropertyToSell\nCONSUMER_SITUATION_PROPERTY_TO_LET PropertyToLet\nCONSUMER_SITUATION_OFFER_ON_OWN_PROPERTY OfferOnOwnProperty\nCONSUMER_SITUATION_RECENTLY_SOLD RecentlySold\nCONSUMER_SITUATION_FIRST_TIME_BUYER FirstTimeBuyer\nCONSUMER_SITUATION_BUYER_NOT_FIRST_TIME BuyerNotFirstTime\nCONSUMER_SITUATION_LOOKING_TO_INVEST LookingToInvest\nCONSUMER_SITUATION_NO_PROPERTY_TO_SELL NoPropertyToSell",
+          "x-go-name": "ConsumerSituation"
+        },
+        "contact": {
+          "$ref": "#/definitions/Contact"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "CreatedAt"
+        },
+        "enquiryType": {
+          "type": "string",
+          "enum": [
+            "ENQUIRY_TYPE_UNSPECIFIED",
+            "ENQUIRY_TYPE_SALES",
+            "ENQUIRY_TYPE_LETTINGS"
+          ],
+          "x-go-enum-desc": "ENQUIRY_TYPE_UNSPECIFIED Unspecified\nENQUIRY_TYPE_SALES Sales\nENQUIRY_TYPE_LETTINGS Lettings",
+          "x-go-name": "EnquiryType"
+        },
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
+        },
+        "intent": {
+          "x-go-name": "Intent"
+        },
+        "isOverseas": {
+          "type": "boolean",
+          "x-go-name": "IsOverseas"
+        },
+        "leadSource": {
+          "$ref": "#/definitions/ApplicantSource"
+        },
+        "listingDetails": {
+          "$ref": "#/definitions/ListingDetails"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "organiseViewing": {
+          "type": "boolean",
+          "x-go-name": "OrganiseViewing"
+        },
+        "portalBranchId": {
+          "type": "string",
+          "x-go-name": "PortalBranchID"
+        },
+        "portalCompanyId": {
+          "type": "string",
+          "x-go-name": "PortalCompanyID"
+        },
+        "portalGroupId": {
+          "type": "string",
+          "x-go-name": "PortalGroupID"
+        },
+        "portalLeadId": {
+          "type": "string",
+          "x-go-name": "PortalLeadID"
+        },
+        "portalSource": {
+          "x-go-name": "PortalSource"
+        },
+        "propertyUse": {
+          "type": "string",
+          "enum": [
+            "PROPERTY_USE_UNSPECIFIED",
+            "PROPERTY_USE_RESIDENTIAL",
+            "PROPERTY_USE_COMMERCIAL"
+          ],
+          "x-go-enum-desc": "PROPERTY_USE_UNSPECIFIED Unspecified\nPROPERTY_USE_RESIDENTIAL Residential\nPROPERTY_USE_COMMERCIAL Commercial",
+          "x-go-name": "PropertyUse"
+        },
+        "recipientEmail": {
+          "type": "string",
+          "x-go-name": "RecipientEmail"
+        },
+        "requestPropertyDetails": {
+          "type": "boolean",
+          "x-go-name": "RequestPropertyDetails"
+        },
+        "searchCriteria": {
+          "$ref": "#/definitions/SearchCriteria"
+        },
+        "sourceBranchId": {
+          "type": "string",
+          "x-go-name": "SourceBranchID"
+        },
+        "viewingTimes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewingTime"
+          },
+          "x-go-name": "ViewingTimes"
+        }
+      },
+      "x-go-name": "View",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant"
+    },
+    "ApplicantItem": {
+      "type": "object",
+      "properties": {
+        "applicant": {
+          "$ref": "#/definitions/Applicant"
+        }
+      },
+      "x-go-name": "SingularView",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant"
+    },
+    "ApplicantList": {
+      "type": "object",
+      "properties": {
+        "applicants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Applicant"
+          },
+          "x-go-name": "Applicants"
+        }
+      },
+      "x-go-name": "ListView",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant"
+    },
+    "ApplicantSource": {
+      "description": "ApplicantSource is an enum representing the mechanism by which the lead was ingested\neither a portal or social media product",
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant/applicantSource"
+    },
+    "Appraisal": {
+      "type": "object",
+      "properties": {
+        "contact": {
+          "$ref": "#/definitions/Contact"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "CreatedAt"
+        },
+        "enquiryType": {
+          "type": "string",
+          "enum": [
+            "ENQUIRY_TYPE_UNSPECIFIED",
+            "ENQUIRY_TYPE_SALES",
+            "ENQUIRY_TYPE_LETTINGS"
+          ],
+          "x-go-enum-desc": "ENQUIRY_TYPE_UNSPECIFIED Unspecified\nENQUIRY_TYPE_SALES Sales\nENQUIRY_TYPE_LETTINGS Lettings",
+          "x-go-name": "EnquiryType"
+        },
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
+        },
+        "intent": {
+          "x-go-name": "Intent"
+        },
+        "isOverseas": {
+          "type": "boolean",
+          "x-go-name": "IsOverseas"
+        },
+        "justCurious": {
+          "type": "boolean",
+          "x-go-name": "JustCurious"
+        },
+        "leadSource": {
+          "$ref": "#/definitions/AppraisalSource"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "portalBranchId": {
+          "type": "string",
+          "x-go-name": "PortalBranchID"
+        },
+        "portalCompanyId": {
+          "type": "string",
+          "x-go-name": "PortalCompanyID"
+        },
+        "portalGroupId": {
+          "type": "string",
+          "x-go-name": "PortalGroupID"
+        },
+        "portalLeadId": {
+          "type": "string",
+          "x-go-name": "PortalLeadID"
+        },
+        "portalSource": {
+          "x-go-name": "PortalSource"
+        },
+        "propertyDetails": {
+          "$ref": "#/definitions/Property"
+        },
+        "propertyUse": {
+          "type": "string",
+          "enum": [
+            "PROPERTY_USE_UNSPECIFIED",
+            "PROPERTY_USE_RESIDENTIAL",
+            "PROPERTY_USE_COMMERCIAL"
+          ],
+          "x-go-enum-desc": "PROPERTY_USE_UNSPECIFIED Unspecified\nPROPERTY_USE_RESIDENTIAL Residential\nPROPERTY_USE_COMMERCIAL Commercial",
+          "x-go-name": "PropertyUse"
+        },
+        "recipientEmail": {
+          "type": "string",
+          "x-go-name": "RecipientEmail"
+        },
+        "sourceBranchId": {
+          "type": "string",
+          "x-go-name": "SourceBranchID"
+        },
+        "urgency": {
+          "$ref": "#/definitions/Urgency"
+        }
+      },
+      "x-go-name": "View",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/appraisal"
+    },
+    "AppraisalItem": {
+      "type": "object",
+      "properties": {
+        "appraisal": {
+          "$ref": "#/definitions/Appraisal"
+        }
+      },
+      "x-go-name": "SingularView",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/appraisal"
+    },
+    "AppraisalList": {
+      "type": "object",
+      "properties": {
+        "appraisals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Appraisal"
+          },
+          "x-go-name": "Appraisals"
+        }
+      },
+      "x-go-name": "ListView",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/appraisal"
+    },
+    "AppraisalSource": {
+      "description": "AppraisalSource is an enum representing the mechanism by which the lead was ingested\neither a portal or social media product",
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/appraisal/appraisalSource"
+    },
+    "ConfidenceBand": {
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/property/estimate"
+    },
+    "Contact": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "x-go-name": "Email"
+        },
+        "firstName": {
+          "type": "string",
+          "x-go-name": "FirstName"
+        },
+        "lastName": {
+          "type": "string",
+          "x-go-name": "LastName"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "x-go-name": "PhoneNumber"
+        },
+        "preferences": {
+          "$ref": "#/definitions/ContactPreferences"
+        }
+      },
+      "x-go-name": "View",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact"
+    },
+    "ContactMethod": {
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact/contactMethod"
+    },
+    "ContactPreferences": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "$ref": "#/definitions/ContactMethod"
+        },
+        "time": {
+          "$ref": "#/definitions/TimePreference"
+        }
+      },
+      "x-go-name": "PreferencesView",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact"
+    },
+    "Energy": {
+      "type": "object",
+      "properties": {
+        "efficiency": {
+          "type": "integer",
+          "format": "uint8",
+          "x-go-name": "Efficiency"
+        },
+        "rating": {
+          "type": "string",
+          "x-go-name": "Rating"
+        }
+      },
+      "x-go-name": "EnergyView",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/property"
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorContent"
+          },
+          "x-go-name": "Errors"
+        }
+      },
+      "x-go-name": "ErrorResponse",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/services/lead-poll-service/internal/response"
+    },
+    "ErrorContent": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "Code"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Links"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        }
+      },
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/services/lead-poll-service/internal/response"
+    },
+    "Estimate": {
+      "type": "object",
+      "properties": {
+        "confidence": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Confidence"
+        },
+        "confidenceBand": {
+          "$ref": "#/definitions/ConfidenceBand"
+        },
+        "lowerRange": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "LowerRange"
+        },
+        "upperRange": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UpperRange"
+        },
+        "value": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Value"
+        }
+      },
+      "x-go-name": "View",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/property/estimate"
+    },
+    "ImageView": {
+      "type": "object",
+      "properties": {
+        "cdnUrl": {
+          "type": "string",
+          "x-go-name": "CdnURL"
+        },
+        "filename": {
+          "type": "string",
+          "x-go-name": "Filename"
+        },
+        "original": {
+          "type": "string",
+          "x-go-name": "Original"
+        }
+      },
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing"
+    },
+    "LifeCycleStatus": {
+      "description": "LifeCycleStatus is an enum representing the current status of the listing at the time of the enquiry",
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing/lifeCycleStatus"
+    },
+    "ListingDetails": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/ListingDetailsAddress"
+        },
+        "bathrooms": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "Bathrooms"
+        },
+        "bedrooms": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "Bedrooms"
+        },
+        "branchId": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "BranchID"
+        },
+        "estimate": {
+          "$ref": "#/definitions/Estimate"
+        },
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ImageView"
+          },
+          "x-go-name": "Images"
+        },
+        "lifeCycleStatus": {
+          "$ref": "#/definitions/LifeCycleStatus"
+        },
+        "pricing": {
+          "$ref": "#/definitions/Pricing"
+        },
+        "propertyId": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "PropertyID"
+        },
+        "propertyType": {
+          "type": "string",
+          "enum": [
+            "PROPERTY_TYPE_UNSPECIFIED",
+            "PROPERTY_TYPE_FLAT",
+            "PROPERTY_TYPE_DETACHED",
+            "PROPERTY_TYPE_SEMI_DETACHED",
+            "PROPERTY_TYPE_TERRACED",
+            "PROPERTY_TYPE_END_TERRACE",
+            "PROPERTY_TYPE_DETACHED_BUNGALOW",
+            "PROPERTY_TYPE_BUNGALOW",
+            "PROPERTY_TYPE_STUDIO",
+            "PROPERTY_TYPE_MAISONETTE",
+            "PROPERTY_TYPE_TOWN_HOUSE",
+            "PROPERTY_TYPE_COTTAGE",
+            "PROPERTY_TYPE_SEMI_DETACHED_BUNGALOW",
+            "PROPERTY_TYPE_LAND",
+            "PROPERTY_TYPE_PARK_HOME",
+            "PROPERTY_TYPE_LINK_DETACHED",
+            "PROPERTY_TYPE_BARN_CONVERSION",
+            "PROPERTY_TYPE_MEWS",
+            "PROPERTY_TYPE_CHALET",
+            "PROPERTY_TYPE_VILLA",
+            "PROPERTY_TYPE_FARMHOUSE",
+            "PROPERTY_TYPE_COUNTRY_HOUSE",
+            "PROPERTY_TYPE_TERRACED_BUNGALOW",
+            "PROPERTY_TYPE_PARKING",
+            "PROPERTY_TYPE_BLOCK_OF_FLATS",
+            "PROPERTY_TYPE_EQUESTRIAN",
+            "PROPERTY_TYPE_LODGE",
+            "PROPERTY_TYPE_HOUSEBOAT",
+            "PROPERTY_TYPE_FARM",
+            "PROPERTY_TYPE_CHATEAU",
+            "PROPERTY_TYPE_FARM_BARN",
+            "PROPERTY_TYPE_FINCA",
+            "PROPERTY_TYPE_HOTEL",
+            "PROPERTY_TYPE_INDUSTRIAL",
+            "PROPERTY_TYPE_JUNK",
+            "PROPERTY_TYPE_LEISURE",
+            "PROPERTY_TYPE_LIGHT_INDUSTRIAL",
+            "PROPERTY_TYPE_LONGERE",
+            "PROPERTY_TYPE_OFFICE",
+            "PROPERTY_TYPE_PUB_BAR",
+            "PROPERTY_TYPE_RESTAURANT",
+            "PROPERTY_TYPE_RETAIL",
+            "PROPERTY_TYPE_RIAD",
+            "PROPERTY_TYPE_WAREHOUSE",
+            "PROPERTY_TYPE_MID_TERRACE"
+          ],
+          "x-go-enum-desc": "PROPERTY_TYPE_UNSPECIFIED Unspecified\nPROPERTY_TYPE_FLAT Flat\nPROPERTY_TYPE_DETACHED Detached\nPROPERTY_TYPE_SEMI_DETACHED SemiDetached\nPROPERTY_TYPE_TERRACED Terraced\nPROPERTY_TYPE_END_TERRACE EndTerrace\nPROPERTY_TYPE_DETACHED_BUNGALOW DetachedBungalow\nPROPERTY_TYPE_BUNGALOW Bungalow\nPROPERTY_TYPE_STUDIO Studio\nPROPERTY_TYPE_MAISONETTE Maisonette\nPROPERTY_TYPE_TOWN_HOUSE TownHouse\nPROPERTY_TYPE_COTTAGE Cottage\nPROPERTY_TYPE_SEMI_DETACHED_BUNGALOW SemiDetachedBungalow\nPROPERTY_TYPE_LAND Land\nPROPERTY_TYPE_PARK_HOME ParkHome\nPROPERTY_TYPE_LINK_DETACHED LinkDetached\nPROPERTY_TYPE_BARN_CONVERSION BarnConversion\nPROPERTY_TYPE_MEWS Mews\nPROPERTY_TYPE_CHALET Chalet\nPROPERTY_TYPE_VILLA Villa\nPROPERTY_TYPE_FARMHOUSE Farmhouse\nPROPERTY_TYPE_COUNTRY_HOUSE CountryHouse\nPROPERTY_TYPE_TERRACED_BUNGALOW TerracedBungalow\nPROPERTY_TYPE_PARKING Parking\nPROPERTY_TYPE_BLOCK_OF_FLATS BlockOfFlats\nPROPERTY_TYPE_EQUESTRIAN Equestrian\nPROPERTY_TYPE_LODGE Lodge\nPROPERTY_TYPE_HOUSEBOAT Houseboat\nPROPERTY_TYPE_FARM Farm\nPROPERTY_TYPE_CHATEAU Chateau\nPROPERTY_TYPE_FARM_BARN FarmBarn\nPROPERTY_TYPE_FINCA Finca\nPROPERTY_TYPE_HOTEL Hotel\nPROPERTY_TYPE_INDUSTRIAL Industrial\nPROPERTY_TYPE_JUNK Junk\nPROPERTY_TYPE_LEISURE Leisure\nPROPERTY_TYPE_LIGHT_INDUSTRIAL LightIndustrial\nPROPERTY_TYPE_LONGERE Longere\nPROPERTY_TYPE_OFFICE Office\nPROPERTY_TYPE_PUB_BAR PubBar\nPROPERTY_TYPE_RESTAURANT Restaurant\nPROPERTY_TYPE_RETAIL Retail\nPROPERTY_TYPE_RIAD Riad\nPROPERTY_TYPE_WAREHOUSE Warehouse\nPROPERTY_TYPE_MID_TERRACE MidTerrace",
+          "x-go-name": "PropertyType"
+        },
+        "receptions": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "Receptions"
+        },
+        "sourceId": {
+          "type": "string",
+          "x-go-name": "SourceID"
+        },
+        "uprn": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UPRN"
+        },
+        "url": {
+          "type": "string",
+          "x-go-name": "URL"
+        }
+      },
+      "x-go-name": "View",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing"
+    },
+    "ListingDetailsAddress": {
+      "type": "object",
+      "properties": {
+        "countryCode": {
+          "type": "string",
+          "x-go-name": "CountryCode"
+        },
+        "locality": {
+          "type": "string",
+          "x-go-name": "Locality"
+        },
+        "postcode": {
+          "type": "string",
+          "x-go-name": "Postcode"
+        },
+        "propertyNumberOrName": {
+          "type": "string",
+          "x-go-name": "PropertyNumberOrName"
+        },
+        "streetName": {
+          "type": "string",
+          "x-go-name": "StreetName"
+        },
+        "townOrCity": {
+          "type": "string",
+          "x-go-name": "TownOrCity"
+        }
+      },
+      "x-go-name": "AddressView",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing"
+    },
+    "LocationView": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string",
+          "x-go-name": "Alias"
+        },
+        "area": {
+          "type": "string",
+          "x-go-name": "Area"
+        },
+        "areaStreet": {
+          "type": "string",
+          "x-go-name": "AreaStreet"
+        },
+        "country": {
+          "type": "string",
+          "x-go-name": "Country"
+        },
+        "countryCode": {
+          "type": "string",
+          "x-go-name": "CountryCode"
+        },
+        "countyArea": {
+          "type": "string",
+          "x-go-name": "CountyArea"
+        },
+        "district": {
+          "type": "string",
+          "x-go-name": "District"
+        },
+        "incode": {
+          "type": "string",
+          "x-go-name": "Incode"
+        },
+        "outcode": {
+          "type": "string",
+          "x-go-name": "Outcode"
+        },
+        "postTown": {
+          "type": "string",
+          "x-go-name": "PostTown"
+        },
+        "postalArea": {
+          "type": "string",
+          "x-go-name": "PostalArea"
+        },
+        "region": {
+          "type": "string",
+          "x-go-name": "Region"
+        }
+      },
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/searchCriteria"
+    },
+    "Pricing": {
+      "type": "object",
+      "properties": {
+        "currencyCode": {
+          "type": "string",
+          "x-go-name": "CurrencyCode"
+        },
+        "price": {
+          "type": "number",
+          "format": "float",
+          "x-go-name": "Price"
+        },
+        "rentFrequency": {
+          "$ref": "#/definitions/RentFrequency"
+        },
+        "transactionType": {
+          "$ref": "#/definitions/TransactionType"
+        }
+      },
+      "x-go-name": "PricingView",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing"
+    },
+    "Property": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/PropertyDetailsAddress"
+        },
+        "bathrooms": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Bathrooms"
+        },
+        "bedrooms": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Bedrooms"
+        },
+        "energy": {
+          "$ref": "#/definitions/Energy"
+        },
+        "estimate": {
+          "$ref": "#/definitions/Estimate"
+        },
+        "floorArea": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "FloorArea"
+        },
+        "lastSalePrice": {
+          "type": "number",
+          "format": "float",
+          "x-go-name": "LastSalePrice"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "x-go-name": "Latitude"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "x-go-name": "Longitude"
+        },
+        "propertyId": {
+          "type": "string",
+          "x-go-name": "PropertyID"
+        },
+        "propertyType": {
+          "type": "string",
+          "enum": [
+            "PROPERTY_TYPE_UNSPECIFIED",
+            "PROPERTY_TYPE_FLAT",
+            "PROPERTY_TYPE_DETACHED",
+            "PROPERTY_TYPE_SEMI_DETACHED",
+            "PROPERTY_TYPE_TERRACED",
+            "PROPERTY_TYPE_END_TERRACE",
+            "PROPERTY_TYPE_DETACHED_BUNGALOW",
+            "PROPERTY_TYPE_BUNGALOW",
+            "PROPERTY_TYPE_STUDIO",
+            "PROPERTY_TYPE_MAISONETTE",
+            "PROPERTY_TYPE_TOWN_HOUSE",
+            "PROPERTY_TYPE_COTTAGE",
+            "PROPERTY_TYPE_SEMI_DETACHED_BUNGALOW",
+            "PROPERTY_TYPE_LAND",
+            "PROPERTY_TYPE_PARK_HOME",
+            "PROPERTY_TYPE_LINK_DETACHED",
+            "PROPERTY_TYPE_BARN_CONVERSION",
+            "PROPERTY_TYPE_MEWS",
+            "PROPERTY_TYPE_CHALET",
+            "PROPERTY_TYPE_VILLA",
+            "PROPERTY_TYPE_FARMHOUSE",
+            "PROPERTY_TYPE_COUNTRY_HOUSE",
+            "PROPERTY_TYPE_TERRACED_BUNGALOW",
+            "PROPERTY_TYPE_PARKING",
+            "PROPERTY_TYPE_BLOCK_OF_FLATS",
+            "PROPERTY_TYPE_EQUESTRIAN",
+            "PROPERTY_TYPE_LODGE",
+            "PROPERTY_TYPE_HOUSEBOAT",
+            "PROPERTY_TYPE_FARM",
+            "PROPERTY_TYPE_CHATEAU",
+            "PROPERTY_TYPE_FARM_BARN",
+            "PROPERTY_TYPE_FINCA",
+            "PROPERTY_TYPE_HOTEL",
+            "PROPERTY_TYPE_INDUSTRIAL",
+            "PROPERTY_TYPE_JUNK",
+            "PROPERTY_TYPE_LEISURE",
+            "PROPERTY_TYPE_LIGHT_INDUSTRIAL",
+            "PROPERTY_TYPE_LONGERE",
+            "PROPERTY_TYPE_OFFICE",
+            "PROPERTY_TYPE_PUB_BAR",
+            "PROPERTY_TYPE_RESTAURANT",
+            "PROPERTY_TYPE_RETAIL",
+            "PROPERTY_TYPE_RIAD",
+            "PROPERTY_TYPE_WAREHOUSE",
+            "PROPERTY_TYPE_MID_TERRACE"
+          ],
+          "x-go-enum-desc": "PROPERTY_TYPE_UNSPECIFIED Unspecified\nPROPERTY_TYPE_FLAT Flat\nPROPERTY_TYPE_DETACHED Detached\nPROPERTY_TYPE_SEMI_DETACHED SemiDetached\nPROPERTY_TYPE_TERRACED Terraced\nPROPERTY_TYPE_END_TERRACE EndTerrace\nPROPERTY_TYPE_DETACHED_BUNGALOW DetachedBungalow\nPROPERTY_TYPE_BUNGALOW Bungalow\nPROPERTY_TYPE_STUDIO Studio\nPROPERTY_TYPE_MAISONETTE Maisonette\nPROPERTY_TYPE_TOWN_HOUSE TownHouse\nPROPERTY_TYPE_COTTAGE Cottage\nPROPERTY_TYPE_SEMI_DETACHED_BUNGALOW SemiDetachedBungalow\nPROPERTY_TYPE_LAND Land\nPROPERTY_TYPE_PARK_HOME ParkHome\nPROPERTY_TYPE_LINK_DETACHED LinkDetached\nPROPERTY_TYPE_BARN_CONVERSION BarnConversion\nPROPERTY_TYPE_MEWS Mews\nPROPERTY_TYPE_CHALET Chalet\nPROPERTY_TYPE_VILLA Villa\nPROPERTY_TYPE_FARMHOUSE Farmhouse\nPROPERTY_TYPE_COUNTRY_HOUSE CountryHouse\nPROPERTY_TYPE_TERRACED_BUNGALOW TerracedBungalow\nPROPERTY_TYPE_PARKING Parking\nPROPERTY_TYPE_BLOCK_OF_FLATS BlockOfFlats\nPROPERTY_TYPE_EQUESTRIAN Equestrian\nPROPERTY_TYPE_LODGE Lodge\nPROPERTY_TYPE_HOUSEBOAT Houseboat\nPROPERTY_TYPE_FARM Farm\nPROPERTY_TYPE_CHATEAU Chateau\nPROPERTY_TYPE_FARM_BARN FarmBarn\nPROPERTY_TYPE_FINCA Finca\nPROPERTY_TYPE_HOTEL Hotel\nPROPERTY_TYPE_INDUSTRIAL Industrial\nPROPERTY_TYPE_JUNK Junk\nPROPERTY_TYPE_LEISURE Leisure\nPROPERTY_TYPE_LIGHT_INDUSTRIAL LightIndustrial\nPROPERTY_TYPE_LONGERE Longere\nPROPERTY_TYPE_OFFICE Office\nPROPERTY_TYPE_PUB_BAR PubBar\nPROPERTY_TYPE_RESTAURANT Restaurant\nPROPERTY_TYPE_RETAIL Retail\nPROPERTY_TYPE_RIAD Riad\nPROPERTY_TYPE_WAREHOUSE Warehouse\nPROPERTY_TYPE_MID_TERRACE MidTerrace",
+          "x-go-name": "PropertyType"
+        },
+        "receptions": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Receptions"
+        },
+        "tenure": {
+          "$ref": "#/definitions/Tenure"
+        },
+        "uprn": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UPRN"
+        }
+      },
+      "x-go-name": "View",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/property"
+    },
+    "PropertyDetailsAddress": {
+      "type": "object",
+      "properties": {
+        "county": {
+          "type": "string",
+          "x-go-name": "County"
+        },
+        "line1": {
+          "type": "string",
+          "x-go-name": "Line1"
+        },
+        "line2": {
+          "type": "string",
+          "x-go-name": "Line2"
+        },
+        "line3": {
+          "type": "string",
+          "x-go-name": "Line3"
+        },
+        "postcode": {
+          "type": "string",
+          "x-go-name": "Postcode"
+        },
+        "town": {
+          "type": "string",
+          "x-go-name": "Town"
+        }
+      },
+      "x-go-name": "AddressView",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/property"
+    },
+    "RentFrequency": {
+      "description": "RentFrequency is an enum representing how often the rent is required for a listing",
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing/rentFrequency"
+    },
+    "SearchCriteria": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "$ref": "#/definitions/LocationView"
+        },
+        "maximumBedrooms": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "MaximumBedrooms"
+        },
+        "maximumPrice": {
+          "type": "number",
+          "format": "double",
+          "x-go-name": "MaximumPrice"
+        },
+        "minimumBedrooms": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "MinimumBedrooms"
+        },
+        "minimumPrice": {
+          "type": "number",
+          "format": "double",
+          "x-go-name": "MinimumPrice"
+        },
+        "priceFrequency": {
+          "$ref": "#/definitions/RentFrequency"
+        },
+        "propertySubType": {
+          "type": "string",
+          "x-go-name": "PropertySubType"
+        },
+        "propertyType": {
+          "type": "string",
+          "enum": [
+            "PROPERTY_TYPE_UNSPECIFIED",
+            "PROPERTY_TYPE_FLAT",
+            "PROPERTY_TYPE_DETACHED",
+            "PROPERTY_TYPE_SEMI_DETACHED",
+            "PROPERTY_TYPE_TERRACED",
+            "PROPERTY_TYPE_END_TERRACE",
+            "PROPERTY_TYPE_DETACHED_BUNGALOW",
+            "PROPERTY_TYPE_BUNGALOW",
+            "PROPERTY_TYPE_STUDIO",
+            "PROPERTY_TYPE_MAISONETTE",
+            "PROPERTY_TYPE_TOWN_HOUSE",
+            "PROPERTY_TYPE_COTTAGE",
+            "PROPERTY_TYPE_SEMI_DETACHED_BUNGALOW",
+            "PROPERTY_TYPE_LAND",
+            "PROPERTY_TYPE_PARK_HOME",
+            "PROPERTY_TYPE_LINK_DETACHED",
+            "PROPERTY_TYPE_BARN_CONVERSION",
+            "PROPERTY_TYPE_MEWS",
+            "PROPERTY_TYPE_CHALET",
+            "PROPERTY_TYPE_VILLA",
+            "PROPERTY_TYPE_FARMHOUSE",
+            "PROPERTY_TYPE_COUNTRY_HOUSE",
+            "PROPERTY_TYPE_TERRACED_BUNGALOW",
+            "PROPERTY_TYPE_PARKING",
+            "PROPERTY_TYPE_BLOCK_OF_FLATS",
+            "PROPERTY_TYPE_EQUESTRIAN",
+            "PROPERTY_TYPE_LODGE",
+            "PROPERTY_TYPE_HOUSEBOAT",
+            "PROPERTY_TYPE_FARM",
+            "PROPERTY_TYPE_CHATEAU",
+            "PROPERTY_TYPE_FARM_BARN",
+            "PROPERTY_TYPE_FINCA",
+            "PROPERTY_TYPE_HOTEL",
+            "PROPERTY_TYPE_INDUSTRIAL",
+            "PROPERTY_TYPE_JUNK",
+            "PROPERTY_TYPE_LEISURE",
+            "PROPERTY_TYPE_LIGHT_INDUSTRIAL",
+            "PROPERTY_TYPE_LONGERE",
+            "PROPERTY_TYPE_OFFICE",
+            "PROPERTY_TYPE_PUB_BAR",
+            "PROPERTY_TYPE_RESTAURANT",
+            "PROPERTY_TYPE_RETAIL",
+            "PROPERTY_TYPE_RIAD",
+            "PROPERTY_TYPE_WAREHOUSE",
+            "PROPERTY_TYPE_MID_TERRACE"
+          ],
+          "x-go-enum-desc": "PROPERTY_TYPE_UNSPECIFIED Unspecified\nPROPERTY_TYPE_FLAT Flat\nPROPERTY_TYPE_DETACHED Detached\nPROPERTY_TYPE_SEMI_DETACHED SemiDetached\nPROPERTY_TYPE_TERRACED Terraced\nPROPERTY_TYPE_END_TERRACE EndTerrace\nPROPERTY_TYPE_DETACHED_BUNGALOW DetachedBungalow\nPROPERTY_TYPE_BUNGALOW Bungalow\nPROPERTY_TYPE_STUDIO Studio\nPROPERTY_TYPE_MAISONETTE Maisonette\nPROPERTY_TYPE_TOWN_HOUSE TownHouse\nPROPERTY_TYPE_COTTAGE Cottage\nPROPERTY_TYPE_SEMI_DETACHED_BUNGALOW SemiDetachedBungalow\nPROPERTY_TYPE_LAND Land\nPROPERTY_TYPE_PARK_HOME ParkHome\nPROPERTY_TYPE_LINK_DETACHED LinkDetached\nPROPERTY_TYPE_BARN_CONVERSION BarnConversion\nPROPERTY_TYPE_MEWS Mews\nPROPERTY_TYPE_CHALET Chalet\nPROPERTY_TYPE_VILLA Villa\nPROPERTY_TYPE_FARMHOUSE Farmhouse\nPROPERTY_TYPE_COUNTRY_HOUSE CountryHouse\nPROPERTY_TYPE_TERRACED_BUNGALOW TerracedBungalow\nPROPERTY_TYPE_PARKING Parking\nPROPERTY_TYPE_BLOCK_OF_FLATS BlockOfFlats\nPROPERTY_TYPE_EQUESTRIAN Equestrian\nPROPERTY_TYPE_LODGE Lodge\nPROPERTY_TYPE_HOUSEBOAT Houseboat\nPROPERTY_TYPE_FARM Farm\nPROPERTY_TYPE_CHATEAU Chateau\nPROPERTY_TYPE_FARM_BARN FarmBarn\nPROPERTY_TYPE_FINCA Finca\nPROPERTY_TYPE_HOTEL Hotel\nPROPERTY_TYPE_INDUSTRIAL Industrial\nPROPERTY_TYPE_JUNK Junk\nPROPERTY_TYPE_LEISURE Leisure\nPROPERTY_TYPE_LIGHT_INDUSTRIAL LightIndustrial\nPROPERTY_TYPE_LONGERE Longere\nPROPERTY_TYPE_OFFICE Office\nPROPERTY_TYPE_PUB_BAR PubBar\nPROPERTY_TYPE_RESTAURANT Restaurant\nPROPERTY_TYPE_RETAIL Retail\nPROPERTY_TYPE_RIAD Riad\nPROPERTY_TYPE_WAREHOUSE Warehouse\nPROPERTY_TYPE_MID_TERRACE MidTerrace",
+          "x-go-name": "PropertyType"
+        },
+        "radius": {
+          "type": "number",
+          "format": "double",
+          "x-go-name": "Radius"
+        }
+      },
+      "x-go-name": "View",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/searchCriteria"
+    },
+    "Tenure": {
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/property/attributes"
+    },
+    "TimePreference": {
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact/timePreference"
+    },
+    "TransactionType": {
+      "description": "TransactionType is an enum representing the type financial transaction that would occur for a given listing",
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing/transactionType"
+    },
+    "Urgency": {
+      "type": "string",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/enquiry/urgency"
+    },
+    "ViewingTime": {
+      "type": "object",
+      "properties": {
+        "earliest": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "Earliest"
+        },
+        "latest": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "Latest"
+        }
+      },
+      "x-go-name": "View",
+      "x-go-package": "gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/viewingTime"
+    }
+  },
+  "securityDefinitions": {
+    "OAuth2": {
+      "type": "oauth2",
+      "flow": "application",
+      "tokenUrl": "https://services-auth.services.zoopla.co.uk/oauth2/token",
+      "scopes": {
+        "leads/list:applicant-leads": "Grants read access to applicant lead lists",
+        "leads/list:appraisal-leads": "Grants read access to appraisal lead lists"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Service"
+    }
+  ]
+}

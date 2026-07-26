@@ -1,0 +1,402 @@
+aid: zoopla
+name: Zoopla
+review:
+  question: What is Zoopla's real, publicly reachable API surface, what does a
+    developer have to sign or join to use it, and what is its RESO posture?
+  date: '2026-07-26'
+  reviewer: API Evangelist
+  homeMarket: United Kingdom
+  tier: portal-marketplace
+  primaryDomain: zoopla.co.uk
+  summary: |
+    Zoopla has a real, public, machine-readable developer surface — but it is
+    not the one most people go looking for. The consumer listings API that
+    third-party wrappers were built against is gone: developer.zoopla.co.uk
+    still resolves (to zoopla.mashery.com, the legacy TIBCO Mashery portal)
+    but no longer presents a valid certificate, and the current docs say
+    outright that "the Zoopla listings API is no longer publicly available."
+    What is live at developers.zoopla.co.uk is a docsify site, served from
+    GitHub Pages out of the private zoopla-eng/zoopla-docs repo, last modified
+    2026-06-08. It documents three APIs and one webhook service aimed squarely
+    at member estate agents and the CRM vendors that integrate for them:
+    a Leads poll API, a real-time lead Push service, and product-activation
+    APIs for Premium Listings and Weekly Featured Properties. Three real
+    Swagger/OpenAPI JSON contracts are downloadable anonymously and all three
+    parse. Credentials are another matter entirely — see accessGate below.
+
+resoPosture:
+  certified: false
+  posture: No RESO reference found anywhere in Zoopla's documentation, specs, or
+    hosts; RESO is a North American (NAR/MLS) construct and the UK market has no
+    MLS to certify against.
+  webApiCertification: none found
+  dataDictionaryCertification: none found
+  dataDictionaryVersion: null
+  directoryEvidence: |
+    https://www.reso.org/certificates/ was fetched (HTTP 200) and contains no
+    reference to Zoopla, Rightmove, or any United Kingdom organization.
+    https://certification.reso.org/ returned HTTP 400 to an anonymous client.
+    No RESO certification claim appears on any Zoopla property.
+  odataEndpoint: none
+  metadataDocument: |
+    Probed https://services.zoopla.co.uk/$metadata (HTTP 404) and
+    https://api.zoopla.co.uk/$metadata (HTTP 404). No OData service document or
+    $metadata exists. Zoopla's contracts are plain REST described by Swagger 2.0
+    and OpenAPI 3.0.0, not OData.
+  universalPropertyIdentifier: |
+    No UPI. Zoopla identifies listings with its own opaque identifiers — a
+    `uuid` path parameter on activations, plus `listing_id` / `listingId`,
+    `portalLeadId`, `portalBranchId`, `portalCompanyId`, `portalGroupId` and
+    `sourceBranchId` in the leads payloads. Nothing maps to a RESO UPI.
+  wordBoundaryGrep: |
+    Case-insensitive word-boundary grep for RESO, OData, $metadata, and
+    "Universal Property Identifier" across every harvested markdown page and
+    all three JSON specs returned zero hits. The only near-matches were the
+    substrings "Resource" (pl-spec.json) and "resolve" (terms-of-use).
+  marketNote: |
+    This is the expected UK answer and should not be read as a failing. The UK
+    has no MLS and therefore no cooperative standard to certify against.
+    Residential listings are controlled by two portals — Rightmove and Zoopla —
+    and reach them through agency CRM software (Alto/Jupix, Reapit, Street,
+    Apex27), not through a shared pool. There is no UK equivalent of a
+    RESO-certified endpoint, so "certified but unreachable" does not apply here:
+    there is simply no certification layer in this market at all.
+
+accessGate:
+  gate: membership-required
+  gated: true
+  selfServe: false
+  whatYouMustSignOrJoin: |
+    You must already be a Zoopla customer. The API Terms of Use answer the
+    question "Who can use this feature?" with: "All Zoopla customers who are
+    subscribed to a listings package with the relevant features." Using the API
+    binds you to Zoopla's existing member contract, including the Zoopla member
+    terms at https://www.zoopla.co.uk/members/terms/, and any products ordered
+    through the activation APIs are charged under that contract at your
+    contracted or prevailing rates. There is no developer signup form, no
+    sandbox, no free tier, and no API key self-issuance anywhere on the site.
+  credentialIssuance: |
+    Credentials are issued by humans. You generate a 4096-bit RSA GPG key pair,
+    export the public key and give it to your Zoopla technical contact; Zoopla
+    emails back a plaintext client_id and a PGP-encrypted client_secret which
+    you decrypt with your private key. Questions and revocation go to
+    members@zoopla.co.uk. Onboarding for the leads services is explicitly
+    "get in touch with us" via https://support.zoopla.co.uk/hc/en-gb.
+  commercialContact: https://business.zoopla.co.uk/contact-us
+  listingsDataNote: |
+    For anything beyond these member product APIs — most importantly listings
+    data — the README directs you to a commercial conversation:
+    "The Zoopla listings API is no longer publicly available. If you have a
+    commercial requirement and would like to discuss the availability of Zoopla
+    data, including but not limited to the listings API, then please get in
+    touch via https://business.zoopla.co.uk/contact-us". That path is
+    partner-only and nothing about it is documented publicly.
+  docsAreOpen: |
+    Worth separating from the gate: the documentation and all three spec files
+    are served anonymously with no login. The contracts are public even though
+    the data behind them is not.
+
+openData:
+  publishesOpenData: false
+  note: |
+    Zoopla publishes no open, unlicensed, publicly callable dataset. Its
+    portal-derived data (listings, sold prices, Zed-Index-style estimates) is
+    proprietary and licensed commercially. The genuinely open UK property layer
+    sits in the public sector instead — HM Land Registry Price Paid Data and
+    Ordnance Survey open products — and is not operated by Zoopla. This is the
+    inverse of the US arrangement: the UK has no industry standard, but it does
+    have real open government property data, and none of it comes from the
+    portals.
+
+authModel:
+  scheme: OAuth 2.0 client credentials (machine-to-machine)
+  tokenEndpoint: https://services-auth.services.zoopla.co.uk/oauth2/token
+  identityProvider: |
+    Amazon Cognito. The sample access token published in the authentication docs
+    carries iss = https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_g0qeZRnbT,
+    which places the auth tier in AWS eu-west-1.
+  clientAuthentication: HTTP Basic — base64(client_id:client_secret) in the
+    Authorization header on the token request, form-encoded body with
+    grant_type=client_credentials.
+  tokenType: Bearer, expires_in 3600
+  scopes:
+    - name: api/api_access
+      note: Coarse single scope used by both product-activation APIs (OpenAPI 3
+        clientCredentials flow in pl-spec.json and wfp-spec.json).
+    - name: leads/list:applicant-leads
+      note: Grants read access to applicant lead lists (Swagger 2.0 OAuth2
+        "application" flow in leads-poll.json).
+    - name: leads/list:appraisal-leads
+      note: Grants read access to appraisal lead lists.
+  openidConfiguration: |
+    Probed https://services-auth.services.zoopla.co.uk/.well-known/openid-configuration
+    anonymously — HTTP 404. No OIDC discovery document is served at the
+    documented token host.
+  errorCodes: HTTP 401 or 403 on an invalid or expired token.
+  inboundVsOutbound: |
+    The Push service inverts the auth relationship: Zoopla is the client and you
+    are the server. You supply a token endpoint plus client_id/client_secret
+    (client_credentials only) that Zoopla calls to mint a token, or a static API
+    key that Zoopla sends verbatim as the Authorization header value.
+
+apiFamily:
+  segmentationUsedByTheDocs:
+    - Leads (applicant leads and appraisal leads; poll and push delivery)
+    - Premium Products / activations (Premium Listings, Weekly Featured Properties)
+  listingsSearch: not available publicly — retired
+  propertyRecords: not available publicly
+  valuationAVM: |
+    Not exposed by Zoopla itself. Valuation and mortgage-risk products live in a
+    sibling Houseful brand, Hometrack (and Calcasa in the Netherlands), sold to
+    lenders rather than published as a developer API.
+  transactions: |
+    Not on this portal. Transaction/onboarding workflow sits in the Alto Software
+    Group side of Houseful (Alto, Jupix, Yourkeys), not in Zoopla's developer docs.
+  tenancy: not documented
+  payments: |
+    No payments API. Product activations are billed against the member's existing
+    Zoopla contract rather than settled through an API.
+
+harvest:
+  fetchDate: '2026-07-26'
+  specs:
+    - path: openapi/zoopla-leads-api-openapi.json
+      sourceURL: https://developers.zoopla.co.uk/leads/reference/leads-poll.json
+      httpStatus: 200
+      bytes: 42872
+      format: Swagger 2.0
+      title: Leads API
+      version: '0.1'
+      host: services.zoopla.co.uk
+      schemes: [https]
+      parsed: true
+      operations:
+        - GET /applicant-leads
+        - GET /appraisal-leads
+    - path: openapi/zoopla-premium-listing-activations-openapi.json
+      sourceURL: https://developers.zoopla.co.uk/premium-listings/reference/pl-spec.json
+      httpStatus: 200
+      bytes: 20864
+      format: OpenAPI 3.0.0
+      title: Premium Listing activations
+      version: 1.0.0
+      server: https://services.zoopla.co.uk
+      parsed: true
+      operations:
+        - GET /products/premium-listings
+        - POST /products/premium-listings
+        - GET /products/premium-listings/{uuid}
+        - PATCH /products/premium-listings/{uuid}
+    - path: openapi/zoopla-weekly-featured-property-activations-openapi.json
+      sourceURL: https://developers.zoopla.co.uk/wfp/reference/wfp-spec.json
+      httpStatus: 200
+      bytes: 15346
+      format: OpenAPI 3.0.0
+      title: Weekly Featured Property (WFP) Activations
+      version: 1.0.0
+      server: https://services.zoopla.co.uk
+      parsed: true
+      operations:
+        - GET /products/weekly-featured-properties
+        - POST /products/weekly-featured-properties
+        - GET /products/weekly-featured-properties/{uuid}
+
+probes:
+  - url: https://developers.zoopla.co.uk/
+    status: 200
+    note: Live developer portal. Docsify SPA served by GitHub.com Pages
+      (server header "GitHub.com", last-modified 2026-06-08), sourced from the
+      private repo https://github.com/zoopla-eng/zoopla-docs/ (404 anonymously).
+      Uses the docsify-swagger-ui plugin to render the three JSON specs.
+  - url: https://developer.zoopla.co.uk/
+    status: '000'
+    note: TLS failure — "no alternative certificate subject name matches target
+      host name". DNS resolves to zoopla.mashery.com, the legacy TIBCO Mashery
+      developer portal that hosted the retired public listings API. Dead surface.
+  - url: https://developer.zoopla.co.uk/docs
+    status: '000'
+    note: Same TLS failure.
+  - url: https://api.zoopla.co.uk/
+    status: 404
+    note: Host resolves (CNAME internal.api.zoopla.co.uk) but serves nothing
+      public. No documented API lives here.
+  - url: https://api.zoopla.co.uk/api/v1/
+    status: 404
+  - url: https://docs.zoopla.co.uk/
+    status: '000'
+    note: TLS connect failure; host not serving.
+  - url: https://services.zoopla.co.uk/
+    status: 404
+    note: Real documented API host (it is the server URL in all three specs) but
+      the root path is not public.
+  - url: https://services.zoopla.co.uk/openapi.json
+    status: 404
+  - url: 'https://services.zoopla.co.uk/$metadata'
+    status: 404
+  - url: 'https://api.zoopla.co.uk/$metadata'
+    status: 404
+  - url: https://services-auth.services.zoopla.co.uk/.well-known/openid-configuration
+    status: 404
+  - url: https://www.zoopla.co.uk/
+    status: 403
+    note: Consumer site is behind bot protection; 403 to anonymous curl.
+  - url: https://www.zoopla.co.uk/developers/
+    status: 403
+  - url: https://www.zoopla.co.uk/api/
+    status: 403
+  - url: https://www.zoopla.co.uk/openapi.json
+    status: 403
+  - url: https://www.zoopla.co.uk/swagger.json
+    status: 403
+  - url: https://www.zoopla.co.uk/.well-known/security.txt
+    status: 200
+  - url: https://developers.zoopla.co.uk/robots.txt
+    status: 404
+  - url: https://developers.zoopla.co.uk/sitemap.xml
+    status: 404
+  - url: https://developers.zoopla.co.uk/_sidebar.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/README.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/pages/authentication.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/pages/terms-of-use.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/pages/zoopla-apis.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/leads/reference/api.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/premium-listings/reference/api.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/wfp/reference/api.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/leads/docs/available-lead-services.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/leads/docs/push-service.md
+    status: 200
+  - url: https://developers.zoopla.co.uk/leads/docs/field-definitions.md
+    status: 200
+  - url: https://business.zoopla.co.uk/
+    status: 200
+  - url: https://business.zoopla.co.uk/contact-us
+    status: 200
+    note: Three-step sales form (estate agency / housebuilder / other). This is
+      the only published route to a data conversation.
+  - url: https://www.houseful.co.uk/
+    status: 200
+    note: Parent group. Confirms the brand set — Zoopla, PrimeLocation, Alto
+      Software Group (Alto, Jupix, Yourkeys), Hometrack and Calcasa.
+  - url: https://github.com/zoopla-eng
+    status: 200
+    note: Engineering org with two public repos (.github, tech-interview). The
+      docs repo behind the portal is private.
+  - url: https://github.com/zoopla
+    status: 200
+    note: Recruitment-oriented org, one public repo. Not an API surface.
+  - url: https://status.zoopla.co.uk/
+    status: 403
+  - url: https://www.zoopla.co.uk/members/terms/
+    status: 403
+    note: Member terms referenced by the API Terms of Use; blocked to anonymous
+      curl by the same bot protection as the consumer site.
+  - url: https://support.zoopla.co.uk/hc/en-gb
+    status: 403
+    note: Zendesk help centre named as the leads onboarding route; 403 to
+      anonymous curl, reachable in a browser.
+  - url: https://www.reso.org/certificates/
+    status: 200
+    note: Fetched and searched for zoopla / rightmove / united kingdom — no match.
+  - url: https://certification.reso.org/
+    status: 400
+  - url: https://www.linkedin.com/company/zoopla
+    status: 200
+  - url: https://developer.zoopla.com/
+    status: '000'
+    note: Does not resolve.
+
+portalRoutingNote: |
+  developers.zoopla.co.uk runs docsify with routerMode "history" on GitHub
+  Pages. Deep links such as /pages/authentication therefore return HTTP 404 at
+  the CDN while serving the full SPA shell, which then renders the correct page
+  client-side. Those URLs are correct for a human in a browser but will look
+  like 404s to a link checker; the underlying markdown at the same path plus
+  ".md" returns a true 200 and was what this review harvested.
+
+webhooksEventsSdksPostman:
+  webhooks: |
+    Yes, and they are real. The Lead Push Service POSTs one HTTP request per
+    lead to an endpoint you host, distinguished by a top-level "applicant" or
+    "appraisal" key, with configurable filters for applicant / appraisal /
+    sales / lettings. It retries for 24 hours against an unavailable consumer
+    and retains leads for 30 days total, with no self-service replay after the
+    retry window. Documented at
+    https://developers.zoopla.co.uk/leads/docs/push-service.
+  events: No event bus, no streaming, no AsyncAPI document, no WebSocket surface.
+  sdks: None published by Zoopla. The Python and Node wrappers on GitHub and
+    PyPI are third-party and target the retired public listings API.
+  postman: No official Postman collection or workspace found.
+  changelog: None published on the developer portal.
+  statusPage: status.zoopla.co.uk exists but returned 403 anonymously; not
+    referenced from the developer docs.
+  rateLimits: Not documented anywhere in the portal or the specs.
+  sandbox: None. The specs document a single production host,
+    services.zoopla.co.uk, and the leads spec labels it "Production URL".
+
+findings:
+  - The public listings API is genuinely retired, and Zoopla says so in its own
+    words on the front page of its developer docs.
+  - Three real machine-readable contracts survive and are downloadable without
+    authentication; all three parse. Two are OpenAPI 3.0.0, one is Swagger 2.0.
+  - Every one of them describes a member-facing commerce or lead-delivery
+    surface. Not one of them returns property listing content.
+  - Auth is a well-formed OAuth 2.0 client-credentials setup on Amazon Cognito
+    with distinct, resource-scoped strings for leads — better hygiene than the
+    single coarse api/api_access scope on the activation APIs.
+  - The GPG-encrypted client_secret handoff is unusual in 2026 and is the
+    clearest signal that onboarding is a manual, relationship-mediated process
+    rather than a developer product.
+  - "Absence is a finding: no RESO, no OData, no UPI, no SDKs, no Postman, no
+    changelog, no sandbox, no published rate limits, no OIDC discovery."
+  - The corporate structure matters for anyone mapping the UK stack. Houseful
+    owns both the portal (Zoopla) and a major agency CRM group (Alto/Jupix),
+    which means the same parent sits on both sides of the listing pipe that
+    substitutes for an MLS in this market.
+
+sources:
+  - url: https://developers.zoopla.co.uk/
+    type: Documentation
+    note: Current developer portal; states the listings API is no longer public.
+  - url: https://developers.zoopla.co.uk/pages/authentication
+    type: Authentication
+    note: OAuth2 client_credentials, Cognito token endpoint, GPG key exchange.
+  - url: https://developers.zoopla.co.uk/pages/terms-of-use
+    type: TermsOfService
+    note: |
+      "Who can use this feature? All Zoopla customers who are subscribed to a
+      listings package with the relevant features." Zoopla Limited, company
+      number 06074771, The Cooperage, 5 Copper Row, London SE1 2LH.
+  - url: https://developers.zoopla.co.uk/pages/zoopla-apis
+    type: Documentation
+    note: Enumerates the four activation paths.
+  - url: https://developers.zoopla.co.uk/leads/docs/available-lead-services
+    type: Documentation
+    note: Push vs poll delivery, 30-day retention, "get in touch with us" onboarding.
+  - url: https://developers.zoopla.co.uk/leads/docs/push-service
+    type: Documentation
+    note: Outbound webhook contract, retry and retention policy, inbound auth options.
+  - url: https://developers.zoopla.co.uk/leads/docs/field-definitions
+    type: Documentation
+    note: Shared field dictionary for applicant and appraisal leads.
+  - url: https://www.reso.org/certificates/
+    type: Reference
+    note: RESO certified-organization page; no UK entries, no Zoopla.
+  - url: https://www.houseful.co.uk/
+    type: Reference
+    note: Parent group and brand portfolio.
+
+actions:
+  apisYmlCreated: true
+  apisListed: 3
+  specsHarvested: 3
+  openapiDirectory: openapi/
+  status: built

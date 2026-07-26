@@ -1,0 +1,615 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Premium Listing activations",
+    "description": "This API is responsible for the activation of a premium listing product. It allows the user to:\n* Get the history of all activations they have access to\n* Get the history of all activations for given listing_id\n* Check if the given listing_id is premium in the moment of time when the call has been made\n* Activate the premium listing for the given listing\n\nThis API is asynchronous, eventually consistent and the requests are processed in the queue to protect from a situation when:\n* Consumer uses more credits than available\n* Consumer uses more than 1 credit per 1 listing\n",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Zoopla Pro P&A Team",
+      "url": "https://www.zoopla.co.uk/",
+      "email": "purchaseandactivationteam@zoopla.co.uk"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://services.zoopla.co.uk"
+    }
+  ],
+  "paths": {
+    "/products/premium-listings/{uuid}": {
+      "get": {
+        "summary": "Returns listing for specific uuid",
+        "description": "If the UUID exists, it  will return a premium listing, if it does not or if it is an invalid UUID it will return an error\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Returns premium listing for a given uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. Request body contains premium listing for a given UUID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PremiumListing"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found. Premium listing doesn't exist or client doesn't have access to it"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Updates highlights for a specific uuid",
+        "description": "If the highlights are valid and the premium listing is `ACTIVE` and not currently awaiting an existing update it will return the premium listing with a `WAITING_FOR_UPDATE` status. If the highlights are invalid, the premium listing is not currently `ACTIVE` or the listing is already `WAITING_FOR_UPDATE` it will return the appropriate error.\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The uuid for the premium listing that the caller is trying to update"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateHighlights"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PremiumListing"
+                }
+              }
+            },
+            "description": "Accepted. We are trying to update highlights on your premium listing. Please check the result soon."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "Bad request. Something wrong with the request, for example invalid highlights provided."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "Forbidden client error, for example, no access to branch."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/products/premium-listings": {
+      "get": {
+        "summary": "Returns all requested upgrades to premium listings that the caller has access to",
+        "description": "If no parameters are given, the response will return all premium listings for the caller. If the response is an **empty** array it means that there are no premium listings for the caller, activated or not. If the caller needs to filter premium listings, we provide the below query parameters.\n",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "listingId",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The Zoopla internal listingId to return activation requests for. If listingId and customerListingId are provided together it will return an `error`. If no listingId is given it will return all premium listing activations.\n"
+          },
+          {
+            "in": "query",
+            "name": "customerListingId",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "An optional parameter which is a customer identifier of a listingId which Zoopla can match to an internal listingId. If the customerListingId cannot be matched to a listingId it will return an `error`. If customerListingId and listingId are provided together it will return an `error`.\n"
+          },
+          {
+            "in": "query",
+            "name": "date_from",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "And optional parameter to filter response by created date starting from date provided. An RFC3339 time format is required. E.g 2022-02-11T14:14:10.776Z\n"
+          },
+          {
+            "in": "query",
+            "name": "date_to",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "And optional parameter to filter response by created date ending with the date provided. An RFC3339 time format is required. E.g 2022-02-11T14:14:10.776Z      \n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. Request body contains the list of requested upgrades to premium listing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PremiumListings"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. There was something wrong with the request, for example both listingId and customerListingId provided together"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create the new upgrade to premium listing",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePremiumListing"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "description": "Location of the created activation",
+                  "example": "https://{server}/premium-listings/{uuid}"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PremiumListing"
+                }
+              }
+            },
+            "description": "Accepted. We are trying to make your listing premium. Please check the result soon."
+          },
+          "303": {
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "description": "Location of the existing activation",
+                  "example": "https://{server}/premium-listings/{uuid}"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PremiumListing"
+                }
+              }
+            },
+            "description": "See other. A premium listing for this listing Id already exists and is either pending or already activated. See location of existing activation."
+          },
+          "400": {
+            "description": "Bad request. Something wrong with the request, for example listing_id not provided."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "Payload too large. There was something wrong with the request for example, customDetails data exceeds max memory limit."
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "oAuthSample": [
+        "api/api_access"
+      ]
+    }
+  ],
+  "components": {
+    "schemas": {
+      "PremiumListings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "readOnly": true
+            },
+            "listingId": {
+              "type": "number",
+              "example": 1234,
+              "description": "an internal zoopla identifier for a given listing which determines which listing should be made premium."
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "createdBy": {
+              "type": "string",
+              "readOnly": true,
+              "description": "unique client identifier"
+            },
+            "status": {
+              "$ref": "#/components/schemas/PremiumListing/properties/status",
+              "x-miro": "/builds/13667159605/api-premium-listings/docs/api/schemas/Status.yaml"
+            },
+            "expiryAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "ISO-8601 date when the premium listing stops being premium",
+              "readOnly": true
+            },
+            "highlights": {
+              "$ref": "#/components/schemas/PremiumListing/properties/highlights",
+              "x-miro": "/builds/13667159605/api-premium-listings/docs/api/schemas/Highlights.yaml"
+            },
+            "customDetails": {
+              "type": "object",
+              "description": "So customers can store additional information about a product activation - for example - CRM identifier or order number."
+            }
+          },
+          "required": [
+            "listingId"
+          ]
+        }
+      },
+      "PremiumListing": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "listingId": {
+            "type": "number",
+            "example": 1234,
+            "description": "an internal zoopla identifier for a given listing which determines which listing should be made premium."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "createdBy": {
+            "type": "string",
+            "readOnly": true,
+            "description": "unique client identifier"
+          },
+          "status": {
+            "type": "object",
+            "description": "Status of request with error response\n",
+            "properties": {
+              "result": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "ACTIVATED",
+                  "DEACTIVATED",
+                  "SCHEDULED",
+                  "ERROR"
+                ],
+                "example": "ERROR"
+              },
+              "currently": {
+                "type": "string",
+                "enum": [
+                  "WAITING_FOR_UPDATE",
+                  "LAST_UPDATE_FAILED"
+                ],
+                "example": "WAITING_FOR_UPDATE"
+              },
+              "errors": {
+                "$ref": "#/components/schemas/Status/properties/errors",
+                "x-miro": "/builds/13667159605/api-premium-listings/docs/api/schemas/Errors.yaml"
+              }
+            }
+          },
+          "expiryAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 date when the premium listing stops being premium",
+            "readOnly": true
+          },
+          "highlights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Highlights/items",
+              "x-miro": "/builds/13667159605/api-premium-listings/docs/api/schemas/Highlight.yaml"
+            }
+          },
+          "customDetails": {
+            "type": "object",
+            "description": "So customers can store additional information about a product activation - for example - CRM identifier or order number."
+          }
+        },
+        "required": [
+          "listingId"
+        ]
+      },
+      "Status": {
+        "type": "object",
+        "description": "Status of request with error response\n",
+        "properties": {
+          "result": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ACTIVATED",
+              "DEACTIVATED",
+              "SCHEDULED",
+              "ERROR"
+            ],
+            "example": "ERROR"
+          },
+          "currently": {
+            "type": "string",
+            "enum": [
+              "WAITING_FOR_UPDATE",
+              "LAST_UPDATE_FAILED"
+            ],
+            "example": "WAITING_FOR_UPDATE"
+          },
+          "errors": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Errors/properties/errors/items",
+                  "x-miro": "/builds/13667159605/api-premium-listings/docs/api/schemas/ServiceError.yaml"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Errors": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "The possible errors:\n* **1011003** - 101 premium listing api, severity level 1, code 003 create premium listing invalid request\n",
+              "properties": {
+                "reason": {
+                  "type": "string",
+                  "description": "The human readable reason of failure",
+                  "example": "JSON schema requirements not met"
+                },
+                "code": {
+                  "type": "integer",
+                  "description": "Comprising of the service identifier, severity and custom error code",
+                  "example": 1011003
+                }
+              }
+            }
+          }
+        }
+      },
+      "ServiceError": {
+        "type": "object",
+        "description": "The possible errors:\n* **1011003** - 101 premium listing api, severity level 1, code 003 create premium listing invalid request\n",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "The human readable reason of failure",
+            "example": "JSON schema requirements not met"
+          },
+          "code": {
+            "type": "integer",
+            "description": "Comprising of the service identifier, severity and custom error code",
+            "example": 1011003
+          }
+        }
+      },
+      "Highlights": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "description": "highlighted feature of a premium listing\n",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "description": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      },
+      "Highlight": {
+        "type": "object",
+        "description": "highlighted feature of a premium listing\n",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "description": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "HighlightsRequest": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "description": "highlighted feature of a premium listing\n",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      },
+      "HighlightRequest": {
+        "type": "object",
+        "description": "highlighted feature of a premium listing\n",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "CreatePremiumListing": {
+        "type": "object",
+        "properties": {
+          "listingId": {
+            "type": "number",
+            "description": "an internal zoopla identifier for a given listing which determines which listing should be made premium."
+          },
+          "customerListingId": {
+            "type": "string",
+            "example": "100219_CHS108334",
+            "description": "an customer identifier of listing id (it has to be provided during listing creation) Zoopla is aware of."
+          },
+          "highlights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HighlightsRequest/items",
+              "x-miro": "/builds/13667159605/api-premium-listings/docs/api/schemas/HighlightRequest.yaml"
+            }
+          },
+          "customDetails": {
+            "type": "object",
+            "description": "So customers can store additional information about a product activation - for example - CRM identifier or order number."
+          }
+        }
+      },
+      "UpdateHighlights": {
+        "type": "object",
+        "properties": {
+          "highlights": {
+            "$ref": "#/components/schemas/CreatePremiumListing/properties/highlights",
+            "x-miro": "/builds/13667159605/api-premium-listings/docs/api/schemas/HighlightsRequest.yaml"
+          }
+        },
+        "required": [
+          "highlights"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "oAuthSample": {
+        "type": "oauth2",
+        "description": "This API uses OAuth 2 with the client credentials grant flow.",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://services-auth.services.zoopla.co.uk/oauth2/token",
+            "scopes": {
+              "api/api_access": "access to the API"
+            }
+          }
+        }
+      }
+    }
+  }
+}

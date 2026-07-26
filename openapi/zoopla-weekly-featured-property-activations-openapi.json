@@ -1,0 +1,439 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Weekly Featured Property (WFP) Activations",
+    "description": "This API is responsible for the activation of a WFP product. It allows the user to:\n* Get the history of all activations they have access to\n* Get the history of all activations for given listingId\n* Check if the given listingId is configured as a WFP at the moment of time when the call has been made\n* Activate a listing as a WFP for the given listingId\n\nThis API is asynchronous, eventually consistent and the requests are processed in a queue.\n",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Zoopla Pro P&A Team",
+      "url": "https://www.zoopla.co.uk/",
+      "email": "purchaseandactivationteam@zoopla.co.uk"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://services.zoopla.co.uk"
+    }
+  ],
+  "paths": {
+    "/products/weekly-featured-properties/{uuid}": {
+      "get": {
+        "summary": "Returns a WFP activated listing for a specific uuid",
+        "description": "if the uuid exists will return a WFP listing, if it does not or it is an invalid UUID will return an error\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "returns the WFP for a given uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. Request body contains the WFP for the given UUID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeeklyFeaturedProperty"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found. WFP doesn't exist or client doesn't have access to it"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/products/weekly-featured-properties": {
+      "get": {
+        "summary": "Returns all requested upgrades to WFPs that the caller has access to",
+        "description": "If no parameters are given, the response will return all WFPs for the caller. If the response is an **empty** array it means that there are no WFPs for the caller, activated or not. If the caller needs to filter WFPs, we provide the below query parameters.\n",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "listingId",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The Zoopla internal listingId to return activation requests for. If listingId and customerListingId are provided together it will return an `error`. If no listingId is given it will return all WFP activations.\n"
+          },
+          {
+            "in": "query",
+            "name": "customerListingId",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "An optional parameter which is a customer identifier of a listingId which Zoopla can match to an internal listingId. If the customerListingId cannot be matched to a listingId it will return an `error`. If customerListingId and listingId are provided together it will return an `error`.\n"
+          },
+          {
+            "in": "query",
+            "name": "date_from",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "And optional parameter to filter response by created date starting from date provided. An date only format (YYYY-MM-DD) is required. E.g 2022-02-11\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. Request body contains the list of requested upgrades to WFP.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeeklyFeaturedProperties"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. There was something wrong with the request, for example both listingId and customerListingId provided together"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Activate a listing as a WFP",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWeeklyFeaturedProperty"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "description": "Location of the created activation",
+                  "example": "https://{server}/weekly-featured-properties/{uuid}"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeeklyFeaturedProperty"
+                }
+              }
+            },
+            "description": "Accepted. We are processing your request to make your listing a WFP. Please check the result soon."
+          },
+          "303": {
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "description": "Location of the existing activation",
+                  "example": "https://{server}/weekly-featured-properties/{uuid}"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "See other. A WFP listing for this listingId already exists and is either pending or already activated. See location of existing activation."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "Bad request. The was something wrong with the request, for example listingId not provided."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "Payload too large. There was something wrong with the request for example, customDetails data exceeds max memory limit."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Errors"
+                }
+              }
+            },
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "oAuthSample": [
+        "api/api_access"
+      ]
+    }
+  ],
+  "components": {
+    "schemas": {
+      "WeeklyFeaturedProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "readOnly": true
+            },
+            "listingId": {
+              "type": "number",
+              "example": 1234,
+              "description": "an internal zoopla identifier for a given listing which determines which listing should be made a WFP."
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true
+            },
+            "createdBy": {
+              "type": "string",
+              "readOnly": true,
+              "description": "unique client identifier"
+            },
+            "startAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "ISO-8601 date when the listing begins being a WFP"
+            },
+            "expiryAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "ISO-8601 date when the listing stops being a WFP"
+            },
+            "isRenewable": {
+              "type": "boolean",
+              "description": "Can listing be renewed",
+              "readOnly": true
+            },
+            "status": {
+              "$ref": "#/components/schemas/WeeklyFeaturedProperty/properties/status",
+              "x-miro": "/builds/13634493756/api-weekly-featured-properties/docs/api/schemas/Status.yaml"
+            },
+            "customDetails": {
+              "type": "object",
+              "description": "So customers can store additional information about a product activation - for example - CRM identifier or order number."
+            }
+          },
+          "required": [
+            "expiryAt",
+            "startAt",
+            "listingId"
+          ]
+        }
+      },
+      "WeeklyFeaturedProperty": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "listingId": {
+            "type": "number",
+            "example": 1234,
+            "description": "an internal zoopla identifier for a given listing which determines which listing should be made a WFP."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "createdBy": {
+            "type": "string",
+            "readOnly": true,
+            "description": "unique client identifier"
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 date when the listing begins being a WFP"
+          },
+          "expiryAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 date when the listing stops being a WFP"
+          },
+          "isRenewable": {
+            "type": "boolean",
+            "description": "Can listing be renewed",
+            "readOnly": true
+          },
+          "status": {
+            "type": "object",
+            "description": "Status of request with error response\n",
+            "properties": {
+              "result": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "ACTIVATED",
+                  "DEACTIVATED",
+                  "SCHEDULED",
+                  "ERROR"
+                ],
+                "example": "ERROR"
+              },
+              "errors": {
+                "$ref": "#/components/schemas/Status/properties/errors",
+                "x-miro": "/builds/13634493756/api-weekly-featured-properties/docs/api/schemas/Errors.yaml"
+              }
+            }
+          },
+          "customDetails": {
+            "type": "object",
+            "description": "So customers can store additional information about a product activation - for example - CRM identifier or order number."
+          }
+        },
+        "required": [
+          "expiryAt",
+          "startAt",
+          "listingId"
+        ]
+      },
+      "Status": {
+        "type": "object",
+        "description": "Status of request with error response\n",
+        "properties": {
+          "result": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ACTIVATED",
+              "DEACTIVATED",
+              "SCHEDULED",
+              "ERROR"
+            ],
+            "example": "ERROR"
+          },
+          "errors": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Errors/properties/errors/items",
+                  "x-miro": "/builds/13634493756/api-weekly-featured-properties/docs/api/schemas/ServiceError.yaml"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Errors": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "The possible errors:\n* **2011003** - 201 WFP API, severity level 1, code 003 activate WFP invalid request\n",
+              "properties": {
+                "reason": {
+                  "type": "string",
+                  "description": "The human readable reason of failure",
+                  "example": "JSON schema requirements not met"
+                },
+                "code": {
+                  "type": "integer",
+                  "description": "Comprising of the service identifier, severity and custom error code",
+                  "example": 2011003
+                }
+              }
+            }
+          }
+        }
+      },
+      "ServiceError": {
+        "type": "object",
+        "description": "The possible errors:\n* **2011003** - 201 WFP API, severity level 1, code 003 activate WFP invalid request\n",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "The human readable reason of failure",
+            "example": "JSON schema requirements not met"
+          },
+          "code": {
+            "type": "integer",
+            "description": "Comprising of the service identifier, severity and custom error code",
+            "example": 2011003
+          }
+        }
+      },
+      "CreateWeeklyFeaturedProperty": {
+        "type": "object",
+        "properties": {
+          "listingId": {
+            "type": "number",
+            "example": 1234,
+            "description": "An internal zoopla identifier for a given listing which determines which listing should be activated as a WFP."
+          },
+          "customerListingId": {
+            "type": "string",
+            "example": "100219_CHS108334",
+            "description": "A customer identifier of listing id which Zoopla is aware of (it has to be provided during the listing creation)."
+          },
+          "customDetails": {
+            "type": "object",
+            "description": "So customers can store additional information about a product activation - for example - CRM identifier or order number."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "oAuthSample": {
+        "type": "oauth2",
+        "description": "This API uses OAuth 2 with the client credentials grant flow.",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://services-auth.services.zoopla.co.uk/oauth2/token",
+            "scopes": {
+              "api/api_access": "access to the API"
+            }
+          }
+        }
+      }
+    }
+  }
+}
