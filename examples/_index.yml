@@ -1,0 +1,106 @@
+generated: '2026-07-26'
+method: searched
+source: Example payloads published verbatim in the Zoopla developer documentation
+note: Every example here is copied from Zoopla's own documentation and re-indented only. Zoopla's three
+  specs carry no in-spec examples, so the documentation is the only place concrete request/response payloads
+  exist. Two malformed JSON blocks in the docs (the generic 'Not enough credits' and 'Internal error interpreting
+  JSON data' error snippets, which are missing object braces inside the errors array) were left out rather
+  than corrected — the well-formed duplicate-activation error examples cover the same shape.
+examples:
+- file: zoopla-push-applicant-lead.json
+  description: Applicant lead push payload
+  operation: asyncapi/zoopla-leads-push-asyncapi.yml#applicantLead
+  source: https://developers.zoopla.co.uk/leads/docs/push-service
+- file: zoopla-push-appraisal-lead.json
+  description: Appraisal lead push payload
+  operation: asyncapi/zoopla-leads-push-asyncapi.yml#appraisalLead
+  source: https://developers.zoopla.co.uk/leads/docs/push-service
+- file: zoopla-premium-listing-create-request.json
+  description: Minimal Premium Listing activation request body
+  operation: POST /products/premium-listings
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-create-with-highlights-request.json
+  description: Premium Listing activation request body with optional highlights (published verbatim, including
+    the docs' listingID casing)
+  operation: POST /products/premium-listings
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-accepted-202.json
+  description: 202 Accepted Premium Listing activation with highlights, status PENDING
+  operation: POST /products/premium-listings
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-pending.json
+  description: Premium Listing activation while still PENDING
+  operation: GET /products/premium-listings/{uuid}
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-activated.json
+  description: Premium Listing activation once ACTIVATED, with expiryAt
+  operation: GET /products/premium-listings/{uuid}
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-error.json
+  description: Premium Listing activation that resolved to ERROR, with a code from the error register
+  operation: GET /products/premium-listings/{uuid}
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-duplicate-pending-error.json
+  description: Rejected because a pending activation already exists for the listing (code 1011004)
+  operation: POST /products/premium-listings
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-activation-list.json
+  description: Premium Listing activation history for the account
+  operation: GET /products/premium-listings
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-is-premium-true.json
+  description: Answer to ?listingId=123&isPremium=true when the listing is premium
+  operation: GET /products/premium-listings
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-is-premium-false.json
+  description: Answer to ?listingId=123&isPremium=true when the listing is not premium — an empty array
+  operation: GET /products/premium-listings
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-highlights-patch-request.json
+  description: Highlights update request body
+  operation: PATCH /products/premium-listings/{uuid}
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-premium-listing-highlights-patch-response.json
+  description: Highlights update response, showing status.currently WAITING_FOR_UPDATE
+  operation: PATCH /products/premium-listings/{uuid}
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- file: zoopla-wfp-create-request.json
+  description: Minimal Weekly Featured Property activation request body
+  operation: POST /products/weekly-featured-properties
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- file: zoopla-wfp-pending.json
+  description: WFP activation while still PENDING
+  operation: GET /products/weekly-featured-properties/{uuid}
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- file: zoopla-wfp-activated.json
+  description: WFP activation once ACTIVATED, with expiryAt
+  operation: GET /products/weekly-featured-properties/{uuid}
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- file: zoopla-wfp-error.json
+  description: WFP activation that resolved to ERROR
+  operation: GET /products/weekly-featured-properties/{uuid}
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- file: zoopla-wfp-duplicate-pending-error.json
+  description: Rejected because a pending WFP activation already exists (code 2011004)
+  operation: POST /products/weekly-featured-properties
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- file: zoopla-wfp-create-with-custom-details-request.json
+  description: WFP activation request body carrying customDetails
+  operation: POST /products/weekly-featured-properties
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- file: zoopla-wfp-accepted-202.json
+  description: 202 Accepted WFP activation echoing customDetails and createdBy
+  operation: POST /products/weekly-featured-properties
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- file: zoopla-wfp-activation-list.json
+  description: WFP activation history for the account
+  operation: GET /products/weekly-featured-properties
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- file: zoopla-wfp-is-wfp-true.json
+  description: Answer to ?listingId=123&isWFP=true when the listing is a WFP
+  operation: GET /products/weekly-featured-properties
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- file: zoopla-wfp-is-wfp-false.json
+  description: Answer to ?listingId=123&isWFP=true when it is not — an empty array
+  operation: GET /products/weekly-featured-properties
+  source: https://developers.zoopla.co.uk/pages/weekly-featured-properties

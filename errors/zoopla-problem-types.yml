@@ -1,0 +1,199 @@
+generated: '2026-07-26'
+method: derived
+source: openapi/zoopla-leads-api-openapi.json, openapi/zoopla-premium-listing-activations-openapi.json,
+  openapi/zoopla-weekly-featured-property-activations-openapi.json
+format: proprietary
+note: Derived from the 4xx/5xx responses declared in Zoopla's three published contracts. None of the responses
+  use application/problem+json (RFC 9457); the activation APIs return an `Errors` object holding an array
+  of {reason, code} pairs and the Leads API returns an `Error` object with an `error` content block. The
+  numeric `code` values are enumerated in errors/zoopla-error-codes.yml, harvested from the published
+  error registers.
+error_schemas:
+- name: Errors
+  source: openapi/zoopla-premium-listing-activations-openapi.json
+  shape: '{"errors": [{"reason": string, "code": integer}]}'
+- name: ServiceError
+  source: openapi/zoopla-premium-listing-activations-openapi.json
+  shape: '{"reason": string, "code": integer}'
+- name: Error
+  source: openapi/zoopla-leads-api-openapi.json
+  shape: '{"error": {…ErrorContent}}'
+problems:
+- status: 400
+  title: Bad request.
+  schema: Error
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /applicant-leads
+  api: Leads API
+- status: 401
+  title: Unauthorised request.
+  schema: Error
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /applicant-leads
+  api: Leads API
+- status: 403
+  title: Forbidden.
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /applicant-leads
+  api: Leads API
+- status: 429
+  title: Too many requests.
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /applicant-leads
+  api: Leads API
+- status: 500
+  title: Internal server error.
+  schema: Error
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /applicant-leads
+  api: Leads API
+- status: 400
+  title: Bad request.
+  schema: Error
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /appraisal-leads
+  api: Leads API
+- status: 401
+  title: Unauthorised request.
+  schema: Error
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /appraisal-leads
+  api: Leads API
+- status: 403
+  title: Forbidden.
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /appraisal-leads
+  api: Leads API
+- status: 429
+  title: Too many requests.
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /appraisal-leads
+  api: Leads API
+- status: 500
+  title: Internal server error.
+  schema: Error
+  media_type: application/json
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /appraisal-leads
+  api: Leads API
+- status: 404
+  title: Not found. Premium listing doesn't exist or client doesn't have access to it
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#GET /products/premium-listings/{uuid}
+  api: Premium Listing activations
+- status: 500
+  title: Internal Server Error
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#GET /products/premium-listings/{uuid}
+  api: Premium Listing activations
+- status: 400
+  title: Bad request. Something wrong with the request, for example invalid highlights provided.
+  schema: Errors
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#PATCH /products/premium-listings/{uuid}
+  api: Premium Listing activations
+- status: 403
+  title: Forbidden client error, for example, no access to branch.
+  schema: Errors
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#PATCH /products/premium-listings/{uuid}
+  api: Premium Listing activations
+- status: 404
+  title: Resource not found
+  schema: Errors
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#PATCH /products/premium-listings/{uuid}
+  api: Premium Listing activations
+- status: 409
+  title: Conflict
+  schema: Errors
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#PATCH /products/premium-listings/{uuid}
+  api: Premium Listing activations
+- status: 500
+  title: Internal Server Error
+  schema: Errors
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#PATCH /products/premium-listings/{uuid}
+  api: Premium Listing activations
+- status: 400
+  title: Bad request. There was something wrong with the request, for example both listingId and customerListingId
+    provided together
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#GET /products/premium-listings
+  api: Premium Listing activations
+- status: 500
+  title: Internal Server Error
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#GET /products/premium-listings
+  api: Premium Listing activations
+- status: 400
+  title: Bad request. Something wrong with the request, for example listing_id not provided.
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#POST /products/premium-listings
+  api: Premium Listing activations
+- status: 413
+  title: Payload too large. There was something wrong with the request for example, customDetails data
+    exceeds max memory limit.
+  schema: Errors
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#POST /products/premium-listings
+  api: Premium Listing activations
+- status: 500
+  title: Internal Server Error
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#POST /products/premium-listings
+  api: Premium Listing activations
+- status: 404
+  title: Not found. WFP doesn't exist or client doesn't have access to it
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#GET /products/weekly-featured-properties/{uuid}
+  api: Weekly Featured Property (WFP) Activations
+- status: 500
+  title: Internal Server Error
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#GET /products/weekly-featured-properties/{uuid}
+  api: Weekly Featured Property (WFP) Activations
+- status: 400
+  title: Bad request. There was something wrong with the request, for example both listingId and customerListingId
+    provided together
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#GET /products/weekly-featured-properties
+  api: Weekly Featured Property (WFP) Activations
+- status: 500
+  title: Internal Server Error
+  schema: null
+  media_type: application/json
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#GET /products/weekly-featured-properties
+  api: Weekly Featured Property (WFP) Activations
+- status: 400
+  title: Bad request. The was something wrong with the request, for example listingId not provided.
+  schema: Errors
+  media_type: application/json
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#POST /products/weekly-featured-properties
+  api: Weekly Featured Property (WFP) Activations
+- status: 413
+  title: Payload too large. There was something wrong with the request for example, customDetails data
+    exceeds max memory limit.
+  schema: Errors
+  media_type: application/json
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#POST /products/weekly-featured-properties
+  api: Weekly Featured Property (WFP) Activations
+- status: 500
+  title: Internal Server Error
+  schema: Errors
+  media_type: application/json
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#POST /products/weekly-featured-properties
+  api: Weekly Featured Property (WFP) Activations

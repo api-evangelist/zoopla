@@ -1,0 +1,122 @@
+generated: '2026-07-26'
+method: derived
+source:
+- mcp/zoopla-mcp.yml
+- openapi/zoopla-leads-api-openapi.json
+- openapi/zoopla-premium-listing-activations-openapi.json
+- openapi/zoopla-weekly-featured-property-activations-openapi.json
+note: >-
+  Zoopla exposes no hosted MCP server and no GraphQL endpoint, so this crosswalk
+  binds the candidate tool set in mcp/zoopla-mcp.yml to the REST operations that
+  back it. Coverage is total in both directions — every candidate tool has
+  exactly one backing operation and every published operation has a tool —
+  because the tool set was derived from the specs rather than harvested from a
+  live server. None of the three specs declares operationId, so operations are
+  addressed here by method + path, which is how they are uniquely identified in
+  Zoopla's contracts.
+surfaces:
+  openapi:
+  - file: openapi/zoopla-leads-api-openapi.json
+    format: Swagger 2.0
+    host: https://services.zoopla.co.uk
+    gated: true
+    gate: OAuth 2.0 client credentials issued manually by Zoopla Member Services
+  - file: openapi/zoopla-premium-listing-activations-openapi.json
+    format: OpenAPI 3.0.0
+    host: https://services.zoopla.co.uk
+    gated: true
+  - file: openapi/zoopla-weekly-featured-property-activations-openapi.json
+    format: OpenAPI 3.0.0
+    host: https://services.zoopla.co.uk
+    gated: true
+  graphql:
+    endpoint: null
+    note: https://services.zoopla.co.uk/graphql returns 404; no GraphQL surface exists.
+  mcp:
+    url: null
+    tools_list_gated: null
+    note: No hosted MCP server published; tools/list could not be called because there is no server to call.
+  webhooks:
+    surface: Lead Push Service
+    docs: https://developers.zoopla.co.uk/leads/docs/push-service
+    note: >-
+      Outbound-only. Zoopla is the client and the member is the server, so the
+      push surface is not addressable as an MCP tool at all — it is recorded in
+      asyncapi/zoopla-leads-webhooks.yml instead.
+crosswalk:
+- tool: list_applicant_leads
+  category: leads
+  rest: ['GET /applicant-leads']
+  spec: openapi/zoopla-leads-api-openapi.json
+  binding: rest
+  confidence: high
+  note: >-
+    Inherits from-time, to-time, group-id, company-id, brand-id and branch-id as
+    its input schema; returns ApplicantList.
+- tool: list_appraisal_leads
+  category: leads
+  rest: ['GET /appraisal-leads']
+  spec: openapi/zoopla-leads-api-openapi.json
+  binding: rest
+  confidence: high
+  note: Same six query parameters; returns AppraisalList.
+- tool: list_premium_listing_activations
+  category: premium-listings
+  rest: ['GET /products/premium-listings']
+  spec: openapi/zoopla-premium-listing-activations-openapi.json
+  binding: rest
+  confidence: high
+  note: Inherits listingId and isPremium query parameters.
+- tool: get_premium_listing_activation
+  category: premium-listings
+  rest: ['GET /products/premium-listings/{uuid}']
+  spec: openapi/zoopla-premium-listing-activations-openapi.json
+  binding: rest
+  confidence: high
+- tool: activate_premium_listing
+  category: premium-listings
+  rest: ['POST /products/premium-listings']
+  spec: openapi/zoopla-premium-listing-activations-openapi.json
+  binding: rest
+  confidence: high
+  note: Request body CreatePremiumListing (listingId, optional highlights[]); 202 Accepted, PENDING.
+- tool: update_premium_listing_highlights
+  category: premium-listings
+  rest: ['PATCH /products/premium-listings/{uuid}']
+  spec: openapi/zoopla-premium-listing-activations-openapi.json
+  binding: rest
+  confidence: high
+  note: Request body UpdateHighlights.
+- tool: list_weekly_featured_property_activations
+  category: weekly-featured-properties
+  rest: ['GET /products/weekly-featured-properties']
+  spec: openapi/zoopla-weekly-featured-property-activations-openapi.json
+  binding: rest
+  confidence: high
+  note: Inherits listingId and isWFP query parameters.
+- tool: get_weekly_featured_property_activation
+  category: weekly-featured-properties
+  rest: ['GET /products/weekly-featured-properties/{uuid}']
+  spec: openapi/zoopla-weekly-featured-property-activations-openapi.json
+  binding: rest
+  confidence: high
+- tool: activate_weekly_featured_property
+  category: weekly-featured-properties
+  rest: ['POST /products/weekly-featured-properties']
+  spec: openapi/zoopla-weekly-featured-property-activations-openapi.json
+  binding: rest
+  confidence: high
+  note: Request body CreateWeeklyFeaturedProperty (listingId, optional customDetails).
+mcp_only: []
+rest_only: []
+divergence_note: >-
+  The real divergence in Zoopla's surface is not between MCP and REST — it is
+  between what the contracts describe and what the market wants. Listings,
+  property records and valuations are absent from every published contract; the
+  retired public listings API has no successor and no tool can be bound to it.
+coverage:
+  tools_named: 9
+  tools_bound: 9
+  mcp_only: 0
+  rest_operations_total: 9
+  rest_operations_with_tool: 9

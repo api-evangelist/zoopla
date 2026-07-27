@@ -1,0 +1,31 @@
+generated: '2026-07-26'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.zoopla.co.uk
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 12 23:27:27 2026 GMT
+  hsts: null
+- host: developers.zoopla.co.uk
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  2 03:21:18 2026 GMT
+  hsts: false
+- host: services.zoopla.co.uk
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 14 23:59:59 2026 GMT
+  hsts: null
+domains:
+- domain: zoopla.co.uk
+  dnssec: false
+  caa:
+  - 0 issuewild "pki.goog; cansignhttpexchanges=yes"
+  - 0 issue "amazon.com"
+  - 0 issue "letsencrypt.org"
+  - 0 issue "pki.goog; cansignhttpexchanges=yes"
+  - 0 issuewild "amazon.com"
+  spf: true
+  dmarc: true
+  dmarc_policy: reject

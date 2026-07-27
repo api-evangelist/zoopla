@@ -1,0 +1,79 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://developers.zoopla.co.uk/
+- https://developers.zoopla.co.uk/pages/premium-listings
+- https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- https://developers.zoopla.co.uk/leads/docs/push-service
+- live probes, 2026-07-26
+versioning:
+  scheme: none
+  current: null
+  docs: null
+  note: >-
+    No version in the URI, no version header, no dated release train. Document
+    versions only: 1.0.0 in both activation specs, 0.1 in the Leads spec.
+change_policy:
+  additive_without_notice: true
+  evidence:
+  - '"This API is being continually improved and so details in this article are
+    subject to change" — Premium Listings and Weekly Featured Properties docs.'
+  - '"NOTE: New fields and enum values can be added at any time." — Lead Push
+    Service docs. Consumers are expected to tolerate unknown fields and enum
+    members.'
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    Zoopla publishes no deprecation policy, no Sunset/Deprecation header support,
+    and no notice period. What it does publish is the outcome of one: the public
+    Zoopla listings API has been retired outright, announced in a single line on
+    the front page of the developer docs — "The Zoopla listings API is no longer
+    publicly available" — with a sales contact instead of a migration path. The
+    legacy TIBCO Mashery portal that hosted it (developer.zoopla.co.uk) still
+    resolves but no longer presents a valid certificate.
+retired_apis:
+- name: Zoopla listings API (public)
+  status: retired
+  former_portal: https://developer.zoopla.co.uk/
+  announcement: https://developers.zoopla.co.uk/
+  successor: >-
+    None public. Commercial enquiries are routed to
+    https://business.zoopla.co.uk/contact-us
+- name: Zoopla lead delivery over FTP/XML
+  status: superseded
+  note: >-
+    "Zoopla leads have historically been delivered in an XML format via an FTP
+    server" — superseded by the JSON Push service and the JSON poll API.
+  announcement: https://developers.zoopla.co.uk/leads/docs/available-lead-services
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No SLA is published on the developer portal. Availability commitments, if any,
+    sit inside the member contract rather than in public documentation.
+status_page:
+  url: null
+  probe: >-
+    status.zoopla.co.uk resolves and answers, but only with an HTTP 301 from an
+    AWS ELB to https://www.zoopla.co.uk/ — it is a redirect, not a status page.
+    No status or incident-history surface is linked from the developer portal.
+  checked: '2026-07-26'
+retention:
+- subject: leads
+  window: 30 days
+  note: >-
+    Applies to both poll and push. The Push service retries a failing consumer
+    endpoint for 24 hours, then holds the lead for the remaining 29 days with no
+    self-service replay.
+- subject: premium listing activation
+  window: expiry recorded per activation as `expiryAt`
+support:
+  technical_contact: members@zoopla.co.uk
+  product_contact: purchaseandactivationteam@zoopla.co.uk
+  onboarding: https://support.zoopla.co.uk/hc/en-gb
+changelog:
+  published: false
+  note: The developer portal carries no dated changelog or release notes.

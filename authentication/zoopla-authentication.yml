@@ -1,0 +1,87 @@
+generated: '2026-07-26'
+method: searched
+docs: https://developers.zoopla.co.uk/pages/authentication
+source: openapi/zoopla-leads-api-openapi.json, openapi/zoopla-premium-listing-activations-openapi.json,
+  openapi/zoopla-weekly-featured-property-activations-openapi.json, https://developers.zoopla.co.uk/pages/authentication,
+  https://developers.zoopla.co.uk/leads/docs/push-service
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - clientCredentials
+  self_serve: false
+  identity_provider: Amazon Cognito (eu-west-1)
+  api_request_header: 'Authorization: Bearer {access_token}'
+schemes:
+- name: OAuth2
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://services-auth.services.zoopla.co.uk/oauth2/token
+    scopes: 2
+  sources:
+  - openapi/zoopla-leads-api-openapi.json
+  - openapi/zoopla-premium-listing-activations-openapi.json
+  - openapi/zoopla-weekly-featured-property-activations-openapi.json
+token_request:
+  method: POST
+  url: https://services-auth.services.zoopla.co.uk/oauth2/token
+  client_authentication: >-
+    HTTP Basic — Authorization: Basic base64(client_id:client_secret). The Leads
+    documentation also shows the credentials form-encoded in the body with an
+    `audience` parameter set to the integration URL (https://services.zoopla.co.uk),
+    and notes the fields are form-encoded rather than sent as a JSON body.
+  content_type: application/x-www-form-urlencoded
+  grant_type: client_credentials
+  scope_parameter: scope=api/api_access (activation APIs)
+  response:
+    token_type: Bearer
+    expires_in: 3600
+  issuer: https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_g0qeZRnbT
+  issuer_evidence: >-
+    The sample access token published on the authentication page decodes to an
+    `iss` claim naming that Cognito user pool, which places the auth tier in AWS
+    eu-west-1.
+credential_issuance:
+  self_serve: false
+  process: >-
+    Generate a 4096-bit RSA GPG key pair, export the public key and give it to
+    your Zoopla technical contact. Zoopla returns a plaintext client_id and a
+    PGP-encrypted client_secret which you decrypt with your private key.
+  prerequisite: >-
+    You must already be a Zoopla customer subscribed to a listings package with
+    the relevant features.
+  contact: members@zoopla.co.uk
+  revocation: >-
+    Contact your technical contact immediately to revoke a compromised
+    client_id/client_secret pair and be issued a new one.
+errors:
+  invalid_or_expired_token:
+  - 401
+  - 403
+token_handling:
+  caching: >-
+    Cache the access token for its full expires_in window. The Leads docs name
+    per-request token minting as the cause of HTTP 429 "service busy" responses.
+inbound_authentication:
+  context: Lead Push Service — Zoopla is the client, the member is the server.
+  methods:
+  - method: oauth2
+    grant: client_credentials
+    note: >-
+      The member supplies client_id, client_secret, a token endpoint and
+      (configuration dependent) an audience. Zoopla mints a token and sends
+      'Authorization: Bearer {access_token}'.
+  - method: api_key
+    note: >-
+      The member supplies a key; Zoopla sends it verbatim as the Authorization
+      header value with no scheme prefix.
+  signature_verification: none
+  docs: https://developers.zoopla.co.uk/leads/docs/push-service
+discovery:
+  openid_configuration: 404
+  oauth_authorization_server: 404
+  note: >-
+    Neither the API host nor the Cognito-fronted token host serves OIDC discovery
+    or RFC 8414 authorization-server metadata; the OAuth setup is documented in
+    prose only.

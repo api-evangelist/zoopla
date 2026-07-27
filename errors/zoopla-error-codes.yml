@@ -1,0 +1,128 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://developers.zoopla.co.uk/pages/premium-listings-error-codes-register
+- https://developers.zoopla.co.uk/pages/weekly-featured-properties-error-code-register
+format: proprietary-numeric
+envelope:
+  shape: >-
+    Errors are returned as a top-level `errors` array of objects, each with a
+    human-readable `reason` and a numeric `code`. On an activation that was
+    accepted but later failed asynchronously, the same array appears nested under
+    `status.errors` on the activation resource, alongside `status.result: ERROR`.
+  example_request_error: |
+    {
+      "errors": [
+        {
+          "reason": "There is already a premium listing pending for this listing ID",
+          "code": 1011004
+        }
+      ]
+    }
+  example_async_error: |
+    {
+      "id": "5ecba691-84d6-4a60-9587-ca810292f5b0",
+      "listingId": 123,
+      "createdAt": "2020-07-20T12:35:38.049963+01:00",
+      "updatedAt": "2020-07-20T12:35:38.049963+01:00",
+      "status": {
+        "result": "ERROR",
+        "errors": [
+          {"reason": "Listing ID doesn't exist", "code": 1011011}
+        ]
+      }
+    }
+code_scheme:
+  description: >-
+    A seven-digit code composed of a three-digit service identifier, a one-digit
+    severity level (1 is the only level currently used), and a three-digit
+    feature-scoped code.
+  layout: SSS L NNN
+  services:
+  - code: '101'
+    service: Premium Listings API
+  - code: '102'
+    service: Premium Listings Processor
+  - code: '201'
+    service: Weekly Featured Properties API
+  ranges:
+  - range: 001-010
+    feature: Create activation
+  - range: 011-020
+    feature: Get activation(s)
+  - range: 021-030
+    feature: Update activation
+  - range: 041-050
+    feature: Premium Listing Plus (highlights) validation
+  - range: 051-060
+    feature: Listing JSON Service
+  - range: 061-070
+    feature: Listing Matching Service
+  - range: 900-910
+    feature: Internal service / permission errors
+error_codes:
+- {code: 1011001, service: Premium Listings API, error: Create Premium Listing - Error parsing request}
+- {code: 1011002, service: Premium Listings API, error: Create Premium Listing - Internal error interpreting JSON data}
+- {code: 1011003, service: Premium Listings API, error: 'Create Premium Listing - Validation error: pending premium listing already exists for listingId'}
+- {code: 1011004, service: Premium Listings API, error: 'Create Premium Listing - Validation error: activated premium listing already exists for listingId'}
+- {code: 1011005, service: Premium Listings API, error: Create Premium Listing - Internal DB error}
+- {code: 1011007, service: Premium Listings API, error: "Create Premium Listing - Validation error: Listing doesn’t pass the quality check. To activate Premium Listing product listing’s Full description should be at least 200 characters."}
+- {code: 1011008, service: Premium Listings API, error: "Create Premium Listing - Validation error: Listing doesn’t pass the quality check. To activate Premium Listing product listing should have at least 3 images assigned."}
+- {code: 1011009, service: Premium Listings API, error: 'Create Premium Listing - Validation error: Listing custom details should not exceed 640kb.'}
+- {code: 1011011, service: Premium Listings API, error: Get Premium Listing - Premium listing not found}
+- {code: 1011012, service: Premium Listings API, error: Get Premium Listing - Internal error interpreting JSON data}
+- {code: 1011016, service: Premium Listings API, error: Get Premium Listing - Internal DB error}
+- {code: 1011017, service: Premium Listings API, error: Get Premium Listing - Request error}
+- {code: 1011021, service: Premium Listings API, error: Update Premium Listing - Error parsing request}
+- {code: 1011022, service: Premium Listings API, error: Update Premium Listing - Internal error interpreting JSON data}
+- {code: 1011026, service: Premium Listings API, error: Update Premium Listing - Internal DB error}
+- {code: 1011041, service: Premium Listings API, error: Update Premium Listing highlights - Error parsing request}
+- {code: 1011042, service: Premium Listings API, error: Can't deserialise provided payload}
+- {code: 1011043, service: Premium Listings API, error: Premium Listing can be only updated if it's active. Active means that the date it expires at is in the future and status is ACTIVATED}
+- {code: 1011044, service: Premium Listings API, error: There's already update pending. Please wait a while and try again. You can't have two updates in a fly.}
+- {code: 1011045, service: Premium Listings API, error: Internal error during updating. Issue related to the storage.}
+- {code: 1011051, service: Premium Listings API, error: Listing Service - Can't find listingId}
+- {code: 1011052, service: Premium Listings API, error: Listing Service - No owner found for given listingId}
+- {code: 1011053, service: Premium Listings API, error: Listing Service - Internal error connecting to listing service}
+- {code: 1011054, service: Premium Listings API, error: Listing Service - Internal error interpreting JSON data}
+- {code: 1011055, service: Premium Listings API, error: Listing Service - listingId found does not match the one provided}
+- {code: 1011061, service: Premium Listings API, error: Listing Matching Service - Can not match customerListingId to a listingId}
+- {code: 1011062, service: Premium Listings API, error: Listing Matching Service - Internal error interpreting JSON data}
+- {code: 1011063, service: Premium Listings API, error: Listing Matching Service - Could not connect to internal system}
+- {code: 1011064, service: Premium Listings API, error: Listing Matching Service - No sources assigned to the client}
+- {code: 1011065, service: Premium Listings API, error: 'Listing Matching Service - Internal error : both listingId and customerListingId cannot be set'}
+- {code: 1011066, service: Premium Listings API, error: 'Listing Matching Service - Listing Matching Service URL: has not been specified : invalid configuration'}
+- {code: 1011900, service: Premium Listings API, error: Internal Service Error}
+- {code: 1011901, service: Premium Listings API, error: Client does not have access to listing}
+- {code: 1011902, service: Premium Listings API, error: Internal error interpreting JSON data for permissions}
+- {code: 1011903, service: Premium Listings API, error: Internal DB error - Cannot create index}
+- {code: 1011904, service: Premium Listings API, error: Invalid request - request body doesn't meet JSON schema requirements}
+- {code: 1011905, service: Premium Listings API, error: Invalid request - provided highlight are not valid}
+- {code: 1021000, service: Premium Listings Processor, error: Premium Listings Processor - Cannot decode error from legacy-products}
+- {code: 1021001, service: Premium Listings Processor, error: Premium Listings Processor - Product already activated for this listing}
+- {code: 1021002, service: Premium Listings Processor, error: Premium Listings Processor - Product cannot be activated for this listing}
+- {code: 1021003, service: Premium Listings Processor, error: Premium Listings Processor - Listing details not available}
+- {code: 1021004, service: Premium Listings Processor, error: Premium Listings Processor - Listing does not have enough images assigned}
+- {code: 1021005, service: Premium Listings Processor, error: Premium Listings Processor - Listing does not have long enough Full description}
+- {code: 1021006, service: Premium Listings Processor, error: Premium Listings Processor - Contract does not have premium features activated}
+- {code: 1021007, service: Premium Listings Processor, error: Premium Listings Processor - Unable to assign highlights to listing}
+- {code: 1021008, service: Premium Listings Processor, error: Premium Listings Processor - Unknown message type}
+- {code: 2011001, service: Weekly Featured Properties API, error: Create Weekly Featured Property Listing - Error parsing request}
+- {code: 2011002, service: Weekly Featured Properties API, error: Create Weekly Featured Property Listing - Internal error interpreting JSON data}
+- {code: 2011003, service: Weekly Featured Properties API, error: Create Weekly Featured Property Listing - Request body fails JSON schema validation}
+- {code: 2011004, service: Weekly Featured Properties API, error: 'Create Weekly Featured Property Listing - Validation error: Pending Weekly Featured Property listing already exists for listingId'}
+- {code: 2011005, service: Weekly Featured Properties API, error: 'Create Weekly Featured Property Listing - Validation error: Activated Weekly Featured Property listing already exists for listingId'}
+- {code: 2011006, service: Weekly Featured Properties API, error: Create Weekly Featured Property Listing - Internal DB error}
+- {code: 2011007, service: Weekly Featured Properties API, error: "Create Weekly Featured Property - Validation error: Listing doesn’t pass the quality check. To activate WFP product listing should have at least 1 image assigned."}
+- {code: 2011008, service: Weekly Featured Properties API, error: 'Create Weekly Featured Property - Validation error: Listing should be in the UK area to activate WFP product.'}
+- {code: 2011009, service: Weekly Featured Properties API, error: Product cannot be activated for this listing - no valid category}
+notes:
+- >-
+  The register is authoritative for the two activation APIs. The Leads API
+  publishes no numeric error registry — it returns a generic `Error` object
+  (see errors/zoopla-problem-types.yml) and documents 429 as a transient
+  "service busy" signal that should be retried after a wait.
+- >-
+  Codes 1011003/1011004 and 2011004/2011005 are the duplicate-activation guard:
+  Zoopla rejects a second activation for a listingId that already has a PENDING
+  or ACTIVATED product rather than de-duplicating on an idempotency key.

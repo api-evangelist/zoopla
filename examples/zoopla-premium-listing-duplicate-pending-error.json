@@ -1,0 +1,8 @@
+{
+  "errors": [
+    {
+      "reason": "There is already a premium listing pending for this listing ID",
+      "code": 1011004
+    }
+  ]
+}

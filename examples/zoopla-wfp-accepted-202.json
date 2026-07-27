@@ -1,0 +1,14 @@
+{
+  "id": "f36fa5b1-df2a-4fe1-9a6c-f675d31e8a8d",
+  "listingId": 123,
+  "createdAt": "2021-07-16T13:59:42.462116906Z",
+  "updatedAt": "2021-07-16T13:59:42.462116906Z",
+  "createdBy": "34obarelcd7pnjrqff066juicv",
+  "status": {
+    "result": "PENDING"
+  },
+  "customDetails": {
+    "orderNumber": 456
+  },
+  "isRenewable": false
+}

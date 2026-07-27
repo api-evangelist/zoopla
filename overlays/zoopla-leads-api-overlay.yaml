@@ -1,0 +1,47 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Zoopla Leads API
+  version: 1.0.0
+extends: openapi/zoopla-leads-api-openapi.json
+x-apievangelist:
+  generated: '2026-07-26'
+  method: generated
+  source: API Evangelist enrichment round 2026-07-26
+  note: Enhancements layered over the harvested Zoopla contract. The original spec is never mutated.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/zoopla-authentication.yml
+      scopes: scopes/zoopla-scopes.yml
+      conventions: conventions/zoopla-conventions.yml
+      errors: errors/zoopla-problem-types.yml
+      webhooks: asyncapi/zoopla-leads-webhooks.yml
+      asyncapi: asyncapi/zoopla-leads-push-asyncapi.yml
+      data_model: data-model/zoopla-data-model.yml
+      skills: skills/_index.yml
+    x-apievangelist-access:
+      pricing: paid
+      onboarding: membership-required
+      self_serve: false
+      note: client_id/client_secret are issued by Zoopla Member Services after a GPG public-key exchange.
+    x-apievangelist-retention: Lead data is retained for 30 days; the default poll window is the last 24 hours.
+- target: $.paths['/applicant-leads'].get
+  update:
+    operationId: listApplicantLeads
+    x-apievangelist-note: The harvested spec declares no operationId; this id is supplied by API Evangelist for
+      tooling and is not a Zoopla-published identifier.
+    x-apievangelist-example: examples/zoopla-push-applicant-lead.json
+- target: $.paths['/appraisal-leads'].get
+  update:
+    operationId: listAppraisalLeads
+    x-apievangelist-note: The harvested spec declares no operationId; this id is supplied by API Evangelist for
+      tooling and is not a Zoopla-published identifier.
+    x-apievangelist-example: examples/zoopla-push-appraisal-lead.json
+- target: $.paths['/applicant-leads'].get.responses['429']
+  update:
+    x-apievangelist-retry: Documented as a transient "service busy" condition. Wait and retry, and cache the access
+      token for its full expires_in window to reduce load.
+- target: $.paths['/appraisal-leads'].get.responses['429']
+  update:
+    x-apievangelist-retry: Documented as a transient "service busy" condition. Wait and retry.

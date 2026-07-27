@@ -1,0 +1,164 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://developers.zoopla.co.uk/pages/authentication
+- https://developers.zoopla.co.uk/pages/premium-listings
+- https://developers.zoopla.co.uk/pages/weekly-featured-properties
+- https://developers.zoopla.co.uk/leads/docs/available-lead-services
+- https://developers.zoopla.co.uk/leads/docs/push-service
+- openapi/zoopla-leads-api-openapi.json
+- openapi/zoopla-premium-listing-activations-openapi.json
+- openapi/zoopla-weekly-featured-property-activations-openapi.json
+summary: >-
+  Zoopla's member-facing APIs are plain JSON over HTTPS on a single production
+  host, secured by OAuth 2.0 client credentials against an Amazon Cognito token
+  service. The activation APIs are explicitly asynchronous: a POST is validated,
+  queued and answered 202 Accepted with a PENDING activation resource that the
+  caller polls until it reaches ACTIVATED or ERROR. There is no idempotency key,
+  no pagination, no versioning scheme, no request-id header and no published
+  rate limit — duplicate work is prevented by a natural-key guard on listingId
+  rather than by a client-supplied key.
+authentication:
+  style: OAuth 2.0 client credentials (machine-to-machine)
+  token_endpoint: https://services-auth.services.zoopla.co.uk/oauth2/token
+  client_authentication: >-
+    HTTP Basic — base64(client_id:client_secret) in the Authorization header of
+    the token request, with grant_type=client_credentials form-encoded in the body.
+  token_type: Bearer
+  token_ttl_seconds: 3600
+  api_request_header: 'Authorization: Bearer {access_token}'
+  identity_provider: Amazon Cognito (eu-west-1)
+  credential_issuance: >-
+    Manual. client_id arrives in plain text and client_secret arrives PGP-encrypted
+    to a 4096-bit RSA GPG public key you send to Zoopla Member Services.
+  detail: authentication/zoopla-authentication.yml
+  scopes: scopes/zoopla-scopes.yml
+idempotency:
+  supported: false
+  idempotency_key_header: null
+  note: >-
+    Zoopla documents no Idempotency-Key header or equivalent, and none of the
+    three contracts declares one. Instead, safe repetition is enforced server-side
+    by a natural-key duplicate guard: "a unique request must be made for each
+    listing", and a second activation for a listingId that already has a PENDING
+    or ACTIVATED product is rejected with error 1011003/1011004 (Premium Listings)
+    or 2011004/2011005 (Weekly Featured Properties). A retried POST is therefore
+    safe in effect but not transparent — the retry surfaces as a validation error
+    rather than as a replay of the original 202 response, and the caller has to
+    treat those codes as "already done" instead of as a failure.
+  retry_guidance: >-
+    On 429 the Leads API tells callers to wait and retry, and to cache the access
+    token for its full expires_in window rather than minting a new one per call.
+pagination:
+  supported: false
+  note: >-
+    Both activation APIs state plainly that pagination is not yet supported
+    ("The API does not yet support pagination", "API does not support pagination
+    yet. This is going to be defined"). Collections are returned as a bare JSON
+    array. The Leads API has no pagination either; volume is bounded by time
+    instead — a default window of the last 24 hours, narrowed with from-time /
+    to-time.
+filtering:
+  activations:
+  - param: listingId
+    applies_to: [/products/premium-listings, /products/weekly-featured-properties]
+    description: Return only activations for the given listing.
+  - param: isPremium
+    applies_to: [/products/premium-listings]
+    description: Return only activations that are currently effectively active.
+  - param: isWFP
+    applies_to: [/products/weekly-featured-properties]
+    description: Return only activations that are currently effectively active.
+  - note: Parameters combine with logical AND. An empty array is the negative answer.
+  leads:
+  - param: from-time
+    format: RFC 3339, e.g. 2006-01-02T15:04:05Z
+    description: Only leads on or after this time.
+  - param: to-time
+    format: RFC 3339
+    description: Only leads on or before this time.
+  - param: group-id
+    description: Restrict to an internal Zoopla group id.
+  - param: company-id
+    description: Restrict to an internal Zoopla company id.
+  - param: brand-id
+    description: Restrict to an internal Zoopla brand id.
+  - param: branch-id
+    description: Restrict to an internal Zoopla branch id.
+asynchrony:
+  model: accept-then-poll
+  accepted_status: 202
+  states: [PENDING, ACTIVATED, ERROR]
+  in_flight_state: status.currently = WAITING_FOR_UPDATE (highlights PATCH)
+  note: >-
+    POST /products/premium-listings and POST /products/weekly-featured-properties
+    return 202 with a PENDING activation carrying a uuid `id`. The caller polls
+    GET /products/{product}/{uuid} until status.result is ACTIVATED or ERROR. The
+    highlights PATCH is asynchronous too but usually settles in under a second.
+    Queueing exists to stop a consumer spending more credits than it holds and to
+    stop it spending more than one credit on one listing.
+expansion:
+  supported: false
+metadata:
+  supported: partial
+  note: >-
+    Weekly Featured Property activations accept a free-form `customDetails`
+    object (documented example: {"orderNumber": 456}) that is echoed back on the
+    activation. Premium Listing activations accept a `highlights` array whose ids
+    come from the published highlights chart. Premium Listing custom details are
+    capped at 640kb (error 1011009).
+request_tracing:
+  request_id_header: null
+  note: No request-id or correlation header is documented or declared in any spec.
+versioning:
+  scheme: none
+  note: >-
+    No version segment in the path, no version header, no dated releases. The
+    activation specs carry info.version 1.0.0 and the Leads spec carries 0.1, but
+    those are document versions, not a negotiated API version. Both product docs
+    warn that "this API is being continually improved and so details in this
+    article are subject to change", and the Push service warns that new fields and
+    enum values can be added at any time — additive change without notice is the
+    stated posture.
+error_envelope:
+  shape: '{"errors": [{"reason": string, "code": integer}]}'
+  async_shape: '{"status": {"result": "ERROR", "errors": [{"reason": string, "code": integer}]}}'
+  code_registry: errors/zoopla-error-codes.yml
+  problem_types: errors/zoopla-problem-types.yml
+  rfc9457: false
+rate_limiting:
+  published_limits: false
+  signalling_headers: none documented
+  note: >-
+    No RateLimit headers, no published quota. HTTP 429 is documented on both
+    Leads endpoints as a "service busy" condition to be waited out. Product
+    activation is bounded commercially rather than technically — by the credits on
+    the member's contract.
+timing_constraints:
+- constraint: >-
+    A newly submitted listing cannot be upgraded until Zoopla has assigned it an
+    identifier; Zoopla advises waiting at least 30 minutes after submission before
+    attempting an activation.
+  source: https://developers.zoopla.co.uk/pages/premium-listings
+- constraint: Lead data is retained for 30 days across both delivery mechanisms.
+  source: https://developers.zoopla.co.uk/leads/docs/available-lead-services
+- constraint: >-
+    The Push service retries an unavailable consumer endpoint for 24 hours; after
+    that there is no self-service replay.
+  source: https://developers.zoopla.co.uk/leads/docs/push-service
+content:
+  request_media_type: application/json
+  response_media_type: application/json
+  auth_request_media_type: application/x-www-form-urlencoded
+  timestamps: RFC 3339 with offset, e.g. 2020-07-20T12:35:38.049963+01:00
+  identifiers:
+    activation: uuid (path parameter `uuid`, body field `id`)
+    listing: integer listingId / listingId, plus customerListingId for matching
+    lead: uuid `id`, plus portalLeadId, portalBranchId, portalCompanyId,
+      portalGroupId, sourceBranchId
+cross_references:
+  authentication: authentication/zoopla-authentication.yml
+  scopes: scopes/zoopla-scopes.yml
+  errors: errors/zoopla-error-codes.yml
+  lifecycle: lifecycle/zoopla-lifecycle.yml
+  webhooks: asyncapi/zoopla-leads-webhooks.yml

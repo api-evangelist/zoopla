@@ -1,0 +1,349 @@
+{
+	"info": {
+		"_postman_id": "2eaf0a81-bf23-40ee-92af-2b67c61a97e6",
+		"name": "01. Products API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01. Authentication",
+			"item": [
+				{
+					"name": "Get Access Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.globals.set(\"access_token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{client_secret}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{client_id}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "api/api_access",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://services-auth.services.zoopla.co.uk/oauth2/token",
+							"protocol": "https",
+							"host": [
+								"services-auth",
+								"services",
+								"zoopla",
+								"co",
+								"uk"
+							],
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Premium Listings",
+			"item": [
+				{
+					"name": "Get Premium Listing Activations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "https://services.zoopla.co.uk/products/premium-listings",
+							"protocol": "https",
+							"host": [
+								"services",
+								"zoopla",
+								"co",
+								"uk"
+							],
+							"path": [
+								"products",
+								"premium-listings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Premium Listing Activation",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://services.zoopla.co.uk/products/premium-listings/{{lastPLActivationRequestUuid}}",
+							"protocol": "https",
+							"host": [
+								"services",
+								"zoopla",
+								"co",
+								"uk"
+							],
+							"path": [
+								"products",
+								"premium-listings",
+								"{{lastPLActivationRequestUuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request Premium Listing Activation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.globals.set(\"lastPLActivationRequestUuid\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerListingId\": \"DEMO_20210129_06\",\n    \"highlights\": [\n        {\n            \"id\": 1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://services.zoopla.co.uk/products/premium-listings",
+							"protocol": "https",
+							"host": [
+								"services",
+								"zoopla",
+								"co",
+								"uk"
+							],
+							"path": [
+								"products",
+								"premium-listings"
+							]
+						},
+						"description": "You can make request providing either:\n* `listingId`\n* `customerListingId`\n\nFor example:\n```\n{\n\t\"listingId\": 56660767\n}\n```\n\n```\n{\n    \"customerListingId\": \"DEMO_20210129_01\"\n}\n```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Weekly Featured Properties",
+			"item": [
+				{
+					"name": "Get WFP Activations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "https://services.zoopla.co.uk/products/weekly-featured-properties",
+							"protocol": "https",
+							"host": [
+								"services",
+								"zoopla",
+								"co",
+								"uk"
+							],
+							"path": [
+								"products",
+								"weekly-featured-properties"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get WFP Activation",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "https://services.zoopla.co.uk/products/weekly-featured-properties/{{lastWfpActivationRequestUuid}}",
+							"protocol": "https",
+							"host": [
+								"services",
+								"zoopla",
+								"co",
+								"uk"
+							],
+							"path": [
+								"products",
+								"weekly-featured-properties",
+								"{{lastWfpActivationRequestUuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request WFP Activation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.globals.set(\"lastWfpActivationRequestUuid\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"customerListingId\": \"DEMO_20210202_01\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://services.zoopla.co.uk/products/weekly-featured-properties",
+							"protocol": "https",
+							"host": [
+								"services",
+								"zoopla",
+								"co",
+								"uk"
+							],
+							"path": [
+								"products",
+								"weekly-featured-properties"
+							]
+						},
+						"description": "You can make request providing either:\n* `listingId`\n* `customerListingId`\n\nFor example:\n```\n{\n\t\"listingId\": 56660767\n}\n```\n\n```\n{\n    \"customerListingId\": \"DEMO_20210129_01\"\n}\n```"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}} ",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "client_id",
+			"value": "_YOUR_CLIENT_ID_"
+		},
+		{
+			"key": "client_secret",
+			"value": "_YOUR_CLIENT_SECRET_"
+		}
+	]
+}

@@ -1,0 +1,248 @@
+generated: '2026-07-26'
+method: derived
+source:
+- openapi/zoopla-leads-api-openapi.json
+- openapi/zoopla-premium-listing-activations-openapi.json
+- openapi/zoopla-weekly-featured-property-activations-openapi.json
+- https://developers.zoopla.co.uk/leads/docs/field-definitions
+summary: >-
+  Two disjoint object graphs sit behind one host. The Leads graph is a rich
+  read-only projection of a consumer enquiry — an Applicant or Appraisal lead
+  that carries a Contact, and either the ListingDetails the enquiry was made
+  against (applicant) or the Property being appraised (appraisal). The
+  activations graph is a small write-then-poll graph — an activation resource
+  keyed by uuid, pointing at a listing by integer listingId, carrying a Status
+  and, for Premium Listings, a Highlights collection. Nothing joins the two
+  graphs in the public contracts: leads reference listings by
+  listingDetails.id / propertyId, activations reference them by listingId, and
+  no operation resolves one to the other.
+entities:
+- name: Applicant
+  domain: leads
+  spec: openapi/zoopla-leads-api-openapi.json
+  identifier: id (uuid)
+  description: >-
+    A consumer enquiring about buying or renting a property, delivered by poll
+    (GET /applicant-leads) or push. Carries intent, enquiryType, message,
+    viewing preferences and the search criteria behind the enquiry.
+  foreign_keys: [portalLeadId, portalBranchId, portalCompanyId, portalGroupId, sourceBranchId]
+- name: Appraisal
+  domain: leads
+  spec: openapi/zoopla-leads-api-openapi.json
+  identifier: id (uuid)
+  description: >-
+    A consumer asking for a valuation on a property they own, delivered by poll
+    (GET /appraisal-leads) or push. Carries intent, justCurious, urgency and the
+    Property being appraised.
+  foreign_keys: [portalLeadId, portalBranchId, portalCompanyId, portalGroupId, sourceBranchId]
+- name: Contact
+  domain: leads
+  identifier: null
+  description: Name, email, phone and contact-method/time preferences of the consumer.
+- name: ContactPreferences
+  domain: leads
+  description: Preferred contact method and time-of-day window.
+- name: ListingDetails
+  domain: leads
+  identifier: id
+  description: >-
+    The Zoopla listing an applicant lead was raised against — bedrooms,
+    bathrooms, lifecycle status, address, pricing, images and uprn.
+- name: Property
+  domain: leads
+  identifier: propertyId
+  description: >-
+    The property behind an appraisal lead — size, tenure, energy rating, an
+    automated Estimate, last sale price, coordinates and uprn.
+- name: Estimate
+  domain: leads
+  description: Automated valuation with lower/upper range, value, confidence and confidence band.
+- name: SearchCriteria
+  domain: leads
+  description: The consumer's search at the moment of enquiry — location, radius, bedrooms, price band, property type.
+- name: PremiumListing
+  domain: activations
+  spec: openapi/zoopla-premium-listing-activations-openapi.json
+  identifier: id (uuid, path parameter `uuid`)
+  description: >-
+    A request to activate the Premium Listing product against a listing.
+    Created 202 PENDING, resolves to ACTIVATED (with expiryAt) or ERROR.
+  foreign_keys: [listingId, customerListingId]
+- name: WeeklyFeaturedProperty
+  domain: activations
+  spec: openapi/zoopla-weekly-featured-property-activations-openapi.json
+  identifier: id (uuid, path parameter `uuid`)
+  description: >-
+    A request to activate the Weekly Featured Property product against a
+    listing. Same PENDING/ACTIVATED/ERROR lifecycle, plus isRenewable and an
+    optional customDetails object.
+  foreign_keys: [listingId]
+- name: Status
+  domain: activations
+  description: >-
+    result (PENDING | ACTIVATED | ERROR), an optional `currently` in-flight
+    marker (WAITING_FOR_UPDATE) and an errors array on failure.
+- name: Highlight
+  domain: activations
+  identifier: id (integer, from the published highlights chart)
+  description: A Premium Listing Plus highlight with an optional free-text description.
+relationships:
+- from: ApplicantList
+  to: Applicant
+  type: has_many
+  via: applicants
+- from: Applicant
+  to: Contact
+  type: has_one
+  via: contact
+- from: Applicant
+  to: ListingDetails
+  type: has_one
+  via: listingDetails
+- from: Applicant
+  to: SearchCriteria
+  type: has_one
+  via: searchCriteria
+- from: Applicant
+  to: ViewingTime
+  type: has_many
+  via: viewingTimes
+- from: Applicant
+  to: ApplicantSource
+  type: has_one
+  via: leadSource
+- from: AppraisalList
+  to: Appraisal
+  type: has_many
+  via: appraisals
+- from: Appraisal
+  to: Contact
+  type: has_one
+  via: contact
+- from: Appraisal
+  to: Property
+  type: has_one
+  via: propertyDetails
+- from: Appraisal
+  to: Urgency
+  type: has_one
+  via: urgency
+- from: Contact
+  to: ContactPreferences
+  type: has_one
+  via: preferences
+- from: ListingDetails
+  to: ListingDetailsAddress
+  type: has_one
+  via: address
+- from: ListingDetails
+  to: Pricing
+  type: has_one
+  via: pricing
+- from: ListingDetails
+  to: ImageView
+  type: has_many
+  via: images
+- from: ListingDetails
+  to: Estimate
+  type: has_one
+  via: estimate
+- from: ListingDetails
+  to: LifeCycleStatus
+  type: has_one
+  via: lifeCycleStatus
+- from: Property
+  to: PropertyDetailsAddress
+  type: has_one
+  via: address
+- from: Property
+  to: Estimate
+  type: has_one
+  via: estimate
+- from: Property
+  to: Energy
+  type: has_one
+  via: energy
+- from: Property
+  to: Tenure
+  type: has_one
+  via: tenure
+- from: SearchCriteria
+  to: LocationView
+  type: has_one
+  via: location
+- from: PremiumListings
+  to: PremiumListing
+  type: has_many
+  via: array items
+- from: PremiumListing
+  to: Status
+  type: has_one
+  via: status
+- from: PremiumListing
+  to: Highlight
+  type: has_many
+  via: highlights
+- from: PremiumListing
+  to: listing
+  type: belongs_to
+  via: listingId
+  note: >-
+    Reference by integer id only; no listing resource is exposed by any public
+    Zoopla contract, so this relationship cannot be dereferenced through the API.
+- from: WeeklyFeaturedProperties
+  to: WeeklyFeaturedProperty
+  type: has_many
+  via: array items
+- from: WeeklyFeaturedProperty
+  to: Status
+  type: has_one
+  via: status
+- from: WeeklyFeaturedProperty
+  to: listing
+  type: belongs_to
+  via: listingId
+- from: Status
+  to: ServiceError
+  type: has_many
+  via: errors
+identifiers:
+- field: id
+  form: uuid
+  scope: leads and activations
+- field: listingId
+  form: integer
+  scope: Zoopla listing identifier used by both activation APIs
+- field: customerListingId
+  form: string
+  scope: >-
+    The agent's own listing identifier, resolved to a listingId by the internal
+    Listing Matching Service (errors 1011061-1011066). Mutually exclusive with
+    listingId.
+- field: uprn
+  form: integer
+  scope: >-
+    UK Unique Property Reference Number (Ordnance Survey / GeoPlace) on both
+    ListingDetails and Property — the only cross-industry property identifier
+    present anywhere in Zoopla's contracts.
+- field: portalBranchId / portalCompanyId / portalGroupId / sourceBranchId
+  form: string
+  scope: >-
+    Zoopla's internal agency hierarchy, which doubles as the filter dimension on
+    the Leads poll endpoints (branch-id, company-id, group-id).
+enumerations:
+- ApplicantSource
+- AppraisalSource
+- ConfidenceBand
+- ContactMethod
+- LifeCycleStatus
+- RentFrequency
+- Tenure
+- TimePreference
+- TransactionType
+- Urgency
+enumeration_note: >-
+  All enumerations are SCREAMING_SNAKE strings prefixed with their domain
+  (APPLICANT_INTENT_BUY, LIFE_CYCLE_STATUS_FOR_SALE, CONFIDENCE_BAND_HIGH). The
+  Push docs warn new members can be added at any time, so consumers must treat
+  every enum as open.

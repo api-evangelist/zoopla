@@ -1,0 +1,108 @@
+generated: '2026-07-26'
+method: derived
+source:
+- openapi/zoopla-leads-api-openapi.json
+- openapi/zoopla-premium-listing-activations-openapi.json
+- openapi/zoopla-weekly-featured-property-activations-openapi.json
+- https://developers.zoopla.co.uk/pages/authentication
+- well-known/zoopla-well-known.yml
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: >-
+    openapi/zoopla-premium-listing-activations-openapi.json and
+    openapi/zoopla-weekly-featured-property-activations-openapi.json declare
+    openapi 3.0.0 and parse.
+- id: swagger-2.0
+  conforms: true
+  evidence: openapi/zoopla-leads-api-openapi.json declares swagger 2.0 and parses.
+- id: oauth2
+  conforms: true
+  evidence: >-
+    securitySchemes/securityDefinitions declare oauth2 with the client-credentials
+    (Swagger 2.0 "application") flow against
+    https://services-auth.services.zoopla.co.uk/oauth2/token; documented in prose
+    at https://developers.zoopla.co.uk/pages/authentication.
+- id: rfc6749-client-credentials
+  conforms: true
+  evidence: >-
+    grant_type=client_credentials with HTTP Basic client authentication and a
+    Bearer access_token with expires_in 3600.
+- id: rfc6750-bearer-token
+  conforms: true
+  evidence: 'Access token presented as `Authorization: Bearer {access_token}`.'
+- id: oidc
+  conforms: false
+  evidence: >-
+    No id_token, no userinfo, and /.well-known/openid-configuration is 404 on both
+    the API host and the Cognito-fronted token host.
+- id: rfc8414-oauth-server-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns 404 on both hosts.
+- id: rfc9116-security-txt
+  conforms: true
+  partial: true
+  evidence: >-
+    https://www.zoopla.co.uk/.well-known/security.txt returns 200 with Canonical
+    and Contact fields, but its Expires value (2026-02-04T02:00:00Z) has passed,
+    which RFC 9116 treats as stale.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use a proprietary {"errors":[{"reason","code"}]} envelope over
+    application/json; no application/problem+json anywhere in the three specs.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation header support documented or declared.
+- id: idempotency-key
+  conforms: false
+  evidence: >-
+    No Idempotency-Key header in any spec or doc; duplicate suppression is a
+    server-side natural-key guard on listingId (errors 1011003/1011004,
+    2011004/2011005).
+- id: json-api
+  conforms: false
+  evidence: Plain JSON; no JSON:API document structure, media type or links.
+- id: odata
+  conforms: false
+  evidence: >-
+    $metadata probes on services.zoopla.co.uk and api.zoopla.co.uk both returned
+    404; no OData service document.
+- id: reso-web-api
+  conforms: false
+  evidence: >-
+    No RESO reference anywhere in Zoopla's docs, specs or hosts, and no UK entry
+    on https://www.reso.org/certificates/. RESO is a North American MLS construct
+    and the UK market has no MLS to certify against.
+- id: reso-data-dictionary
+  conforms: false
+  evidence: >-
+    Zoopla's lead and listing payloads use proprietary field names
+    (portalLeadId, sourceBranchId, LIFE_CYCLE_STATUS_FOR_SALE) with no RESO
+    Data Dictionary alignment.
+- id: uprn
+  conforms: true
+  partial: true
+  evidence: >-
+    Both lead payloads carry a `uprn` field — the UK Unique Property Reference
+    Number (Ordnance Survey / GeoPlace), which is the closest thing this market
+    has to a universal property identifier.
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    A real webhook surface exists (Lead Push Service) but Zoopla publishes no
+    AsyncAPI document; see asyncapi/zoopla-leads-push-asyncapi.yml for the
+    API Evangelist derivation.
+- id: pagination
+  conforms: false
+  evidence: >-
+    Both activation APIs state pagination is not yet supported; the Leads API
+    bounds volume with a time window instead.
+compliance_program:
+  published: false
+  note: >-
+    No trust centre, no certification page and no named certifications (SOC 2,
+    ISO 27001, PCI DSS) could be verified. trust.zoopla.co.uk, /security and
+    /trust are behind a Cloudflare managed challenge that blocks anonymous
+    verification, so this records "not verified" rather than "absent". No
+    Compliance pointer is emitted without evidence.

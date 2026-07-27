@@ -1,0 +1,23 @@
+[
+  {
+    "id": "5ecba691-84d6-4a60-9587-ca810292f5b0",
+    "listingId": 567,
+    "createdAt": "2020-07-17T12:35:38.049963+01:00",
+    "updatedAt": "2020-07-17T12:35:38.049963+01:00",
+    "status": {
+      "result": "PENDING"
+    },
+    "isRenewable": false
+  },
+  {
+    "id": "5ecba691-84d6-4a60-9587-ca810292f5b0",
+    "listingId": 123,
+    "createdAt": "2020-07-20T12:35:38.049963+01:00",
+    "updatedAt": "2020-07-20T12:35:38.049963+01:00",
+    "status": {
+      "result": "ACTIVATED"
+    },
+    "expiryAt": "2021-07-20T12:36:38.049963+01:00",
+    "isRenewable": false
+  }
+]

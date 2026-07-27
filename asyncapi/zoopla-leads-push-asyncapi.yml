@@ -1,0 +1,127 @@
+asyncapi: 3.0.0
+info:
+  title: Zoopla Lead Push Service
+  version: '1.0.0'
+  description: >-
+    API Evangelist derivation of Zoopla's Lead Push Service. Zoopla publishes no
+    AsyncAPI document; this document is derived from the published push-service
+    documentation at https://developers.zoopla.co.uk/leads/docs/push-service and
+    binds each event to the message schema already declared in Zoopla's own
+    Swagger 2.0 Leads contract. Nothing here is invented — the channel is the
+    member-hosted endpoint Zoopla POSTs to, the two messages are the documented
+    `applicant` and `appraisal` envelopes, and the security schemes are the two
+    inbound methods Zoopla supports (OAuth 2.0 client credentials against the
+    member's token endpoint, or a static API key sent verbatim as the
+    Authorization header value).
+  contact:
+    name: Zoopla Member Services
+    email: members@zoopla.co.uk
+    url: https://developers.zoopla.co.uk/leads/docs/push-service
+  x-apievangelist:
+    generated: '2026-07-26'
+    method: derived
+    source: https://developers.zoopla.co.uk/leads/docs/push-service
+    published_by_provider: false
+defaultContentType: application/json
+servers:
+  consumer:
+    host: 'your-endpoint.example.com'
+    protocol: https
+    description: >-
+      The member-hosted endpoint Zoopla delivers leads to. Zoopla is the client
+      here; the host is whatever the member configures with Zoopla, and a single
+      endpoint may receive both lead types or separate endpoints may be
+      configured per type.
+    security:
+      - $ref: '#/components/securitySchemes/memberOAuth2'
+      - $ref: '#/components/securitySchemes/memberApiKey'
+channels:
+  leads:
+    address: '/'
+    description: >-
+      The member's configured recipient endpoint. Zoopla sends one HTTP POST per
+      lead. When one endpoint receives both types, the top-level key on the
+      payload distinguishes them.
+    servers:
+      - $ref: '#/servers/consumer'
+    messages:
+      applicantLead:
+        $ref: '#/components/messages/applicantLead'
+      appraisalLead:
+        $ref: '#/components/messages/appraisalLead'
+operations:
+  receiveApplicantLead:
+    action: receive
+    channel:
+      $ref: '#/channels/leads'
+    summary: Receive an applicant lead (a consumer looking to buy or rent).
+    description: >-
+      Delivered in real time. Retried for 24 hours if the member endpoint is
+      unavailable; leads are retained for 30 days in total with no self-service
+      replay after the retry window. The same lead is also retrievable from
+      GET /applicant-leads on the Leads poll API.
+    messages:
+      - $ref: '#/channels/leads/messages/applicantLead'
+  receiveAppraisalLead:
+    action: receive
+    channel:
+      $ref: '#/channels/leads'
+    summary: Receive an appraisal lead (an owner asking for a valuation).
+    description: >-
+      Delivered in real time under the same retry and retention rules. Also
+      retrievable from GET /appraisal-leads on the Leads poll API.
+    messages:
+      - $ref: '#/channels/leads/messages/appraisalLead'
+components:
+  messages:
+    applicantLead:
+      name: applicantLead
+      title: Applicant lead
+      summary: A consumer has enquired about buying or renting a property.
+      contentType: application/json
+      payload:
+        type: object
+        required: [applicant]
+        properties:
+          applicant:
+            $ref: '../openapi/zoopla-leads-api-openapi.json#/definitions/Applicant'
+      examples:
+        - name: applicantLeadExample
+          summary: Example applicant payload published in the push-service docs.
+          payload:
+            $ref: '../examples/zoopla-push-applicant-lead.json'
+    appraisalLead:
+      name: appraisalLead
+      title: Appraisal lead
+      summary: A property owner has requested a valuation.
+      contentType: application/json
+      payload:
+        type: object
+        required: [appraisal]
+        properties:
+          appraisal:
+            $ref: '../openapi/zoopla-leads-api-openapi.json#/definitions/Appraisal'
+      examples:
+        - name: appraisalLeadExample
+          summary: Example appraisal payload published in the push-service docs.
+          payload:
+            $ref: '../examples/zoopla-push-appraisal-lead.json'
+  securitySchemes:
+    memberOAuth2:
+      type: oauth2
+      description: >-
+        Zoopla mints a token from the member's own token endpoint using
+        grant_type=client_credentials with the client_id and client_secret the
+        member supplied, then presents it as `Authorization: Bearer {token}`.
+        Client credentials is the only grant supported.
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://your-token-endpoint.example.com/oauth2/token'
+          availableScopes: {}
+    memberApiKey:
+      type: httpApiKey
+      description: >-
+        A static key supplied by the member, sent verbatim as the Authorization
+        header value with no scheme prefix.
+      name: Authorization
+      in: header

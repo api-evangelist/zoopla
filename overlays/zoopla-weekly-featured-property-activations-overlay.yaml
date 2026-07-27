@@ -1,0 +1,39 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Zoopla Weekly Featured Property Activations
+  version: 1.0.0
+extends: openapi/zoopla-weekly-featured-property-activations-openapi.json
+x-apievangelist:
+  generated: '2026-07-26'
+  method: generated
+  source: API Evangelist enrichment round 2026-07-26
+  note: Enhancements layered over the harvested Zoopla contract. The original spec is never mutated.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/zoopla-authentication.yml
+      scopes: scopes/zoopla-scopes.yml
+      conventions: conventions/zoopla-conventions.yml
+      error_codes: errors/zoopla-error-codes.yml
+      examples: examples/_index.yml
+      skills: skills/_index.yml
+    x-apievangelist-error-register: https://developers.zoopla.co.uk/pages/weekly-featured-properties-error-code-register
+    x-apievangelist-async: Accept-then-poll, same as Premium Listings.
+    x-apievangelist-eligibility: The listing must be residential, in the UK, and carry at least one image (errors
+      2011007, 2011008, 2011009).
+- target: $.paths['/products/weekly-featured-properties'].get
+  update:
+    operationId: listWeeklyFeaturedPropertyActivations
+    x-apievangelist-note: operationId supplied by API Evangelist; the harvested spec declares none.
+    x-apievangelist-pagination: Not supported.
+    x-apievangelist-example: examples/zoopla-wfp-activation-list.json
+- target: $.paths['/products/weekly-featured-properties'].post
+  update:
+    operationId: createWeeklyFeaturedPropertyActivation
+    x-apievangelist-consequence: Spends a member credit against the live contract. There is no sandbox or test mode.
+    x-apievangelist-example: examples/zoopla-wfp-accepted-202.json
+- target: $.paths['/products/weekly-featured-properties/{uuid}'].get
+  update:
+    operationId: getWeeklyFeaturedPropertyActivation
+    x-apievangelist-example: examples/zoopla-wfp-activated.json

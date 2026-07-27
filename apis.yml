@@ -2,31 +2,26 @@ aid: zoopla
 url: https://raw.githubusercontent.com/api-evangelist/zoopla/refs/heads/main/apis.yml
 name: Zoopla
 kind: company
-description: >-
-  Zoopla Limited is one of the two dominant residential property portals
-  in the United Kingdom, operating zoopla.co.uk alongside PrimeLocation under the
-  Houseful group (formerly ZPG), which also owns the Alto/Jupix estate-agency CRM
-  software and the Hometrack valuation and mortgage-risk business. In a market with
-  no MLS and no cooperative listing standard, Zoopla sits at the demand end of the
-  value chain — consumers search on the portal, and listings reach it from agency
-  CRM systems rather than from a shared data pool. Its API posture reflects that
-  position honestly: the old public Zoopla listings API on the Mashery-hosted
-  developer.zoopla.co.uk portal has been retired and the site no longer serves a
-  valid certificate, and the current developer documentation at
-  developers.zoopla.co.uk states plainly that "the Zoopla listings API is no longer
-  publicly available." What remains public is a small, real, machine-readable
-  surface aimed at member estate agents and their CRM vendors — a Leads API for
-  polling applicant and appraisal enquiries, a real-time lead Push service, and two
-  product-activation APIs for Premium Listings and Weekly Featured Properties. The
-  documentation and three Swagger/OpenAPI contracts are openly readable with no
-  login, but credentials are not self-serve: you must already be a Zoopla member on
-  a listings package, and client_id/client_secret are issued by Member Services
-  after you send them a GPG public key. There is no RESO Web API or Data Dictionary
-  certification, no OData $metadata document, and no Universal Property Identifier
-  anywhere in Zoopla's stack — RESO is a North American construct and the UK has
-  not adopted it. Zoopla publishes no open data; the open property layer in the UK
-  belongs to the public sector (HM Land Registry Price Paid and Ordnance Survey),
-  not to the portals.
+description: 'Zoopla Limited is one of the two dominant residential property portals in the
+  United Kingdom, operating zoopla.co.uk alongside PrimeLocation under the Houseful group
+  (formerly ZPG), which also owns the Alto/Jupix estate-agency CRM software and the Hometrack
+  valuation and mortgage-risk business. In a market with no MLS and no cooperative listing
+  standard, Zoopla sits at the demand end of the value chain — consumers search on the portal,
+  and listings reach it from agency CRM systems rather than from a shared data pool. Its API
+  posture reflects that position honestly: the old public Zoopla listings API on the Mashery-hosted
+  developer.zoopla.co.uk portal has been retired and the site no longer serves a valid certificate,
+  and the current developer documentation at developers.zoopla.co.uk states plainly that "the
+  Zoopla listings API is no longer publicly available." What remains public is a small, real,
+  machine-readable surface aimed at member estate agents and their CRM vendors — a Leads API
+  for polling applicant and appraisal enquiries, a real-time lead Push service, and two product-activation
+  APIs for Premium Listings and Weekly Featured Properties. The documentation and three Swagger/OpenAPI
+  contracts are openly readable with no login, but credentials are not self-serve: you must
+  already be a Zoopla member on a listings package, and client_id/client_secret are issued
+  by Member Services after you send them a GPG public key. There is no RESO Web API or Data
+  Dictionary certification, no OData $metadata document, and no Universal Property Identifier
+  anywhere in Zoopla''s stack — RESO is a North American construct and the UK has not adopted
+  it. Zoopla publishes no open data; the open property layer in the UK belongs to the public
+  sector (HM Land Registry Price Paid and Ordnance Survey), not to the portals.'
 accessModel:
   pricing: paid
   onboarding: membership-required
@@ -36,130 +31,260 @@ accessModel:
   label: Paid · Zoopla membership required · credentials issued by Member Services
   confidence: high
   source:
-  - documentation
-  - authentication
-  - terms-of-use
+    - documentation
+    - authentication
+    - terms-of-use
   generated: '2026-07-26'
   method: manual
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/groq.png
 tags:
-- Real Estate
-- United Kingdom
-- Property Listings
-- Property Portal
-- PropTech
-- Rentals
-- Estate Agents
-- Leads
-- CRM Integration
+  - Real Estate
+  - United Kingdom
+  - Property Listings
+  - Property Portal
+  - PropTech
+  - Rentals
+  - Estate Agents
+  - Leads
+  - CRM Integration
 created: '2026-07-26'
 modified: '2026-07-26'
 specificationVersion: '0.19'
 apis:
-- aid: zoopla:zoopla-leads-api
-  name: Zoopla Leads API
-  description: Poll-based REST API used by Zoopla member agents to retrieve consumer
-    leads generated on the portal. Applicant leads (buyers and renters enquiring on
-    a property) and appraisal leads (owners asking for a valuation) are served from
-    two separate endpoints with separate OAuth2 scopes. Lead data is retained for
-    30 days. A real-time Push alternative delivers the same payloads to an endpoint
-    you host.
-  humanURL: https://developers.zoopla.co.uk/leads/reference/api
-  baseURL: https://services.zoopla.co.uk
-  tags:
-  - Leads
-  - Real Estate
-  - United Kingdom
-  properties:
-  - type: OpenAPI
-    url: openapi/zoopla-leads-api-openapi.json
-  - type: APIReference
-    url: https://developers.zoopla.co.uk/leads/reference/api
+  - aid: zoopla:zoopla-leads-api
+    name: Zoopla Leads API
+    description: Poll-based REST API used by Zoopla member agents to retrieve consumer leads
+      generated on the portal. Applicant leads (buyers and renters enquiring on a property)
+      and appraisal leads (owners asking for a valuation) are served from two separate endpoints
+      with separate OAuth2 scopes. Lead data is retained for 30 days. A real-time Push alternative
+      delivers the same payloads to an endpoint you host.
+    humanURL: https://developers.zoopla.co.uk/leads/reference/api
+    baseURL: https://services.zoopla.co.uk
+    tags:
+      - Leads
+      - Real Estate
+      - United Kingdom
+    properties:
+      - type: OpenAPI
+        url: openapi/zoopla-leads-api-openapi.json
+      - type: APIReference
+        url: https://developers.zoopla.co.uk/leads/reference/api
+      - type: Documentation
+        url: https://developers.zoopla.co.uk/leads/docs/available-lead-services
+      - type: Documentation
+        url: https://developers.zoopla.co.uk/leads/docs/field-definitions
+      - type: Webhooks
+        url: https://developers.zoopla.co.uk/leads/docs/push-service
+      - type: Authentication
+        url: https://developers.zoopla.co.uk/pages/authentication
+      - type: TermsOfService
+        url: https://developers.zoopla.co.uk/pages/terms-of-use
+      - type: Support
+        url: https://support.zoopla.co.uk/hc/en-gb
+      - type: Overlay
+        url: overlays/zoopla-leads-api-overlay.yaml
+      - type: AsyncAPI
+        url: asyncapi/zoopla-leads-push-asyncapi.yml
+        name: Lead Push Service (derived AsyncAPI 3.0.0)
+      - type: Webhooks
+        url: asyncapi/zoopla-leads-webhooks.yml
+        name: Lead Push Service webhook catalog
+      - type: Examples
+        url: examples/zoopla-push-applicant-lead.json
+        name: Applicant lead payload
+      - type: Examples
+        url: examples/zoopla-push-appraisal-lead.json
+        name: Appraisal lead payload
+      - type: AgentSkill
+        url: skills/zoopla-poll-leads.md
+        name: Poll Zoopla for new applicant and appraisal leads
+      - type: AgentSkill
+        url: skills/zoopla-receive-lead-push.md
+        name: Receive Zoopla leads in real time over the Push Service
+      - type: ErrorCatalog
+        url: errors/zoopla-problem-types.yml
+  - aid: zoopla:zoopla-premium-listing-activations-api
+    name: Zoopla Premium Listing Activations API
+    description: REST API that lets a member agent's CRM activate the Premium Listing product
+      against a Zoopla listing, read the activation history for an account or a single listing_id,
+      check whether a listing is premium at the moment of the call, and patch the highlights
+      chart on an activation.
+    humanURL: https://developers.zoopla.co.uk/premium-listings/reference/api
+    baseURL: https://services.zoopla.co.uk
+    tags:
+      - Property Listings
+      - Real Estate
+      - United Kingdom
+    properties:
+      - type: OpenAPI
+        url: openapi/zoopla-premium-listing-activations-openapi.json
+      - type: APIReference
+        url: https://developers.zoopla.co.uk/premium-listings/reference/api
+      - type: Documentation
+        url: https://developers.zoopla.co.uk/pages/premium-listings
+      - type: Documentation
+        url: https://developers.zoopla.co.uk/pages/premium-listings-highlights-chart
+      - type: Errors
+        url: https://developers.zoopla.co.uk/pages/premium-listings-error-codes-register
+      - type: Authentication
+        url: https://developers.zoopla.co.uk/pages/authentication
+      - type: TermsOfService
+        url: https://developers.zoopla.co.uk/pages/terms-of-use
+      - type: Overlay
+        url: overlays/zoopla-premium-listing-activations-overlay.yaml
+      - type: ErrorCatalog
+        url: errors/zoopla-error-codes.yml
+        name: Premium Listings error code register
+      - type: Examples
+        url: examples/_index.yml
+        name: Example payloads published in the Zoopla docs
+      - type: AgentSkill
+        url: skills/zoopla-activate-premium-listing.md
+        name: Activate a Zoopla Premium Listing from a CRM
+      - type: Postman
+        url: https://support.zoopla.co.uk/hc/en-gb/article_attachments/360016811117/Products-API.json
+        name: Official "01. Products API" Postman collection
+  - aid: zoopla:zoopla-weekly-featured-property-activations-api
+    name: Zoopla Weekly Featured Property (WFP) Activations API
+    description: REST API for activating the Weekly Featured Property product on a Zoopla
+      listing from an agency CRM, reading activation history across an account or for a single
+      listingId, and checking whether a listing is currently configured as a WFP.
+    humanURL: https://developers.zoopla.co.uk/wfp/reference/api
+    baseURL: https://services.zoopla.co.uk
+    tags:
+      - Property Listings
+      - Real Estate
+      - United Kingdom
+    properties:
+      - type: OpenAPI
+        url: openapi/zoopla-weekly-featured-property-activations-openapi.json
+      - type: APIReference
+        url: https://developers.zoopla.co.uk/wfp/reference/api
+      - type: Documentation
+        url: https://developers.zoopla.co.uk/pages/weekly-featured-properties
+      - type: Errors
+        url: https://developers.zoopla.co.uk/pages/weekly-featured-properties-error-code-register
+      - type: Authentication
+        url: https://developers.zoopla.co.uk/pages/authentication
+      - type: TermsOfService
+        url: https://developers.zoopla.co.uk/pages/terms-of-use
+      - type: Overlay
+        url: overlays/zoopla-weekly-featured-property-activations-overlay.yaml
+      - type: ErrorCatalog
+        url: errors/zoopla-error-codes.yml
+        name: Weekly Featured Properties error code register
+      - type: Examples
+        url: examples/_index.yml
+        name: Example payloads published in the Zoopla docs
+      - type: AgentSkill
+        url: skills/zoopla-activate-weekly-featured-property.md
+        name: Activate a Zoopla Weekly Featured Property from a CRM
+      - type: Postman
+        url: https://support.zoopla.co.uk/hc/en-gb/article_attachments/360016810997/Products-API.json
+        name: Official "01. Products API" Postman collection
+      - type: Documentation
+        url: https://developers.zoopla.co.uk/pages/zoopla-apis
+        name: Zoopla APIs index
+common:
+  - type: AgenticAccess
+    url: agentic-access/zoopla-agentic-access.yml
+  - type: VulnerabilityDisclosure
+    url: security/zoopla-vulnerability-disclosure.yml
+  - type: DomainSecurity
+    url: security/zoopla-domain-security.yml
+  - type: OAuthScopes
+    url: scopes/zoopla-scopes.yml
+  - type: Authentication
+    url: authentication/zoopla-authentication.yml
+  - type: Website
+    url: https://www.zoopla.co.uk/
   - type: Documentation
-    url: https://developers.zoopla.co.uk/leads/docs/available-lead-services
-  - type: Documentation
-    url: https://developers.zoopla.co.uk/leads/docs/field-definitions
-  - type: Webhooks
-    url: https://developers.zoopla.co.uk/leads/docs/push-service
+    url: https://developers.zoopla.co.uk/
   - type: Authentication
     url: https://developers.zoopla.co.uk/pages/authentication
   - type: TermsOfService
     url: https://developers.zoopla.co.uk/pages/terms-of-use
+  - type: SignUp
+    url: https://business.zoopla.co.uk/contact-us
   - type: Support
     url: https://support.zoopla.co.uk/hc/en-gb
-- aid: zoopla:zoopla-premium-listing-activations-api
-  name: Zoopla Premium Listing Activations API
-  description: REST API that lets a member agent's CRM activate the Premium Listing
-    product against a Zoopla listing, read the activation history for an account or
-    a single listing_id, check whether a listing is premium at the moment of the
-    call, and patch the highlights chart on an activation.
-  humanURL: https://developers.zoopla.co.uk/premium-listings/reference/api
-  baseURL: https://services.zoopla.co.uk
-  tags:
-  - Property Listings
-  - Real Estate
-  - United Kingdom
-  properties:
-  - type: OpenAPI
-    url: openapi/zoopla-premium-listing-activations-openapi.json
+  - type: Business
+    url: https://business.zoopla.co.uk/
+  - type: ParentCompany
+    url: https://www.houseful.co.uk/
+  - type: GitHubOrganization
+    url: https://github.com/zoopla-eng
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/zoopla
+  - type: DeveloperPortal
+    url: https://developers.zoopla.co.uk/
+    name: Zoopla Developer Docs
+  - type: GettingStarted
+    url: https://developers.zoopla.co.uk/
+    name: Getting Started with Zoopla
   - type: APIReference
-    url: https://developers.zoopla.co.uk/premium-listings/reference/api
-  - type: Documentation
-    url: https://developers.zoopla.co.uk/pages/premium-listings
-  - type: Documentation
-    url: https://developers.zoopla.co.uk/pages/premium-listings-highlights-chart
-  - type: Errors
-    url: https://developers.zoopla.co.uk/pages/premium-listings-error-codes-register
-  - type: Authentication
-    url: https://developers.zoopla.co.uk/pages/authentication
-  - type: TermsOfService
-    url: https://developers.zoopla.co.uk/pages/terms-of-use
-- aid: zoopla:zoopla-weekly-featured-property-activations-api
-  name: Zoopla Weekly Featured Property (WFP) Activations API
-  description: REST API for activating the Weekly Featured Property product on a
-    Zoopla listing from an agency CRM, reading activation history across an account
-    or for a single listingId, and checking whether a listing is currently
-    configured as a WFP.
-  humanURL: https://developers.zoopla.co.uk/wfp/reference/api
-  baseURL: https://services.zoopla.co.uk
-  tags:
-  - Property Listings
-  - Real Estate
-  - United Kingdom
-  properties:
-  - type: OpenAPI
-    url: openapi/zoopla-weekly-featured-property-activations-openapi.json
-  - type: APIReference
-    url: https://developers.zoopla.co.uk/wfp/reference/api
-  - type: Documentation
-    url: https://developers.zoopla.co.uk/pages/weekly-featured-properties
-  - type: Errors
-    url: https://developers.zoopla.co.uk/pages/weekly-featured-properties-error-code-register
-  - type: Authentication
-    url: https://developers.zoopla.co.uk/pages/authentication
-  - type: TermsOfService
-    url: https://developers.zoopla.co.uk/pages/terms-of-use
-common:
-- type: Website
-  url: https://www.zoopla.co.uk/
-- type: Documentation
-  url: https://developers.zoopla.co.uk/
-- type: Authentication
-  url: https://developers.zoopla.co.uk/pages/authentication
-- type: TermsOfService
-  url: https://developers.zoopla.co.uk/pages/terms-of-use
-- type: SignUp
-  url: https://business.zoopla.co.uk/contact-us
-- type: Support
-  url: https://support.zoopla.co.uk/hc/en-gb
-- type: Business
-  url: https://business.zoopla.co.uk/
-- type: ParentCompany
-  url: https://www.houseful.co.uk/
-- type: GitHubOrganization
-  url: https://github.com/zoopla-eng
-- type: LinkedIn
-  url: https://www.linkedin.com/company/zoopla
+    url: https://developers.zoopla.co.uk/pages/zoopla-apis
+    name: Zoopla APIs index
+  - type: Security
+    url: https://www.zoopla.co.uk/vulnerability-disclosure/
+    name: Vulnerability disclosure
+  - type: SecurityTxt
+    url: well-known/zoopla-security.txt
+  - type: WellKnown
+    url: well-known/zoopla-well-known.yml
+  - type: Packages
+    url: packages/zoopla-packages.yml
+  - type: Postman
+    url: https://support.zoopla.co.uk/hc/en-gb/article_attachments/360016811117/Products-API.json
+    name: Official "01. Products API" Postman collection
+  - type: Postman
+    url: postman/zoopla-products-api.postman_collection.json
+    name: Archived copy of the official Postman collection
+  - type: MCPServer
+    url: mcp/zoopla-mcp.yml
+    name: Candidate MCP tool surface (no hosted server published)
+  - type: ToolCrosswalk
+    url: mcp/zoopla-tool-crosswalk.yml
+  - type: LLMsTxt
+    url: llms/zoopla-llms.txt
+  - type: Conformance
+    url: conformance/zoopla-conformance.yml
+  - type: ErrorCatalog
+    url: errors/zoopla-error-codes.yml
+    name: Published numeric error registers
+  - type: ErrorCatalog
+    url: errors/zoopla-problem-types.yml
+    name: Error responses derived from the specs
+  - type: Lifecycle
+    url: lifecycle/zoopla-lifecycle.yml
+  - type: Conventions
+    url: conventions/zoopla-conventions.yml
+  - type: DataModel
+    url: data-model/zoopla-data-model.yml
+  - type: AsyncAPI
+    url: asyncapi/zoopla-leads-push-asyncapi.yml
+    name: Lead Push Service (derived AsyncAPI 3.0.0)
+  - type: Webhooks
+    url: asyncapi/zoopla-leads-webhooks.yml
+    name: Lead Push Service webhook catalog
+  - type: Examples
+    url: examples/_index.yml
+    name: Example payloads published in the Zoopla docs
+  - type: AgentSkill
+    url: skills/_index.yml
+    name: Zoopla agent skills
+  - type: AgentSkill
+    url: skills/zoopla-poll-leads.md
+    name: Poll Zoopla for new applicant and appraisal leads
+  - type: AgentSkill
+    url: skills/zoopla-receive-lead-push.md
+    name: Receive Zoopla leads in real time over the Push Service
+  - type: AgentSkill
+    url: skills/zoopla-activate-premium-listing.md
+    name: Activate a Zoopla Premium Listing from a CRM
+  - type: AgentSkill
+    url: skills/zoopla-activate-weekly-featured-property.md
+    name: Activate a Zoopla Weekly Featured Property from a CRM
 maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
+  - FN: Kin Lane
+    email: kin@apievangelist.com

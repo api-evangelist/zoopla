@@ -1,0 +1,8 @@
+{
+  "errors": [
+    {
+      "reason": "There is already a weekly featured property activation pending for this listing ID",
+      "code": 2011004
+    }
+  ]
+}

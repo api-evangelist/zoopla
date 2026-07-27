@@ -1,0 +1,90 @@
+generated: '2026-07-26'
+method: searched
+source: https://developers.zoopla.co.uk/leads/docs/push-service
+name: Zoopla Lead Push Service
+summary: >-
+  Zoopla's only event surface is an outbound webhook: the Lead Push Service
+  POSTs one HTTP request per lead, in real time, to an endpoint the member
+  hosts. The relationship is inverted from the rest of the platform — Zoopla is
+  the client and the member is the server — so the member supplies either their
+  own OAuth 2.0 token endpoint plus credentials, or a static API key that Zoopla
+  sends verbatim as the Authorization header value. There is no event bus, no
+  streaming surface, no WebSocket and no published AsyncAPI document.
+asyncapi_published: false
+delivery:
+  style: outbound webhook (HTTP POST per lead)
+  content_type: application/json
+  direction: Zoopla -> member endpoint
+  endpoints: >-
+    One recipient endpoint can receive everything, or separate endpoints can be
+    configured for applicant and appraisal leads. When one endpoint is shared,
+    the two are distinguished by the top-level key on the payload.
+  retry: >-
+    Retried for 24 hours against an unavailable consumer. After that there is no
+    automatic replay; leads are retained for a further 29 days (30 total) and a
+    manual recovery may be possible by contacting Zoopla.
+  ordering: not documented
+  signature_verification: >-
+    None. Zoopla authenticates itself to the member endpoint with the member's
+    own OAuth token or API key; there is no request-signing scheme, no shared
+    secret HMAC and no timestamp header to verify.
+authentication_to_consumer:
+  methods:
+  - method: oauth2
+    grant: client_credentials
+    requires_from_member: [client_id, client_secret, token endpoint, audience (configuration dependent)]
+    usage: 'Authorization: Bearer {access_token}'
+  - method: api_key
+    requires_from_member: [key]
+    usage: 'Authorization: {api-key}   # sent verbatim, no scheme prefix'
+filters:
+- name: applicant leads
+  description: Consumers looking to buy or rent properties.
+- name: appraisal leads
+  description: Consumers looking to sell or let properties.
+- name: sales leads
+  description: Consumers looking to buy or sell properties.
+- name: lettings leads
+  description: Consumers looking to rent or let properties.
+filter_note: All four are independent booleans set per configured endpoint.
+events:
+- name: applicant.lead
+  top_level_key: applicant
+  description: >-
+    A consumer has enquired about a property they want to buy or rent. Payload
+    carries contact details and preferences, intent, enquiry type, free-text
+    message, viewing times, consumer situation and postcode, the search criteria
+    behind the enquiry, and full details of the listing enquired about.
+  schema: openapi/zoopla-leads-api-openapi.json#/definitions/Applicant
+  example: examples/zoopla-push-applicant-lead.json
+  also_available_by_poll: 'GET /applicant-leads'
+- name: appraisal.lead
+  top_level_key: appraisal
+  description: >-
+    A property owner has asked for a valuation. Payload carries contact details,
+    intent, whether they are "just curious", and full property details including
+    size, tenure, energy rating, an automated estimate with confidence band, last
+    sale price and coordinates.
+  schema: openapi/zoopla-leads-api-openapi.json#/definitions/Appraisal
+  example: examples/zoopla-push-appraisal-lead.json
+  also_available_by_poll: 'GET /appraisal-leads'
+compatibility:
+  additive_change_without_notice: true
+  evidence: '"NOTE: New fields and enum values can be added at any time."'
+consumer_obligations:
+- >-
+  Sanitise the `message` field before display — it is user-generated and may
+  contain HTML or other formatting.
+- Tolerate unknown fields and unknown enum members.
+- >-
+  Acknowledge quickly; a consumer outage longer than 24 hours loses automatic
+  redelivery.
+alternatives:
+  poll: >-
+    The same lead payloads are available by polling the Leads API, which returns
+    the last 24 hours by default and supports a from-time/to-time window over the
+    full 30-day retention period. Push is recommended where latency matters.
+  legacy: >-
+    Leads were historically delivered as XML over FTP; that mechanism is
+    superseded by push and poll.
+derived_spec: asyncapi/zoopla-leads-push-asyncapi.yml

@@ -1,0 +1,52 @@
+generated: '2026-07-26'
+method: searched
+docs: https://developers.zoopla.co.uk/pages/authentication
+source: openapi/zoopla-leads-api-openapi.json, openapi/zoopla-premium-listing-activations-openapi.json,
+  openapi/zoopla-weekly-featured-property-activations-openapi.json, https://developers.zoopla.co.uk/pages/authentication
+note: >-
+  Zoopla publishes no scopes reference page. The authentication guide documents
+  only `scope=api/api_access` on the token request for the activation APIs; the
+  two lead scopes appear in the Leads contract and are not named anywhere in
+  prose. The split is worth noting: leads use resource-scoped strings
+  (leads/list:applicant-leads, leads/list:appraisal-leads) while both activation
+  APIs — including the two operations that spend money — share one coarse
+  api/api_access scope, so scope alone cannot separate reading an activation
+  history from buying a product.
+schemes:
+- name: OAuth2
+  source: openapi/zoopla-leads-api-openapi.json
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://services-auth.services.zoopla.co.uk/oauth2/token
+- name: oAuthSample
+  source: openapi/zoopla-premium-listing-activations-openapi.json
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://services-auth.services.zoopla.co.uk/oauth2/token
+  description: This API uses OAuth 2 with the client credentials grant flow.
+- name: oAuthSample
+  source: openapi/zoopla-weekly-featured-property-activations-openapi.json
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://services-auth.services.zoopla.co.uk/oauth2/token
+  description: This API uses OAuth 2 with the client credentials grant flow.
+scopes:
+- scope: api/api_access
+  description: access to the API
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/zoopla-premium-listing-activations-openapi.json
+  - openapi/zoopla-weekly-featured-property-activations-openapi.json
+- scope: leads/list:applicant-leads
+  description: Grants read access to applicant lead lists
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/zoopla-leads-api-openapi.json
+- scope: leads/list:appraisal-leads
+  description: Grants read access to appraisal lead lists
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/zoopla-leads-api-openapi.json

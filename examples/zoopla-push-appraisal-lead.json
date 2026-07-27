@@ -1,0 +1,62 @@
+{
+  "appraisal": {
+    "id": "f24dd54d-1425-48f4-8d31-3c79663ae97e",
+    "enquiryType": "ENQUIRY_TYPE_SALES",
+    "contact": {
+      "firstName": "Joe",
+      "lastName": "Bloggs",
+      "phoneNumber": "00000000",
+      "email": "joe@bloggs.com",
+      "preferences": {
+        "method": "CONTACT_METHOD_PHONE",
+        "time": "TIME_PREFERENCE_AFTERNOON"
+      }
+    },
+    "createdAt": "2021-03-29T12:40:59Z",
+    "intent": "APPRAISAL_INTENT_SELL",
+    "message": "I am looking to sell my home",
+    "propertyUse": "PROPERTY_USE_RESIDENTIAL",
+    "isOverseas": false,
+    "portalLeadId": "000000",
+    "portalBranchId": "000000",
+    "portalCompanyId": "00000",
+    "portalGroupId": "00000",
+    "sourceBranchId": "000000",
+    "propertyDetails": {
+      "propertyId": "000000",
+      "uprn": 12345,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "receptions": 1,
+      "floorArea": 96,
+      "tenure": "Leasehold",
+      "propertyType": "PROPERTY_TYPE_FLAT",
+      "estimate": {
+        "lowerRange": 100000,
+        "upperRange": 200000,
+        "value": 150000,
+        "confidence": 90,
+        "confidenceBand": "CONFIDENCE_BAND_HIGH"
+      },
+      "lastSalePrice": 300000,
+      "latitude": 0,
+      "longitude": 0,
+      "address": {
+        "line1": "Example Flat",
+        "line2": "Example Road",
+        "line3": "Example Area",
+        "town": "Town",
+        "county": "County",
+        "postcode": "SW1 1AA"
+      },
+      "energy": {
+        "efficiency": 86,
+        "rating": "B"
+      }
+    },
+    "justCurious": false,
+    "recipientEmail": "example-recipient-sales@example.com",
+    "leadSource": "APPRAISAL_SOURCE_ZOOPLA_WEBSITE",
+    "portalSource": "APPRAISAL_PORTAL_SOURCE_ASKANAGENT"
+  }
+}

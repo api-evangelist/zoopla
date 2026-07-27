@@ -1,0 +1,106 @@
+generated: '2026-07-26'
+method: derived
+status: candidate
+source: >-
+  Derived from Zoopla's three published contracts. Searched for an official
+  server first: the MCP registry (registry.modelcontextprotocol.io) returns no
+  Zoopla entry, npm has no Zoopla MCP package, and the developer portal at
+  developers.zoopla.co.uk documents no agent, MCP or AI surface.
+search:
+  official_server_found: false
+  registries_probed:
+  - registry.modelcontextprotocol.io
+  - npm
+  docs_probed:
+  - https://developers.zoopla.co.uk/
+server:
+  name: zoopla
+  transport: http
+  url: null
+  note: >-
+    Candidate only — no hosted Zoopla MCP server exists. This manifest describes
+    what a faithful server over Zoopla's published operations would expose, so
+    the tool surface can be catalogued and crosswalked. Every tool below is
+    backed by a real operation in a real spec; nothing here is invented.
+auth:
+  scheme: oauth2
+  flow: clientCredentials
+  token_url: https://services-auth.services.zoopla.co.uk/oauth2/token
+  note: >-
+    Machine-to-machine only, with credentials issued manually by Zoopla Member
+    Services. There is no user-consent flow, so any MCP deployment would run as
+    a single member agency's service identity.
+tools:
+- name: list_applicant_leads
+  description: >-
+    List applicant leads (consumers enquiring about buying or renting), filtered
+    by time window and agency hierarchy. Defaults to the last 24 hours.
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /applicant-leads
+  scope: leads/list:applicant-leads
+  read_only: true
+- name: list_appraisal_leads
+  description: >-
+    List appraisal leads (owners asking for a valuation), filtered by time window
+    and agency hierarchy. Defaults to the last 24 hours.
+  source_operation: openapi/zoopla-leads-api-openapi.json#GET /appraisal-leads
+  scope: leads/list:appraisal-leads
+  read_only: true
+- name: list_premium_listing_activations
+  description: >-
+    List Premium Listing activation requests the caller can see, optionally
+    narrowed to one listingId and/or to activations that are currently active.
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#GET /products/premium-listings
+  scope: api/api_access
+  read_only: true
+- name: get_premium_listing_activation
+  description: Get one Premium Listing activation by its uuid, including its current status.
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#GET /products/premium-listings/{uuid}
+  scope: api/api_access
+  read_only: true
+- name: activate_premium_listing
+  description: >-
+    Request activation of the Premium Listing product for a listing, optionally
+    with highlights. Consumes a credit; returns 202 with a PENDING activation.
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#POST /products/premium-listings
+  scope: api/api_access
+  read_only: false
+  consequence: spends a member credit
+- name: update_premium_listing_highlights
+  description: Patch the highlights chart on an active Premium Listing activation.
+  source_operation: openapi/zoopla-premium-listing-activations-openapi.json#PATCH /products/premium-listings/{uuid}
+  scope: api/api_access
+  read_only: false
+- name: list_weekly_featured_property_activations
+  description: >-
+    List Weekly Featured Property activation requests, optionally narrowed to one
+    listingId and/or to activations that are currently active.
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#GET /products/weekly-featured-properties
+  scope: api/api_access
+  read_only: true
+- name: get_weekly_featured_property_activation
+  description: Get one Weekly Featured Property activation by its uuid.
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#GET /products/weekly-featured-properties/{uuid}
+  scope: api/api_access
+  read_only: true
+- name: activate_weekly_featured_property
+  description: >-
+    Request activation of the Weekly Featured Property product for a listing.
+    Consumes a credit; returns 202 with a PENDING activation.
+  source_operation: openapi/zoopla-weekly-featured-property-activations-openapi.json#POST /products/weekly-featured-properties
+  scope: api/api_access
+  read_only: false
+  consequence: spends a member credit
+agent_notes:
+- >-
+  Two of the nine tools spend money. Zoopla has no sandbox and no test mode, so
+  an agent calling activate_premium_listing or activate_weekly_featured_property
+  is transacting against a live member contract on the first call. See
+  agentic-access/zoopla-agentic-access.yml for the recommended execution
+  contracts.
+- >-
+  There is no idempotency key. A retried activation is rejected as a duplicate
+  (errors 1011003/1011004, 2011004/2011005) rather than replayed, so an agent
+  must read those codes as "already done".
+- >-
+  Activation is asynchronous: the write tools return PENDING and the agent has
+  to poll the matching get_* tool until the status resolves.

@@ -1,0 +1,97 @@
+{
+  "applicant": {
+    "id": "dcec2eae-2002-4198-bc1d-fa32e9fdc389",
+    "contact": {
+      "firstName": "Joe",
+      "lastName": "Bloggs",
+      "phoneNumber": "00000 000000",
+      "email": "joe@bloggs.com",
+      "preferences": {
+        "method": "CONTACT_METHOD_PHONE",
+        "time": "TIME_PREFERENCE_AFTERNOON"
+      }
+    },
+    "createdAt": "2021-04-12T15:19:53Z",
+    "intent": "APPLICANT_INTENT_BUY",
+    "enquiryType": "ENQUIRY_TYPE_SALES",
+    "message": "Hello\r\n\r\nWe're very interested in viewing this property",
+    "propertyUse": "PROPERTY_USE_RESIDENTIAL",
+    "isOverseas": false,
+    "portalLeadId": "00000000",
+    "portalBranchId": "00000",
+    "portalCompanyId": "00000",
+    "portalGroupId": "00000",
+    "sourceBranchId": "000000",
+    "viewingTimes": [
+      {
+        "earliest": "2021-04-18T12:00:00Z",
+        "latest": "2021-04-18T17:00:00Z"
+      }
+    ],
+    "organiseViewing": true,
+    "requestPropertyDetails": false,
+    "consumerSituation": "CONSUMER_SITUATION_FIRST_TIME_BUYER",
+    "consumerPostcode": "NW3 3DN",
+    "recipientEmail": "example-recipient-sales@example.com",
+    "leadSource": "APPLICANT_SOURCE_ZOOPLA_WEBSITE",
+    "portalSource": "APPLICANT_PORTAL_SOURCE_LISTING",
+    "searchCriteria": {
+      "location": {
+        "alias": "test-alias",
+        "area": "test-area",
+        "areaStreet": "test-area-street",
+        "country": "test-country",
+        "countyArea": "test-county-area",
+        "incode": "test-incode",
+        "outcode": "test-outcode",
+        "postTown": "test-post-town",
+        "postalArea": "test-postal-area",
+        "region": "test-region",
+        "district": "test-district",
+        "countryCode": "test-country-code"
+      },
+      "radius": 5,
+      "minimumBedrooms": 1,
+      "maximumBedrooms": 11,
+      "minimumPrice": 999999,
+      "maximumPrice": 9999999,
+      "priceFrequency": "RENT_FREQUENCY_PER_WEEK",
+      "propertyType": "PROPERTY_TYPE_HOUSEBOAT",
+      "propertySubType": "Terraced"
+    },
+    "listingDetails": {
+      "id": "000000",
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "receptions": 1,
+      "lifeCycleStatus": "LIFE_CYCLE_STATUS_FOR_SALE",
+      "address": {
+        "propertyNumberOrName": "1",
+        "streetName": "Wadham Gardens",
+        "locality": "",
+        "townOrCity": "LONDON",
+        "postcode": "PO5T C0D3",
+        "countryCode": "GB"
+      },
+      "pricing": {
+        "transactionType": "TRANSACTION_TYPE_SALE",
+        "currencyCode": "gbp",
+        "price": 123456.78,
+        "rentFrequency": "RENT_FREQUENCY_PER_MONTH"
+      },
+      "propertyId": 0,
+      "uprn": 12345,
+      "propertyType": "PROPERTY_TYPE_FLAT",
+      "sourceBranchId": "000000",
+      "sourceId": "000000",
+      "url": "https://www.zoopla.co.uk/for-sale/details/58391988",
+      "images": [
+        {
+          "original": "https://lc.zoocdn.com/324dafa495e710565615f2bf329b3b56265c08ba.jpg",
+          "cdnUrl": "https://lc.zoocdn.com/",
+          "filename": "324dafa495e710565615f2bf329b3b56265c08ba.jpg"
+        }
+      ]
+    }
+  }
+}

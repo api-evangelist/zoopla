@@ -1,0 +1,53 @@
+generated: '2026-07-26'
+method: generated
+source: >-
+  Generated from Zoopla's three published contracts plus the developer
+  documentation at developers.zoopla.co.uk. Zoopla publishes no AGENTS.md and no
+  agent skills of its own — searched and not found.
+note: >-
+  None of Zoopla's specs declares an operationId, so every step below is grounded
+  in the method + path as published in the contract, which is how Zoopla's own
+  documentation addresses these operations. Suggested operationIds are recorded
+  separately in overlays/ and are clearly marked as API Evangelist additions.
+skills:
+- file: zoopla-poll-leads.md
+  name: Poll Zoopla for new applicant and appraisal leads
+  api: openapi/zoopla-leads-api-openapi.json
+  operations:
+  - GET /applicant-leads
+  - GET /appraisal-leads
+  scopes:
+  - leads/list:applicant-leads
+  - leads/list:appraisal-leads
+  read_only: true
+- file: zoopla-receive-lead-push.md
+  name: Receive Zoopla leads in real time over the Push Service
+  api: asyncapi/zoopla-leads-push-asyncapi.yml
+  operations:
+  - receiveApplicantLead
+  - receiveAppraisalLead
+  read_only: true
+  note: Inbound webhook — the member hosts the endpoint and Zoopla is the client.
+- file: zoopla-activate-premium-listing.md
+  name: Activate a Zoopla Premium Listing from a CRM
+  api: openapi/zoopla-premium-listing-activations-openapi.json
+  operations:
+  - POST /products/premium-listings
+  - GET /products/premium-listings/{uuid}
+  - GET /products/premium-listings
+  - PATCH /products/premium-listings/{uuid}
+  scopes:
+  - api/api_access
+  read_only: false
+  spends_money: true
+- file: zoopla-activate-weekly-featured-property.md
+  name: Activate a Zoopla Weekly Featured Property from a CRM
+  api: openapi/zoopla-weekly-featured-property-activations-openapi.json
+  operations:
+  - POST /products/weekly-featured-properties
+  - GET /products/weekly-featured-properties/{uuid}
+  - GET /products/weekly-featured-properties
+  scopes:
+  - api/api_access
+  read_only: false
+  spends_money: true

@@ -1,0 +1,9 @@
+{
+  "listingID": 123,
+  "highlights": [
+    {
+      "id": 456,
+      "description": "optional text description of highlight"
+    }
+  ]
+}

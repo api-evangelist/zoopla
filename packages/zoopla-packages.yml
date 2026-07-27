@@ -1,0 +1,58 @@
+generated: '2026-07-26'
+method: searched
+source: >-
+  npm registry search, PyPI, RubyGems, and the Zoopla developer portal
+  (developers.zoopla.co.uk)
+summary:
+  official_packages: 0
+  third_party_packages: 5
+  note: >-
+    Zoopla publishes no first-party client library in any language. The
+    developer portal documents raw HTTP + OAuth 2.0 client-credentials only, and
+    the two public GitHub organisations (zoopla-eng, zoopla) contain no SDK — only
+    an org profile repo, a technical-interview starter, and a forked C# style
+    guide. Every package found on a public registry is community-built and all of
+    them target the retired public Zoopla listings API, so they no longer work
+    against a live Zoopla surface. The one artifact Zoopla does publish for
+    getting started is a Postman collection, catalogued at
+    postman/zoopla-products-api.postman_collection.json.
+packages: []
+third_party:
+- language: javascript
+  registry: npm
+  name: zoopla
+  url: https://www.npmjs.com/package/zoopla
+  repository: https://github.com/InsidersByte/zoopla
+  official: false
+  targets: retired public Zoopla listings API
+- language: javascript
+  registry: npm
+  name: zoopla-scraper
+  url: https://www.npmjs.com/package/zoopla-scraper
+  repository: https://github.com/ISNIT0/Zoopla-Scraper
+  official: false
+  targets: HTML scraping, not an API client
+- language: python
+  registry: pypi
+  name: zoopla
+  url: https://pypi.org/project/zoopla/
+  official: false
+  targets: retired public Zoopla listings API
+- language: python
+  registry: pypi
+  name: pyzoopla
+  url: https://pypi.org/project/pyzoopla/
+  official: false
+  targets: retired public Zoopla listings API
+- language: ruby
+  registry: rubygems
+  name: zoopla
+  url: https://rubygems.org/gems/zoopla
+  repository: http://github.com/shadchnev/zoopla
+  official: false
+  targets: retired public Zoopla listings API
+registries_probed:
+- npm
+- pypi
+- rubygems
+- github (zoopla-eng, zoopla)

@@ -1,0 +1,48 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Zoopla Premium Listing Activations
+  version: 1.0.0
+extends: openapi/zoopla-premium-listing-activations-openapi.json
+x-apievangelist:
+  generated: '2026-07-26'
+  method: generated
+  source: API Evangelist enrichment round 2026-07-26
+  note: Enhancements layered over the harvested Zoopla contract. The original spec is never mutated.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/zoopla-authentication.yml
+      scopes: scopes/zoopla-scopes.yml
+      conventions: conventions/zoopla-conventions.yml
+      error_codes: errors/zoopla-error-codes.yml
+      examples: examples/_index.yml
+      data_model: data-model/zoopla-data-model.yml
+      skills: skills/_index.yml
+    x-apievangelist-error-register: https://developers.zoopla.co.uk/pages/premium-listings-error-codes-register
+    x-apievangelist-async: 'Accept-then-poll: POST returns 202 with status.result PENDING; poll GET /products/premium-listings/{uuid}
+      until ACTIVATED or ERROR.'
+    x-apievangelist-idempotency: No idempotency key. Duplicate activations are rejected by a natural-key guard on
+      listingId (errors 1011003/1011004).
+- target: $.paths['/products/premium-listings'].get
+  update:
+    operationId: listPremiumListingActivations
+    x-apievangelist-note: operationId supplied by API Evangelist; the harvested spec declares none.
+    x-apievangelist-pagination: Not supported. The API returns a bare array.
+    x-apievangelist-example: examples/zoopla-premium-listing-activation-list.json
+- target: $.paths['/products/premium-listings'].post
+  update:
+    operationId: createPremiumListingActivation
+    x-apievangelist-note: operationId supplied by API Evangelist; the harvested spec declares none.
+    x-apievangelist-consequence: Spends a member credit against the live contract. There is no sandbox or test mode.
+    x-apievangelist-example: examples/zoopla-premium-listing-accepted-202.json
+- target: $.paths['/products/premium-listings/{uuid}'].get
+  update:
+    operationId: getPremiumListingActivation
+    x-apievangelist-example: examples/zoopla-premium-listing-activated.json
+- target: $.paths['/products/premium-listings/{uuid}'].patch
+  update:
+    operationId: updatePremiumListingHighlights
+    x-apievangelist-constraint: Only an ACTIVATED activation whose expiry is in the future can be updated (error
+      1011043), and only one update may be in flight (error 1011044).
+    x-apievangelist-example: examples/zoopla-premium-listing-highlights-patch-response.json
