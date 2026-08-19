@@ -1,0 +1,1204 @@
+{
+  "item": [
+    {
+      "id": "0b2b874d-c241-44d5-a1c3-2839f641ea3f",
+      "name": "Returns listing for specific uuid",
+      "request": {
+        "name": "Returns listing for specific uuid",
+        "description": {
+          "content": "If the UUID exists, it  will return a premium listing, if it does not or if it is an invalid UUID it will return an error\n",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "products",
+            "premium-listings",
+            ":uuid"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "uuid",
+              "description": "(Required) Returns premium listing for a given uuid"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "fd57fba1-0de0-4c7d-b5ca-744c3664add4",
+          "name": "OK. Request body contains premium listing for a given UUID",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uuid",
+                  "description": "(Required) Returns premium listing for a given uuid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"listingId\": 1234,\n  \"id\": \"71aece80-ed0f-c504-f2a9-08832dd0e089\",\n  \"createdAt\": \"1957-05-14T22:46:50.163Z\",\n  \"updatedAt\": \"1970-10-13T19:20:56.286Z\",\n  \"createdBy\": \"string\",\n  \"status\": {\n    \"result\": \"ERROR\",\n    \"currently\": \"WAITING_FOR_UPDATE\",\n    \"errors\": {\n      \"errors\": [\n        {\n          \"reason\": \"JSON schema requirements not met\",\n          \"code\": 1011003\n        },\n        {\n          \"reason\": \"JSON schema requirements not met\",\n          \"code\": 1011003\n        }\n      ]\n    }\n  },\n  \"expiryAt\": \"2014-03-06T05:03:21.773Z\",\n  \"highlights\": [\n    {\n      \"id\": 6651,\n      \"description\": \"string\",\n      \"key\": \"string\"\n    },\n    {\n      \"id\": 9323,\n      \"description\": \"string\",\n      \"key\": \"string\"\n    }\n  ],\n  \"customDetails\": {}\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "fbbfc18c-f302-442b-a76b-8ae7618d7f06",
+          "name": "Not found. Premium listing doesn't exist or client doesn't have access to it",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uuid",
+                  "description": "(Required) Returns premium listing for a given uuid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        },
+        {
+          "id": "19134900-b9d2-48a6-a395-8d51f1974600",
+          "name": "Internal Server Error",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uuid",
+                  "description": "(Required) Returns premium listing for a given uuid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Internal Server Error",
+          "code": 500,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "8145e6b1-9360-4ebd-adb5-56dd87916345",
+      "name": "Updates highlights for a specific uuid",
+      "request": {
+        "name": "Updates highlights for a specific uuid",
+        "description": {
+          "content": "If the highlights are valid and the premium listing is `ACTIVE` and not currently awaiting an existing update it will return the premium listing with a `WAITING_FOR_UPDATE` status. If the highlights are invalid, the premium listing is not currently `ACTIVE` or the listing is already `WAITING_FOR_UPDATE` it will return the appropriate error.\n",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "products",
+            "premium-listings",
+            ":uuid"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "uuid",
+              "description": "(Required) The uuid for the premium listing that the caller is trying to update"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "PATCH",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "bb06da08-167a-44e7-810d-b287f9f2d295",
+          "name": "Accepted. We are trying to update highlights on your premium listing. Please check the result soon.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uuid",
+                  "description": "(Required) The uuid for the premium listing that the caller is trying to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Accepted",
+          "code": 202,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"listingId\": 1234,\n  \"id\": \"13e1d988-3783-70b9-49d1-4a97e4c703bd\",\n  \"createdAt\": \"2010-01-19T05:07:52.330Z\",\n  \"updatedAt\": \"2003-12-26T15:01:59.569Z\",\n  \"createdBy\": \"string\",\n  \"status\": {\n    \"result\": \"ERROR\",\n    \"currently\": \"WAITING_FOR_UPDATE\",\n    \"errors\": {\n      \"errors\": [\n        {\n          \"reason\": \"JSON schema requirements not met\",\n          \"code\": 1011003\n        },\n        {\n          \"reason\": \"JSON schema requirements not met\",\n          \"code\": 1011003\n        }\n      ]\n    }\n  },\n  \"expiryAt\": \"1958-01-08T08:46:54.160Z\",\n  \"highlights\": [\n    {\n      \"id\": 2787,\n      \"description\": \"string\",\n      \"key\": \"string\"\n    },\n    {\n      \"id\": 7452,\n      \"description\": \"string\",\n      \"key\": \"string\"\n    }\n  ],\n  \"customDetails\": {}\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "266bd68d-36fb-4f95-8e88-3bddea039481",
+          "name": "Bad request. Something wrong with the request, for example invalid highlights provided.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uuid",
+                  "description": "(Required) The uuid for the premium listing that the caller is trying to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"errors\": [\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    },\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "f77461a0-a8a2-4d37-b846-492a3791ef6c",
+          "name": "Forbidden client error, for example, no access to branch.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uuid",
+                  "description": "(Required) The uuid for the premium listing that the caller is trying to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Forbidden",
+          "code": 403,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"errors\": [\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    },\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "5ee48c5d-4f1a-4f41-9a38-4f89e016a849",
+          "name": "Resource not found",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uuid",
+                  "description": "(Required) The uuid for the premium listing that the caller is trying to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"errors\": [\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    },\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "bcffff3d-d64a-4b1d-8cd9-308dac1373e9",
+          "name": "Conflict",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uuid",
+                  "description": "(Required) The uuid for the premium listing that the caller is trying to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Conflict",
+          "code": 409,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"errors\": [\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    },\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "ef39e30f-242d-41b9-9237-466c35f6c602",
+          "name": "Internal Server Error",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "uuid",
+                  "description": "(Required) The uuid for the premium listing that the caller is trying to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Internal Server Error",
+          "code": 500,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"errors\": [\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    },\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "91f58889-7a10-4b3c-a229-b6d4e6154dcb",
+      "name": "Returns all requested upgrades to premium listings that the caller has access to",
+      "request": {
+        "name": "Returns all requested upgrades to premium listings that the caller has access to",
+        "description": {
+          "content": "If no parameters are given, the response will return all premium listings for the caller. If the response is an **empty** array it means that there are no premium listings for the caller, activated or not. If the caller needs to filter premium listings, we provide the below query parameters.\n",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "products",
+            "premium-listings"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "listingId",
+              "value": "<string>",
+              "description": "The Zoopla internal listingId to return activation requests for. If listingId and customerListingId are provided together it will return an `error`. If no listingId is given it will return all premium listing activations.\n"
+            },
+            {
+              "disabled": false,
+              "key": "customerListingId",
+              "value": "<string>",
+              "description": "An optional parameter which is a customer identifier of a listingId which Zoopla can match to an internal listingId. If the customerListingId cannot be matched to a listingId it will return an `error`. If customerListingId and listingId are provided together it will return an `error`.\n"
+            },
+            {
+              "disabled": false,
+              "key": "date_from",
+              "value": "<string>",
+              "description": "And optional parameter to filter response by created date starting from date provided. An RFC3339 time format is required. E.g 2022-02-11T14:14:10.776Z\n"
+            },
+            {
+              "disabled": false,
+              "key": "date_to",
+              "value": "<string>",
+              "description": "And optional parameter to filter response by created date ending with the date provided. An RFC3339 time format is required. E.g 2022-02-11T14:14:10.776Z      \n"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "3295ceda-a8bf-47a1-959f-c60c1a7f250a",
+          "name": "OK. Request body contains the list of requested upgrades to premium listing.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "listingId",
+                  "value": "<string>"
+                },
+                {
+                  "key": "customerListingId",
+                  "value": "<string>"
+                },
+                {
+                  "key": "date_from",
+                  "value": "<string>"
+                },
+                {
+                  "key": "date_to",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  {\n    \"listingId\": 1234,\n    \"id\": \"4eb84300-5b1e-2773-a3ef-83df6a8e8e66\",\n    \"createdAt\": \"2000-04-07T06:55:48.958Z\",\n    \"updatedAt\": \"1973-07-15T22:10:27.414Z\",\n    \"createdBy\": \"string\",\n    \"status\": {\n      \"result\": \"ERROR\",\n      \"currently\": \"WAITING_FOR_UPDATE\",\n      \"errors\": {\n        \"errors\": [\n          {\n            \"reason\": \"JSON schema requirements not met\",\n            \"code\": 1011003\n          },\n          {\n            \"reason\": \"JSON schema requirements not met\",\n            \"code\": 1011003\n          }\n        ]\n      }\n    },\n    \"expiryAt\": \"1978-02-07T01:41:41.587Z\",\n    \"highlights\": [\n      {\n        \"id\": 2621,\n        \"description\": \"string\",\n        \"key\": \"string\"\n      },\n      {\n        \"id\": 9764,\n        \"description\": \"string\",\n        \"key\": \"string\"\n      }\n    ],\n    \"customDetails\": {}\n  },\n  {\n    \"listingId\": 1234,\n    \"id\": \"838292a8-b6b7-7e70-7b1c-f4be0afc81bd\",\n    \"createdAt\": \"1952-04-29T16:02:12.829Z\",\n    \"updatedAt\": \"2009-09-07T14:38:37.763Z\",\n    \"createdBy\": \"string\",\n    \"status\": {\n      \"result\": \"ERROR\",\n      \"currently\": \"WAITING_FOR_UPDATE\",\n      \"errors\": {\n        \"errors\": [\n          {\n            \"reason\": \"JSON schema requirements not met\",\n            \"code\": 1011003\n          },\n          {\n            \"reason\": \"JSON schema requirements not met\",\n            \"code\": 1011003\n          }\n        ]\n      }\n    },\n    \"expiryAt\": \"1998-01-06T13:35:56.671Z\",\n    \"highlights\": [\n      {\n        \"id\": 4097,\n        \"description\": \"string\",\n        \"key\": \"string\"\n      },\n      {\n        \"id\": 8909,\n        \"description\": \"string\",\n        \"key\": \"string\"\n      }\n    ],\n    \"customDetails\": {}\n  }\n]",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "73f71171-9c06-466b-85e0-8947ba4f37b7",
+          "name": "Bad request. There was something wrong with the request, for example both listingId and customerListingId provided together",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "listingId",
+                  "value": "<string>"
+                },
+                {
+                  "key": "customerListingId",
+                  "value": "<string>"
+                },
+                {
+                  "key": "date_from",
+                  "value": "<string>"
+                },
+                {
+                  "key": "date_to",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        },
+        {
+          "id": "e50813f6-4cea-4546-968b-f1b0febd7fee",
+          "name": "Internal Server Error",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "listingId",
+                  "value": "<string>"
+                },
+                {
+                  "key": "customerListingId",
+                  "value": "<string>"
+                },
+                {
+                  "key": "date_from",
+                  "value": "<string>"
+                },
+                {
+                  "key": "date_to",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Internal Server Error",
+          "code": 500,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "568a73f6-fa3f-4324-b270-ea621b8ca709",
+      "name": "Create the new upgrade to premium listing",
+      "request": {
+        "name": "Create the new upgrade to premium listing",
+        "description": {},
+        "url": {
+          "path": [
+            "products",
+            "premium-listings"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"listingId\": \"<number>\",\n  \"customerListingId\": \"<string>\",\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ],\n  \"customDetails\": \"<object>\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "96e61d49-14fd-41d6-ae8f-e08904a17d6c",
+          "name": "Accepted. We are trying to make your listing premium. Please check the result soon.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"listingId\": \"<number>\",\n  \"customerListingId\": \"100219_CHS108334\",\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ],\n  \"customDetails\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Accepted",
+          "code": 202,
+          "header": [
+            {
+              "disabled": false,
+              "key": "Location",
+              "value": "https://{server}/premium-listings/{uuid}",
+              "description": ""
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"listingId\": 1234,\n  \"id\": \"13e1d988-3783-70b9-49d1-4a97e4c703bd\",\n  \"createdAt\": \"2010-01-19T05:07:52.330Z\",\n  \"updatedAt\": \"2003-12-26T15:01:59.569Z\",\n  \"createdBy\": \"string\",\n  \"status\": {\n    \"result\": \"ERROR\",\n    \"currently\": \"WAITING_FOR_UPDATE\",\n    \"errors\": {\n      \"errors\": [\n        {\n          \"reason\": \"JSON schema requirements not met\",\n          \"code\": 1011003\n        },\n        {\n          \"reason\": \"JSON schema requirements not met\",\n          \"code\": 1011003\n        }\n      ]\n    }\n  },\n  \"expiryAt\": \"1958-01-08T08:46:54.160Z\",\n  \"highlights\": [\n    {\n      \"id\": 2787,\n      \"description\": \"string\",\n      \"key\": \"string\"\n    },\n    {\n      \"id\": 7452,\n      \"description\": \"string\",\n      \"key\": \"string\"\n    }\n  ],\n  \"customDetails\": {}\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "d7424329-8eb2-47bf-98da-e0f981d05ca9",
+          "name": "See other. A premium listing for this listing Id already exists and is either pending or already activated. See location of existing activation.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"listingId\": \"<number>\",\n  \"customerListingId\": \"100219_CHS108334\",\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ],\n  \"customDetails\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "See Other",
+          "code": 303,
+          "header": [
+            {
+              "disabled": false,
+              "key": "Location",
+              "value": "https://{server}/premium-listings/{uuid}",
+              "description": ""
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"listingId\": 1234,\n  \"id\": \"13e1d988-3783-70b9-49d1-4a97e4c703bd\",\n  \"createdAt\": \"2010-01-19T05:07:52.330Z\",\n  \"updatedAt\": \"2003-12-26T15:01:59.569Z\",\n  \"createdBy\": \"string\",\n  \"status\": {\n    \"result\": \"ERROR\",\n    \"currently\": \"WAITING_FOR_UPDATE\",\n    \"errors\": {\n      \"errors\": [\n        {\n          \"reason\": \"JSON schema requirements not met\",\n          \"code\": 1011003\n        },\n        {\n          \"reason\": \"JSON schema requirements not met\",\n          \"code\": 1011003\n        }\n      ]\n    }\n  },\n  \"expiryAt\": \"1958-01-08T08:46:54.160Z\",\n  \"highlights\": [\n    {\n      \"id\": 2787,\n      \"description\": \"string\",\n      \"key\": \"string\"\n    },\n    {\n      \"id\": 7452,\n      \"description\": \"string\",\n      \"key\": \"string\"\n    }\n  ],\n  \"customDetails\": {}\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "47d2ed3e-2178-4094-99b0-d66f403155a8",
+          "name": "Bad request. Something wrong with the request, for example listing_id not provided.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"listingId\": \"<number>\",\n  \"customerListingId\": \"100219_CHS108334\",\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ],\n  \"customDetails\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        },
+        {
+          "id": "f78b8719-3793-4847-8e02-eabe0fa06476",
+          "name": "Payload too large. There was something wrong with the request for example, customDetails data exceeds max memory limit.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"listingId\": \"<number>\",\n  \"customerListingId\": \"100219_CHS108334\",\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ],\n  \"customDetails\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Request Entity Too Large",
+          "code": 413,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"errors\": [\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    },\n    {\n      \"reason\": \"JSON schema requirements not met\",\n      \"code\": 1011003\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "ae377ac1-3f9b-4409-b8ef-fb7e8e9b9319",
+          "name": "Internal Server Error",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "products",
+                "premium-listings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: oauth2",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "<token>"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"listingId\": \"<number>\",\n  \"customerListingId\": \"100219_CHS108334\",\n  \"highlights\": [\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"id\": \"<integer>\",\n      \"description\": \"<string>\"\n    }\n  ],\n  \"customDetails\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Internal Server Error",
+          "code": 500,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://services.zoopla.co.uk",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "api/api_access"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://services-auth.services.zoopla.co.uk/oauth2/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "4267df6b-a23b-4a80-9a0f-ca57d389429d",
+    "name": "Premium Listing activations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "This API is responsible for the activation of a premium listing product. It allows the user to:\n* Get the history of all activations they have access to\n* Get the history of all activations for given listing_id\n* Check if the given listing_id is premium in the moment of time when the call has been made\n* Activate the premium listing for the given listing\n\nThis API is asynchronous, eventually consistent and the requests are processed in the queue to protect from a situation when:\n* Consumer uses more credits than available\n* Consumer uses more than 1 credit per 1 listing\n\n\nContact Support:\n Name: Zoopla Pro P&A Team\n Email: purchaseandactivationteam@zoopla.co.uk",
+      "type": "text/plain"
+    }
+  }
+}

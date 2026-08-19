@@ -1,0 +1,114 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Leads API",
+    "version": "0.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "REST Endpoints",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /applicant-leads",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/applicant-leads",
+            "params": [
+              {
+                "name": "from-time",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those on or after the specified date time. In the format `2006-01-02T15:04:05Z`"
+              },
+              {
+                "name": "to-time",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those on or before the specified date time. In the format `2006-01-02T15:04:05Z`"
+              },
+              {
+                "name": "group-id",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those with this specified internal Zoopla group id"
+              },
+              {
+                "name": "company-id",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those with this specified internal Zoopla company id"
+              },
+              {
+                "name": "brand-id",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those with this specified internal Zoopla brand id"
+              },
+              {
+                "name": "branch-id",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those with this specified internal Zoopla branch id"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "GET /appraisal-leads",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/appraisal-leads",
+            "params": [
+              {
+                "name": "from-time",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those on or after the specified date time. In the format `2006-01-02T15:04:05Z`"
+              },
+              {
+                "name": "to-time",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those on or before the specified date time. In the format `2006-01-02T15:04:05Z`"
+              },
+              {
+                "name": "group-id",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those with this specified internal Zoopla group id"
+              },
+              {
+                "name": "company-id",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those with this specified internal Zoopla company id"
+              },
+              {
+                "name": "brand-id",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those with this specified internal Zoopla brand id"
+              },
+              {
+                "name": "branch-id",
+                "value": "",
+                "type": "query",
+                "description": "Restricts the returned leads to only include those with this specified internal Zoopla branch id"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

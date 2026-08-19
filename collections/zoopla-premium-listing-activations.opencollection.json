@@ -1,0 +1,115 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Premium Listing activations",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://services-auth.services.zoopla.co.uk/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Returns listing for specific uuid",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://services.zoopla.co.uk/products/premium-listings/:uuid",
+        "params": [
+          {
+            "name": "uuid",
+            "value": "",
+            "type": "path",
+            "description": "Returns premium listing for a given uuid"
+          }
+        ]
+      },
+      "docs": "If the UUID exists, it  will return a premium listing, if it does not or if it is an invalid UUID it will return an error\n"
+    },
+    {
+      "info": {
+        "name": "Updates highlights for a specific uuid",
+        "type": "http"
+      },
+      "http": {
+        "method": "PATCH",
+        "url": "https://services.zoopla.co.uk/products/premium-listings/:uuid",
+        "params": [
+          {
+            "name": "uuid",
+            "value": "",
+            "type": "path",
+            "description": "The uuid for the premium listing that the caller is trying to update"
+          }
+        ],
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "If the highlights are valid and the premium listing is `ACTIVE` and not currently awaiting an existing update it will return the premium listing with a `WAITING_FOR_UPDATE` status. If the highlights are invalid, the premium listing is not currently `ACTIVE` or the listing is already `WAITING_FOR_UPDATE` it will return the appropriate error.\n"
+    },
+    {
+      "info": {
+        "name": "Returns all requested upgrades to premium listings that the caller has access to",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://services.zoopla.co.uk/products/premium-listings",
+        "params": [
+          {
+            "name": "listingId",
+            "value": "",
+            "type": "query",
+            "description": "The Zoopla internal listingId to return activation requests for. If listingId and customerListingId are provided together it will return an `error`. If no listingId is given it will return all premium listing activations.\n"
+          },
+          {
+            "name": "customerListingId",
+            "value": "",
+            "type": "query",
+            "description": "An optional parameter which is a customer identifier of a listingId which Zoopla can match to an internal listingId. If the customerListingId cannot be matched to a listingId it will return an `error`. If customerListingId and listingId are provided together it will return an `error`.\n"
+          },
+          {
+            "name": "date_from",
+            "value": "",
+            "type": "query",
+            "description": "And optional parameter to filter response by created date starting from date provided. An RFC3339 time format is required. E.g 2022-02-11T14:14:10.776Z\n"
+          },
+          {
+            "name": "date_to",
+            "value": "",
+            "type": "query",
+            "description": "And optional parameter to filter response by created date ending with the date provided. An RFC3339 time format is required. E.g 2022-02-11T14:14:10.776Z      \n"
+          }
+        ]
+      },
+      "docs": "If no parameters are given, the response will return all premium listings for the caller. If the response is an **empty** array it means that there are no premium listings for the caller, activated or not. If the caller needs to filter premium listings, we provide the below query parameters.\n"
+    },
+    {
+      "info": {
+        "name": "Create the new upgrade to premium listing",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://services.zoopla.co.uk/products/premium-listings",
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Create the new upgrade to premium listing"
+    }
+  ],
+  "bundled": true
+}

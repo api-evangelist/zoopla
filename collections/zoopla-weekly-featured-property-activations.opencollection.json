@@ -1,0 +1,86 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Weekly Featured Property (WFP) Activations",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://services-auth.services.zoopla.co.uk/oauth2/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Returns a WFP activated listing for a specific uuid",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://services.zoopla.co.uk/products/weekly-featured-properties/:uuid",
+        "params": [
+          {
+            "name": "uuid",
+            "value": "",
+            "type": "path",
+            "description": "returns the WFP for a given uuid"
+          }
+        ]
+      },
+      "docs": "if the uuid exists will return a WFP listing, if it does not or it is an invalid UUID will return an error\n"
+    },
+    {
+      "info": {
+        "name": "Returns all requested upgrades to WFPs that the caller has access to",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://services.zoopla.co.uk/products/weekly-featured-properties",
+        "params": [
+          {
+            "name": "listingId",
+            "value": "",
+            "type": "query",
+            "description": "The Zoopla internal listingId to return activation requests for. If listingId and customerListingId are provided together it will return an `error`. If no listingId is given it will return all WFP activations.\n"
+          },
+          {
+            "name": "customerListingId",
+            "value": "",
+            "type": "query",
+            "description": "An optional parameter which is a customer identifier of a listingId which Zoopla can match to an internal listingId. If the customerListingId cannot be matched to a listingId it will return an `error`. If customerListingId and listingId are provided together it will return an `error`.\n"
+          },
+          {
+            "name": "date_from",
+            "value": "",
+            "type": "query",
+            "description": "And optional parameter to filter response by created date starting from date provided. An date only format (YYYY-MM-DD) is required. E.g 2022-02-11\n"
+          }
+        ]
+      },
+      "docs": "If no parameters are given, the response will return all WFPs for the caller. If the response is an **empty** array it means that there are no WFPs for the caller, activated or not. If the caller needs to filter WFPs, we provide the below query parameters.\n"
+    },
+    {
+      "info": {
+        "name": "Activate a listing as a WFP",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://services.zoopla.co.uk/products/weekly-featured-properties",
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Activate a listing as a WFP"
+    }
+  ],
+  "bundled": true
+}
