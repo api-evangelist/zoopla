@@ -38,6 +38,16 @@ accessModel:
   method: manual
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/groq.png
 tags:
+  - Real-Estate
+  - United Kingdom
+  - Property Listings
+  - Property Portal
+  - PropTech
+  - Rentals
+  - Estate Agents
+  - Leads
+  - CRM Integration
+tags_raw:
   - Real Estate
   - United Kingdom
   - Property Listings
@@ -61,6 +71,10 @@ apis:
     humanURL: https://developers.zoopla.co.uk/leads/reference/api
     baseURL: https://services.zoopla.co.uk
     tags:
+      - Leads
+      - Real-Estate
+      - United Kingdom
+    tags_raw:
       - Leads
       - Real Estate
       - United Kingdom
@@ -113,6 +127,10 @@ apis:
     baseURL: https://services.zoopla.co.uk
     tags:
       - Property Listings
+      - Real-Estate
+      - United Kingdom
+    tags_raw:
+      - Property Listings
       - Real Estate
       - United Kingdom
     properties:
@@ -152,6 +170,10 @@ apis:
     humanURL: https://developers.zoopla.co.uk/wfp/reference/api
     baseURL: https://services.zoopla.co.uk
     tags:
+      - Property Listings
+      - Real-Estate
+      - United Kingdom
+    tags_raw:
       - Property Listings
       - Real Estate
       - United Kingdom
