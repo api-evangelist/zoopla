@@ -22,6 +22,18 @@ description: 'Zoopla Limited is one of the two dominant residential property por
   anywhere in Zoopla''s stack — RESO is a North American construct and the UK has not adopted
   it. Zoopla publishes no open data; the open property layer in the UK belongs to the public
   sector (HM Land Registry Price Paid and Ordnance Survey), not to the portals.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: membership-required
