@@ -85,6 +85,8 @@ apis:
   humanURL: https://developers.zoopla.co.uk/leads/reference/api
   baseURL: https://services.zoopla.co.uk
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
