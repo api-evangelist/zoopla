@@ -1,0 +1,37 @@
+{
+  "provider": "zoopla",
+  "sources": [
+    "_original/zoopla-leads-api-openapi.json",
+    "_original/zoopla-premium-listing-activations-openapi.json",
+    "_original/zoopla-weekly-featured-property-activations-openapi.json"
+  ],
+  "outputs": [
+    "zoopla-rest-endpoints-api-openapi.yml",
+    "zoopla-products-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "zoopla-leads-api-openapi.json: upgraded swagger 2.0 -> OpenAPI 3.2.0",
+    "zoopla-leads-api-openapi.json: declared missing tag: REST Endpoints",
+    "zoopla-premium-listing-activations-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "zoopla-premium-listing-activations-openapi.json: tagged paths GET /products/premium-listings/{uuid} -> Products",
+    "zoopla-premium-listing-activations-openapi.json: tagged paths PATCH /products/premium-listings/{uuid} -> Products",
+    "zoopla-premium-listing-activations-openapi.json: tagged paths GET /products/premium-listings -> Products",
+    "zoopla-premium-listing-activations-openapi.json: tagged paths POST /products/premium-listings -> Products",
+    "zoopla-premium-listing-activations-openapi.json: declared missing tag: Products",
+    "zoopla-weekly-featured-property-activations-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "zoopla-weekly-featured-property-activations-openapi.json: tagged paths GET /products/weekly-featured-properties/{uuid} -> Products",
+    "zoopla-weekly-featured-property-activations-openapi.json: tagged paths GET /products/weekly-featured-properties -> Products",
+    "zoopla-weekly-featured-property-activations-openapi.json: tagged paths POST /products/weekly-featured-properties -> Products",
+    "zoopla-weekly-featured-property-activations-openapi.json: declared missing tag: Products",
+    "tag 'Products' spans 2 source specs (zoopla-premium-listing-activations-openapi.json, zoopla-weekly-featured-property-activations-openapi.json): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "zoopla-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "zoopla-rest-endpoints-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
