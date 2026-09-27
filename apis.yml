@@ -56,7 +56,7 @@ imageNote: >-
   No correct icon has been sourced yet. Shipping the wrong company's mark is worse
   than shipping none; re-run the icon backfill once a real asset exists.
 tags:
-  - Real-Estate
+  - Real Estate
   - United Kingdom
   - Property Listings
   - Property Portal
@@ -75,6 +75,7 @@ tags_raw:
   - Estate Agents
   - Leads
   - CRM Integration
+  - Real-Estate
 created: '2026-07-26'
 modified: '2026-07-26'
 specificationVersion: '0.23'

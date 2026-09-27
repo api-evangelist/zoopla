@@ -327,15 +327,25 @@ paths:
     - url: https://services.zoopla.co.uk
 components:
   schemas:
-    UpdateHighlights:
+    CreatePremiumListing:
       type: object
       properties:
+        listingId:
+          type: number
+          description: an internal zoopla identifier for a given listing which determines which listing should be made premium.
+        customerListingId:
+          type: string
+          example: 100219_CHS108334
+          description: an customer identifier of listing id (it has to be provided during listing creation) Zoopla is aware of.
         highlights:
-          $ref: '#/components/schemas/CreatePremiumListing/properties/highlights'
-          x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/HighlightsRequest.yaml
-      required:
-      - highlights
-    Highlights:
+          type: array
+          items:
+            $ref: '#/components/schemas/HighlightsRequest/items'
+            x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/HighlightRequest.yaml
+        customDetails:
+          type: object
+          description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
+    HighlightsRequest:
       type: array
       items:
         type: object
@@ -347,10 +357,57 @@ components:
             type: integer
           description:
             type: string
-          key:
-            type: string
         required:
         - id
+    UpdateHighlights:
+      type: object
+      properties:
+        highlights:
+          $ref: '#/components/schemas/CreatePremiumListing/properties/highlights'
+          x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/HighlightsRequest.yaml
+      required:
+      - highlights
+    PremiumListings:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            readOnly: true
+          listingId:
+            type: number
+            example: 1234
+            description: an internal zoopla identifier for a given listing which determines which listing should be made premium.
+          createdAt:
+            type: string
+            format: date-time
+            readOnly: true
+          updatedAt:
+            type: string
+            format: date-time
+            readOnly: true
+          createdBy:
+            type: string
+            readOnly: true
+            description: unique client identifier
+          status:
+            $ref: '#/components/schemas/PremiumListing/properties/status'
+            x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/Status.yaml
+          expiryAt:
+            type: string
+            format: date-time
+            description: ISO-8601 date when the premium listing stops being premium
+            readOnly: true
+          highlights:
+            $ref: '#/components/schemas/PremiumListing/properties/highlights'
+            x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/Highlights.yaml
+          customDetails:
+            type: object
+            description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
+        required:
+        - listingId
     Errors:
       type: object
       properties:
@@ -434,79 +491,6 @@ components:
           description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
       required:
       - listingId
-    PremiumListings:
-      type: array
-      items:
-        type: object
-        properties:
-          id:
-            type: string
-            format: uuid
-            readOnly: true
-          listingId:
-            type: number
-            example: 1234
-            description: an internal zoopla identifier for a given listing which determines which listing should be made premium.
-          createdAt:
-            type: string
-            format: date-time
-            readOnly: true
-          updatedAt:
-            type: string
-            format: date-time
-            readOnly: true
-          createdBy:
-            type: string
-            readOnly: true
-            description: unique client identifier
-          status:
-            $ref: '#/components/schemas/PremiumListing/properties/status'
-            x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/Status.yaml
-          expiryAt:
-            type: string
-            format: date-time
-            description: ISO-8601 date when the premium listing stops being premium
-            readOnly: true
-          highlights:
-            $ref: '#/components/schemas/PremiumListing/properties/highlights'
-            x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/Highlights.yaml
-          customDetails:
-            type: object
-            description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
-        required:
-        - listingId
-    HighlightsRequest:
-      type: array
-      items:
-        type: object
-        description: 'highlighted feature of a premium listing
-
-          '
-        properties:
-          id:
-            type: integer
-          description:
-            type: string
-        required:
-        - id
-    CreatePremiumListing:
-      type: object
-      properties:
-        listingId:
-          type: number
-          description: an internal zoopla identifier for a given listing which determines which listing should be made premium.
-        customerListingId:
-          type: string
-          example: 100219_CHS108334
-          description: an customer identifier of listing id (it has to be provided during listing creation) Zoopla is aware of.
-        highlights:
-          type: array
-          items:
-            $ref: '#/components/schemas/HighlightsRequest/items'
-            x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/HighlightRequest.yaml
-        customDetails:
-          type: object
-          description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
     Status:
       type: object
       description: 'Status of request with error response
@@ -536,6 +520,22 @@ components:
               items:
                 $ref: '#/components/schemas/Errors/properties/errors/items'
                 x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/ServiceError.yaml
+    Highlights:
+      type: array
+      items:
+        type: object
+        description: 'highlighted feature of a premium listing
+
+          '
+        properties:
+          id:
+            type: integer
+          description:
+            type: string
+          key:
+            type: string
+        required:
+        - id
     WeeklyFeaturedProperty:
       type: object
       properties:
@@ -596,20 +596,6 @@ components:
       - expiryAt
       - startAt
       - listingId
-    CreateWeeklyFeaturedProperty:
-      type: object
-      properties:
-        listingId:
-          type: number
-          example: 1234
-          description: An internal zoopla identifier for a given listing which determines which listing should be activated as a WFP.
-        customerListingId:
-          type: string
-          example: 100219_CHS108334
-          description: A customer identifier of listing id which Zoopla is aware of (it has to be provided during the listing creation).
-        customDetails:
-          type: object
-          description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
     Errors_2:
       type: object
       properties:
@@ -631,6 +617,43 @@ components:
                 type: integer
                 description: Comprising of the service identifier, severity and custom error code
                 example: 2011003
+    CreateWeeklyFeaturedProperty:
+      type: object
+      properties:
+        listingId:
+          type: number
+          example: 1234
+          description: An internal zoopla identifier for a given listing which determines which listing should be activated as a WFP.
+        customerListingId:
+          type: string
+          example: 100219_CHS108334
+          description: A customer identifier of listing id which Zoopla is aware of (it has to be provided during the listing creation).
+        customDetails:
+          type: object
+          description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
+    Status_2:
+      type: object
+      description: 'Status of request with error response
+
+        '
+      properties:
+        result:
+          type: string
+          enum:
+          - PENDING
+          - ACTIVATED
+          - DEACTIVATED
+          - SCHEDULED
+          - ERROR
+          example: ERROR
+        errors:
+          type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: '#/components/schemas/Errors/properties/errors/items'
+                x-miro: /builds/13634493756/api-weekly-featured-properties/docs/api/schemas/ServiceError.yaml
     WeeklyFeaturedProperties:
       type: array
       items:
@@ -678,29 +701,6 @@ components:
         - expiryAt
         - startAt
         - listingId
-    Status_2:
-      type: object
-      description: 'Status of request with error response
-
-        '
-      properties:
-        result:
-          type: string
-          enum:
-          - PENDING
-          - ACTIVATED
-          - DEACTIVATED
-          - SCHEDULED
-          - ERROR
-          example: ERROR
-        errors:
-          type: object
-          properties:
-            errors:
-              type: array
-              items:
-                $ref: '#/components/schemas/Errors/properties/errors/items'
-                x-miro: /builds/13634493756/api-weekly-featured-properties/docs/api/schemas/ServiceError.yaml
   securitySchemes:
     oAuthSample:
       type: oauth2
