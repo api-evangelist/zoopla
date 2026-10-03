@@ -158,42 +158,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ContactPreferences:
-      type: object
-      properties:
-        method:
-          $ref: '#/components/schemas/ContactMethod'
-        time:
-          $ref: '#/components/schemas/TimePreference'
-      x-go-name: PreferencesView
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact
-    Estimate:
-      type: object
-      properties:
-        confidence:
-          type: integer
-          format: int64
-          x-go-name: Confidence
-        confidenceBand:
-          $ref: '#/components/schemas/ConfidenceBand'
-        lowerRange:
-          type: integer
-          format: int64
-          x-go-name: LowerRange
-        upperRange:
-          type: integer
-          format: int64
-          x-go-name: UpperRange
-        value:
-          type: integer
-          format: int64
-          x-go-name: Value
-      x-go-name: View
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/property/estimate
-    LifeCycleStatus:
-      description: LifeCycleStatus is an enum representing the current status of the listing at the time of the enquiry
-      type: string
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing/lifeCycleStatus
     ViewingTime:
       type: object
       properties:
@@ -207,12 +171,12 @@ components:
           x-go-name: Latest
       x-go-name: View
       x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/viewingTime
-    ConfidenceBand:
+    AppraisalSource:
+      description: 'AppraisalSource is an enum representing the mechanism by which the lead was ingested
+
+        either a portal or social media product'
       type: string
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/property/estimate
-    ContactMethod:
-      type: string
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact/contactMethod
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/appraisal/appraisalSource
     PropertyDetailsAddress:
       type: object
       properties:
@@ -236,19 +200,124 @@ components:
           x-go-name: Town
       x-go-name: AddressView
       x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/property
-    ApplicantList:
+    RentFrequency:
+      description: RentFrequency is an enum representing how often the rent is required for a listing
+      type: string
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing/rentFrequency
+    Appraisal:
       type: object
       properties:
-        applicants:
+        contact:
+          $ref: '#/components/schemas/Contact'
+        createdAt:
+          type: string
+          format: date-time
+          x-go-name: CreatedAt
+        enquiryType:
+          type: string
+          enum:
+          - ENQUIRY_TYPE_UNSPECIFIED
+          - ENQUIRY_TYPE_SALES
+          - ENQUIRY_TYPE_LETTINGS
+          x-go-enum-desc: 'ENQUIRY_TYPE_UNSPECIFIED Unspecified
+
+            ENQUIRY_TYPE_SALES Sales
+
+            ENQUIRY_TYPE_LETTINGS Lettings'
+          x-go-name: EnquiryType
+        id:
+          type: string
+          x-go-name: ID
+        intent:
+          x-go-name: Intent
+        isOverseas:
+          type: boolean
+          x-go-name: IsOverseas
+        justCurious:
+          type: boolean
+          x-go-name: JustCurious
+        leadSource:
+          $ref: '#/components/schemas/AppraisalSource'
+        message:
+          type: string
+          x-go-name: Message
+        portalBranchId:
+          type: string
+          x-go-name: PortalBranchID
+        portalCompanyId:
+          type: string
+          x-go-name: PortalCompanyID
+        portalGroupId:
+          type: string
+          x-go-name: PortalGroupID
+        portalLeadId:
+          type: string
+          x-go-name: PortalLeadID
+        portalSource:
+          x-go-name: PortalSource
+        propertyDetails:
+          $ref: '#/components/schemas/Property'
+        propertyUse:
+          type: string
+          enum:
+          - PROPERTY_USE_UNSPECIFIED
+          - PROPERTY_USE_RESIDENTIAL
+          - PROPERTY_USE_COMMERCIAL
+          x-go-enum-desc: 'PROPERTY_USE_UNSPECIFIED Unspecified
+
+            PROPERTY_USE_RESIDENTIAL Residential
+
+            PROPERTY_USE_COMMERCIAL Commercial'
+          x-go-name: PropertyUse
+        recipientEmail:
+          type: string
+          x-go-name: RecipientEmail
+        sourceBranchId:
+          type: string
+          x-go-name: SourceBranchID
+        urgency:
+          $ref: '#/components/schemas/Urgency'
+      x-go-name: View
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/appraisal
+    TimePreference:
+      type: string
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact/timePreference
+    TransactionType:
+      description: TransactionType is an enum representing the type financial transaction that would occur for a given listing
+      type: string
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing/transactionType
+    Pricing:
+      type: object
+      properties:
+        currencyCode:
+          type: string
+          x-go-name: CurrencyCode
+        price:
+          type: number
+          format: float
+          x-go-name: Price
+        rentFrequency:
+          $ref: '#/components/schemas/RentFrequency'
+        transactionType:
+          $ref: '#/components/schemas/TransactionType'
+      x-go-name: PricingView
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing
+    ErrorContent:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          x-go-name: Code
+        links:
           type: array
           items:
-            $ref: '#/components/schemas/Applicant'
-          x-go-name: Applicants
-      x-go-name: ListView
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant
-    Urgency:
-      type: string
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/enquiry/urgency
+            type: string
+          x-go-name: Links
+        message:
+          type: string
+          x-go-name: Message
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/services/lead-poll-service/internal/response
     AppraisalList:
       type: object
       properties:
@@ -259,16 +328,28 @@ components:
           x-go-name: Appraisals
       x-go-name: ListView
       x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/appraisal
-    AppraisalSource:
-      description: 'AppraisalSource is an enum representing the mechanism by which the lead was ingested
-
-        either a portal or social media product'
-      type: string
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/appraisal/appraisalSource
-    TransactionType:
-      description: TransactionType is an enum representing the type financial transaction that would occur for a given listing
-      type: string
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing/transactionType
+    ContactPreferences:
+      type: object
+      properties:
+        method:
+          $ref: '#/components/schemas/ContactMethod'
+        time:
+          $ref: '#/components/schemas/TimePreference'
+      x-go-name: PreferencesView
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact
+    ImageView:
+      type: object
+      properties:
+        cdnUrl:
+          type: string
+          x-go-name: CdnURL
+        filename:
+          type: string
+          x-go-name: Filename
+        original:
+          type: string
+          x-go-name: Original
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing
     ListingDetails:
       type: object
       properties:
@@ -458,522 +539,9 @@ components:
           x-go-name: URL
       x-go-name: View
       x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing
-    Energy:
-      type: object
-      properties:
-        efficiency:
-          type: integer
-          format: uint8
-          x-go-name: Efficiency
-        rating:
-          type: string
-          x-go-name: Rating
-      x-go-name: EnergyView
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/property
-    Appraisal:
-      type: object
-      properties:
-        contact:
-          $ref: '#/components/schemas/Contact'
-        createdAt:
-          type: string
-          format: date-time
-          x-go-name: CreatedAt
-        enquiryType:
-          type: string
-          enum:
-          - ENQUIRY_TYPE_UNSPECIFIED
-          - ENQUIRY_TYPE_SALES
-          - ENQUIRY_TYPE_LETTINGS
-          x-go-enum-desc: 'ENQUIRY_TYPE_UNSPECIFIED Unspecified
-
-            ENQUIRY_TYPE_SALES Sales
-
-            ENQUIRY_TYPE_LETTINGS Lettings'
-          x-go-name: EnquiryType
-        id:
-          type: string
-          x-go-name: ID
-        intent:
-          x-go-name: Intent
-        isOverseas:
-          type: boolean
-          x-go-name: IsOverseas
-        justCurious:
-          type: boolean
-          x-go-name: JustCurious
-        leadSource:
-          $ref: '#/components/schemas/AppraisalSource'
-        message:
-          type: string
-          x-go-name: Message
-        portalBranchId:
-          type: string
-          x-go-name: PortalBranchID
-        portalCompanyId:
-          type: string
-          x-go-name: PortalCompanyID
-        portalGroupId:
-          type: string
-          x-go-name: PortalGroupID
-        portalLeadId:
-          type: string
-          x-go-name: PortalLeadID
-        portalSource:
-          x-go-name: PortalSource
-        propertyDetails:
-          $ref: '#/components/schemas/Property'
-        propertyUse:
-          type: string
-          enum:
-          - PROPERTY_USE_UNSPECIFIED
-          - PROPERTY_USE_RESIDENTIAL
-          - PROPERTY_USE_COMMERCIAL
-          x-go-enum-desc: 'PROPERTY_USE_UNSPECIFIED Unspecified
-
-            PROPERTY_USE_RESIDENTIAL Residential
-
-            PROPERTY_USE_COMMERCIAL Commercial'
-          x-go-name: PropertyUse
-        recipientEmail:
-          type: string
-          x-go-name: RecipientEmail
-        sourceBranchId:
-          type: string
-          x-go-name: SourceBranchID
-        urgency:
-          $ref: '#/components/schemas/Urgency'
-      x-go-name: View
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/appraisal
-    SearchCriteria:
-      type: object
-      properties:
-        location:
-          $ref: '#/components/schemas/LocationView'
-        maximumBedrooms:
-          type: integer
-          format: int32
-          x-go-name: MaximumBedrooms
-        maximumPrice:
-          type: number
-          format: double
-          x-go-name: MaximumPrice
-        minimumBedrooms:
-          type: integer
-          format: int32
-          x-go-name: MinimumBedrooms
-        minimumPrice:
-          type: number
-          format: double
-          x-go-name: MinimumPrice
-        priceFrequency:
-          $ref: '#/components/schemas/RentFrequency'
-        propertySubType:
-          type: string
-          x-go-name: PropertySubType
-        propertyType:
-          type: string
-          enum:
-          - PROPERTY_TYPE_UNSPECIFIED
-          - PROPERTY_TYPE_FLAT
-          - PROPERTY_TYPE_DETACHED
-          - PROPERTY_TYPE_SEMI_DETACHED
-          - PROPERTY_TYPE_TERRACED
-          - PROPERTY_TYPE_END_TERRACE
-          - PROPERTY_TYPE_DETACHED_BUNGALOW
-          - PROPERTY_TYPE_BUNGALOW
-          - PROPERTY_TYPE_STUDIO
-          - PROPERTY_TYPE_MAISONETTE
-          - PROPERTY_TYPE_TOWN_HOUSE
-          - PROPERTY_TYPE_COTTAGE
-          - PROPERTY_TYPE_SEMI_DETACHED_BUNGALOW
-          - PROPERTY_TYPE_LAND
-          - PROPERTY_TYPE_PARK_HOME
-          - PROPERTY_TYPE_LINK_DETACHED
-          - PROPERTY_TYPE_BARN_CONVERSION
-          - PROPERTY_TYPE_MEWS
-          - PROPERTY_TYPE_CHALET
-          - PROPERTY_TYPE_VILLA
-          - PROPERTY_TYPE_FARMHOUSE
-          - PROPERTY_TYPE_COUNTRY_HOUSE
-          - PROPERTY_TYPE_TERRACED_BUNGALOW
-          - PROPERTY_TYPE_PARKING
-          - PROPERTY_TYPE_BLOCK_OF_FLATS
-          - PROPERTY_TYPE_EQUESTRIAN
-          - PROPERTY_TYPE_LODGE
-          - PROPERTY_TYPE_HOUSEBOAT
-          - PROPERTY_TYPE_FARM
-          - PROPERTY_TYPE_CHATEAU
-          - PROPERTY_TYPE_FARM_BARN
-          - PROPERTY_TYPE_FINCA
-          - PROPERTY_TYPE_HOTEL
-          - PROPERTY_TYPE_INDUSTRIAL
-          - PROPERTY_TYPE_JUNK
-          - PROPERTY_TYPE_LEISURE
-          - PROPERTY_TYPE_LIGHT_INDUSTRIAL
-          - PROPERTY_TYPE_LONGERE
-          - PROPERTY_TYPE_OFFICE
-          - PROPERTY_TYPE_PUB_BAR
-          - PROPERTY_TYPE_RESTAURANT
-          - PROPERTY_TYPE_RETAIL
-          - PROPERTY_TYPE_RIAD
-          - PROPERTY_TYPE_WAREHOUSE
-          - PROPERTY_TYPE_MID_TERRACE
-          x-go-enum-desc: 'PROPERTY_TYPE_UNSPECIFIED Unspecified
-
-            PROPERTY_TYPE_FLAT Flat
-
-            PROPERTY_TYPE_DETACHED Detached
-
-            PROPERTY_TYPE_SEMI_DETACHED SemiDetached
-
-            PROPERTY_TYPE_TERRACED Terraced
-
-            PROPERTY_TYPE_END_TERRACE EndTerrace
-
-            PROPERTY_TYPE_DETACHED_BUNGALOW DetachedBungalow
-
-            PROPERTY_TYPE_BUNGALOW Bungalow
-
-            PROPERTY_TYPE_STUDIO Studio
-
-            PROPERTY_TYPE_MAISONETTE Maisonette
-
-            PROPERTY_TYPE_TOWN_HOUSE TownHouse
-
-            PROPERTY_TYPE_COTTAGE Cottage
-
-            PROPERTY_TYPE_SEMI_DETACHED_BUNGALOW SemiDetachedBungalow
-
-            PROPERTY_TYPE_LAND Land
-
-            PROPERTY_TYPE_PARK_HOME ParkHome
-
-            PROPERTY_TYPE_LINK_DETACHED LinkDetached
-
-            PROPERTY_TYPE_BARN_CONVERSION BarnConversion
-
-            PROPERTY_TYPE_MEWS Mews
-
-            PROPERTY_TYPE_CHALET Chalet
-
-            PROPERTY_TYPE_VILLA Villa
-
-            PROPERTY_TYPE_FARMHOUSE Farmhouse
-
-            PROPERTY_TYPE_COUNTRY_HOUSE CountryHouse
-
-            PROPERTY_TYPE_TERRACED_BUNGALOW TerracedBungalow
-
-            PROPERTY_TYPE_PARKING Parking
-
-            PROPERTY_TYPE_BLOCK_OF_FLATS BlockOfFlats
-
-            PROPERTY_TYPE_EQUESTRIAN Equestrian
-
-            PROPERTY_TYPE_LODGE Lodge
-
-            PROPERTY_TYPE_HOUSEBOAT Houseboat
-
-            PROPERTY_TYPE_FARM Farm
-
-            PROPERTY_TYPE_CHATEAU Chateau
-
-            PROPERTY_TYPE_FARM_BARN FarmBarn
-
-            PROPERTY_TYPE_FINCA Finca
-
-            PROPERTY_TYPE_HOTEL Hotel
-
-            PROPERTY_TYPE_INDUSTRIAL Industrial
-
-            PROPERTY_TYPE_JUNK Junk
-
-            PROPERTY_TYPE_LEISURE Leisure
-
-            PROPERTY_TYPE_LIGHT_INDUSTRIAL LightIndustrial
-
-            PROPERTY_TYPE_LONGERE Longere
-
-            PROPERTY_TYPE_OFFICE Office
-
-            PROPERTY_TYPE_PUB_BAR PubBar
-
-            PROPERTY_TYPE_RESTAURANT Restaurant
-
-            PROPERTY_TYPE_RETAIL Retail
-
-            PROPERTY_TYPE_RIAD Riad
-
-            PROPERTY_TYPE_WAREHOUSE Warehouse
-
-            PROPERTY_TYPE_MID_TERRACE MidTerrace'
-          x-go-name: PropertyType
-        radius:
-          type: number
-          format: double
-          x-go-name: Radius
-      x-go-name: View
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/searchCriteria
-    Contact:
-      type: object
-      properties:
-        email:
-          type: string
-          x-go-name: Email
-        firstName:
-          type: string
-          x-go-name: FirstName
-        lastName:
-          type: string
-          x-go-name: LastName
-        phoneNumber:
-          type: string
-          x-go-name: PhoneNumber
-        preferences:
-          $ref: '#/components/schemas/ContactPreferences'
-      x-go-name: View
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact
     Tenure:
       type: string
       x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/property/attributes
-    ApplicantSource:
-      description: 'ApplicantSource is an enum representing the mechanism by which the lead was ingested
-
-        either a portal or social media product'
-      type: string
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant/applicantSource
-    Pricing:
-      type: object
-      properties:
-        currencyCode:
-          type: string
-          x-go-name: CurrencyCode
-        price:
-          type: number
-          format: float
-          x-go-name: Price
-        rentFrequency:
-          $ref: '#/components/schemas/RentFrequency'
-        transactionType:
-          $ref: '#/components/schemas/TransactionType'
-      x-go-name: PricingView
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing
-    ListingDetailsAddress:
-      type: object
-      properties:
-        countryCode:
-          type: string
-          x-go-name: CountryCode
-        locality:
-          type: string
-          x-go-name: Locality
-        postcode:
-          type: string
-          x-go-name: Postcode
-        propertyNumberOrName:
-          type: string
-          x-go-name: PropertyNumberOrName
-        streetName:
-          type: string
-          x-go-name: StreetName
-        townOrCity:
-          type: string
-          x-go-name: TownOrCity
-      x-go-name: AddressView
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing
-    LocationView:
-      type: object
-      properties:
-        alias:
-          type: string
-          x-go-name: Alias
-        area:
-          type: string
-          x-go-name: Area
-        areaStreet:
-          type: string
-          x-go-name: AreaStreet
-        country:
-          type: string
-          x-go-name: Country
-        countryCode:
-          type: string
-          x-go-name: CountryCode
-        countyArea:
-          type: string
-          x-go-name: CountyArea
-        district:
-          type: string
-          x-go-name: District
-        incode:
-          type: string
-          x-go-name: Incode
-        outcode:
-          type: string
-          x-go-name: Outcode
-        postTown:
-          type: string
-          x-go-name: PostTown
-        postalArea:
-          type: string
-          x-go-name: PostalArea
-        region:
-          type: string
-          x-go-name: Region
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/searchCriteria
-    Applicant:
-      type: object
-      properties:
-        consumerPostcode:
-          type: string
-          x-go-name: ConsumerPostcode
-        consumerSituation:
-          type: string
-          enum:
-          - CONSUMER_SITUATION_UNSPECIFIED
-          - CONSUMER_SITUATION_OTHER
-          - CONSUMER_SITUATION_PROPERTY_TO_SELL
-          - CONSUMER_SITUATION_PROPERTY_TO_LET
-          - CONSUMER_SITUATION_OFFER_ON_OWN_PROPERTY
-          - CONSUMER_SITUATION_RECENTLY_SOLD
-          - CONSUMER_SITUATION_FIRST_TIME_BUYER
-          - CONSUMER_SITUATION_BUYER_NOT_FIRST_TIME
-          - CONSUMER_SITUATION_LOOKING_TO_INVEST
-          - CONSUMER_SITUATION_NO_PROPERTY_TO_SELL
-          x-go-enum-desc: 'CONSUMER_SITUATION_UNSPECIFIED Unspecified
-
-            CONSUMER_SITUATION_OTHER Other
-
-            CONSUMER_SITUATION_PROPERTY_TO_SELL PropertyToSell
-
-            CONSUMER_SITUATION_PROPERTY_TO_LET PropertyToLet
-
-            CONSUMER_SITUATION_OFFER_ON_OWN_PROPERTY OfferOnOwnProperty
-
-            CONSUMER_SITUATION_RECENTLY_SOLD RecentlySold
-
-            CONSUMER_SITUATION_FIRST_TIME_BUYER FirstTimeBuyer
-
-            CONSUMER_SITUATION_BUYER_NOT_FIRST_TIME BuyerNotFirstTime
-
-            CONSUMER_SITUATION_LOOKING_TO_INVEST LookingToInvest
-
-            CONSUMER_SITUATION_NO_PROPERTY_TO_SELL NoPropertyToSell'
-          x-go-name: ConsumerSituation
-        contact:
-          $ref: '#/components/schemas/Contact'
-        createdAt:
-          type: string
-          format: date-time
-          x-go-name: CreatedAt
-        enquiryType:
-          type: string
-          enum:
-          - ENQUIRY_TYPE_UNSPECIFIED
-          - ENQUIRY_TYPE_SALES
-          - ENQUIRY_TYPE_LETTINGS
-          x-go-enum-desc: 'ENQUIRY_TYPE_UNSPECIFIED Unspecified
-
-            ENQUIRY_TYPE_SALES Sales
-
-            ENQUIRY_TYPE_LETTINGS Lettings'
-          x-go-name: EnquiryType
-        id:
-          type: string
-          x-go-name: ID
-        intent:
-          x-go-name: Intent
-        isOverseas:
-          type: boolean
-          x-go-name: IsOverseas
-        leadSource:
-          $ref: '#/components/schemas/ApplicantSource'
-        listingDetails:
-          $ref: '#/components/schemas/ListingDetails'
-        message:
-          type: string
-          x-go-name: Message
-        organiseViewing:
-          type: boolean
-          x-go-name: OrganiseViewing
-        portalBranchId:
-          type: string
-          x-go-name: PortalBranchID
-        portalCompanyId:
-          type: string
-          x-go-name: PortalCompanyID
-        portalGroupId:
-          type: string
-          x-go-name: PortalGroupID
-        portalLeadId:
-          type: string
-          x-go-name: PortalLeadID
-        portalSource:
-          x-go-name: PortalSource
-        propertyUse:
-          type: string
-          enum:
-          - PROPERTY_USE_UNSPECIFIED
-          - PROPERTY_USE_RESIDENTIAL
-          - PROPERTY_USE_COMMERCIAL
-          x-go-enum-desc: 'PROPERTY_USE_UNSPECIFIED Unspecified
-
-            PROPERTY_USE_RESIDENTIAL Residential
-
-            PROPERTY_USE_COMMERCIAL Commercial'
-          x-go-name: PropertyUse
-        recipientEmail:
-          type: string
-          x-go-name: RecipientEmail
-        requestPropertyDetails:
-          type: boolean
-          x-go-name: RequestPropertyDetails
-        searchCriteria:
-          $ref: '#/components/schemas/SearchCriteria'
-        sourceBranchId:
-          type: string
-          x-go-name: SourceBranchID
-        viewingTimes:
-          type: array
-          items:
-            $ref: '#/components/schemas/ViewingTime'
-          x-go-name: ViewingTimes
-      x-go-name: View
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant
-    ErrorContent:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-          x-go-name: Code
-        links:
-          type: array
-          items:
-            type: string
-          x-go-name: Links
-        message:
-          type: string
-          x-go-name: Message
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/services/lead-poll-service/internal/response
-    RentFrequency:
-      description: RentFrequency is an enum representing how often the rent is required for a listing
-      type: string
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing/rentFrequency
-    Error:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorContent'
-          x-go-name: Errors
-      x-go-name: ErrorResponse
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/services/lead-poll-service/internal/response
-    TimePreference:
-      type: string
-      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact/timePreference
     Property:
       type: object
       properties:
@@ -1160,19 +728,451 @@ components:
           x-go-name: UPRN
       x-go-name: View
       x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/property
-    ImageView:
+    LifeCycleStatus:
+      description: LifeCycleStatus is an enum representing the current status of the listing at the time of the enquiry
+      type: string
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing/lifeCycleStatus
+    ListingDetailsAddress:
       type: object
       properties:
-        cdnUrl:
+        countryCode:
           type: string
-          x-go-name: CdnURL
-        filename:
+          x-go-name: CountryCode
+        locality:
           type: string
-          x-go-name: Filename
-        original:
+          x-go-name: Locality
+        postcode:
           type: string
-          x-go-name: Original
+          x-go-name: Postcode
+        propertyNumberOrName:
+          type: string
+          x-go-name: PropertyNumberOrName
+        streetName:
+          type: string
+          x-go-name: StreetName
+        townOrCity:
+          type: string
+          x-go-name: TownOrCity
+      x-go-name: AddressView
       x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/listing
+    Urgency:
+      type: string
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/enquiry/urgency
+    ConfidenceBand:
+      type: string
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/property/estimate
+    Estimate:
+      type: object
+      properties:
+        confidence:
+          type: integer
+          format: int64
+          x-go-name: Confidence
+        confidenceBand:
+          $ref: '#/components/schemas/ConfidenceBand'
+        lowerRange:
+          type: integer
+          format: int64
+          x-go-name: LowerRange
+        upperRange:
+          type: integer
+          format: int64
+          x-go-name: UpperRange
+        value:
+          type: integer
+          format: int64
+          x-go-name: Value
+      x-go-name: View
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/zoopla/property/estimate
+    Applicant:
+      type: object
+      properties:
+        consumerPostcode:
+          type: string
+          x-go-name: ConsumerPostcode
+        consumerSituation:
+          type: string
+          enum:
+          - CONSUMER_SITUATION_UNSPECIFIED
+          - CONSUMER_SITUATION_OTHER
+          - CONSUMER_SITUATION_PROPERTY_TO_SELL
+          - CONSUMER_SITUATION_PROPERTY_TO_LET
+          - CONSUMER_SITUATION_OFFER_ON_OWN_PROPERTY
+          - CONSUMER_SITUATION_RECENTLY_SOLD
+          - CONSUMER_SITUATION_FIRST_TIME_BUYER
+          - CONSUMER_SITUATION_BUYER_NOT_FIRST_TIME
+          - CONSUMER_SITUATION_LOOKING_TO_INVEST
+          - CONSUMER_SITUATION_NO_PROPERTY_TO_SELL
+          x-go-enum-desc: 'CONSUMER_SITUATION_UNSPECIFIED Unspecified
+
+            CONSUMER_SITUATION_OTHER Other
+
+            CONSUMER_SITUATION_PROPERTY_TO_SELL PropertyToSell
+
+            CONSUMER_SITUATION_PROPERTY_TO_LET PropertyToLet
+
+            CONSUMER_SITUATION_OFFER_ON_OWN_PROPERTY OfferOnOwnProperty
+
+            CONSUMER_SITUATION_RECENTLY_SOLD RecentlySold
+
+            CONSUMER_SITUATION_FIRST_TIME_BUYER FirstTimeBuyer
+
+            CONSUMER_SITUATION_BUYER_NOT_FIRST_TIME BuyerNotFirstTime
+
+            CONSUMER_SITUATION_LOOKING_TO_INVEST LookingToInvest
+
+            CONSUMER_SITUATION_NO_PROPERTY_TO_SELL NoPropertyToSell'
+          x-go-name: ConsumerSituation
+        contact:
+          $ref: '#/components/schemas/Contact'
+        createdAt:
+          type: string
+          format: date-time
+          x-go-name: CreatedAt
+        enquiryType:
+          type: string
+          enum:
+          - ENQUIRY_TYPE_UNSPECIFIED
+          - ENQUIRY_TYPE_SALES
+          - ENQUIRY_TYPE_LETTINGS
+          x-go-enum-desc: 'ENQUIRY_TYPE_UNSPECIFIED Unspecified
+
+            ENQUIRY_TYPE_SALES Sales
+
+            ENQUIRY_TYPE_LETTINGS Lettings'
+          x-go-name: EnquiryType
+        id:
+          type: string
+          x-go-name: ID
+        intent:
+          x-go-name: Intent
+        isOverseas:
+          type: boolean
+          x-go-name: IsOverseas
+        leadSource:
+          $ref: '#/components/schemas/ApplicantSource'
+        listingDetails:
+          $ref: '#/components/schemas/ListingDetails'
+        message:
+          type: string
+          x-go-name: Message
+        organiseViewing:
+          type: boolean
+          x-go-name: OrganiseViewing
+        portalBranchId:
+          type: string
+          x-go-name: PortalBranchID
+        portalCompanyId:
+          type: string
+          x-go-name: PortalCompanyID
+        portalGroupId:
+          type: string
+          x-go-name: PortalGroupID
+        portalLeadId:
+          type: string
+          x-go-name: PortalLeadID
+        portalSource:
+          x-go-name: PortalSource
+        propertyUse:
+          type: string
+          enum:
+          - PROPERTY_USE_UNSPECIFIED
+          - PROPERTY_USE_RESIDENTIAL
+          - PROPERTY_USE_COMMERCIAL
+          x-go-enum-desc: 'PROPERTY_USE_UNSPECIFIED Unspecified
+
+            PROPERTY_USE_RESIDENTIAL Residential
+
+            PROPERTY_USE_COMMERCIAL Commercial'
+          x-go-name: PropertyUse
+        recipientEmail:
+          type: string
+          x-go-name: RecipientEmail
+        requestPropertyDetails:
+          type: boolean
+          x-go-name: RequestPropertyDetails
+        searchCriteria:
+          $ref: '#/components/schemas/SearchCriteria'
+        sourceBranchId:
+          type: string
+          x-go-name: SourceBranchID
+        viewingTimes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ViewingTime'
+          x-go-name: ViewingTimes
+      x-go-name: View
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant
+    LocationView:
+      type: object
+      properties:
+        alias:
+          type: string
+          x-go-name: Alias
+        area:
+          type: string
+          x-go-name: Area
+        areaStreet:
+          type: string
+          x-go-name: AreaStreet
+        country:
+          type: string
+          x-go-name: Country
+        countryCode:
+          type: string
+          x-go-name: CountryCode
+        countyArea:
+          type: string
+          x-go-name: CountyArea
+        district:
+          type: string
+          x-go-name: District
+        incode:
+          type: string
+          x-go-name: Incode
+        outcode:
+          type: string
+          x-go-name: Outcode
+        postTown:
+          type: string
+          x-go-name: PostTown
+        postalArea:
+          type: string
+          x-go-name: PostalArea
+        region:
+          type: string
+          x-go-name: Region
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/searchCriteria
+    ContactMethod:
+      type: string
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact/contactMethod
+    ApplicantList:
+      type: object
+      properties:
+        applicants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Applicant'
+          x-go-name: Applicants
+      x-go-name: ListView
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant
+    Contact:
+      type: object
+      properties:
+        email:
+          type: string
+          x-go-name: Email
+        firstName:
+          type: string
+          x-go-name: FirstName
+        lastName:
+          type: string
+          x-go-name: LastName
+        phoneNumber:
+          type: string
+          x-go-name: PhoneNumber
+        preferences:
+          $ref: '#/components/schemas/ContactPreferences'
+      x-go-name: View
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/contact
+    ApplicantSource:
+      description: 'ApplicantSource is an enum representing the mechanism by which the lead was ingested
+
+        either a portal or social media product'
+      type: string
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/applicant/applicantSource
+    Energy:
+      type: object
+      properties:
+        efficiency:
+          type: integer
+          format: uint8
+          x-go-name: Efficiency
+        rating:
+          type: string
+          x-go-name: Rating
+      x-go-name: EnergyView
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/property
+    SearchCriteria:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/LocationView'
+        maximumBedrooms:
+          type: integer
+          format: int32
+          x-go-name: MaximumBedrooms
+        maximumPrice:
+          type: number
+          format: double
+          x-go-name: MaximumPrice
+        minimumBedrooms:
+          type: integer
+          format: int32
+          x-go-name: MinimumBedrooms
+        minimumPrice:
+          type: number
+          format: double
+          x-go-name: MinimumPrice
+        priceFrequency:
+          $ref: '#/components/schemas/RentFrequency'
+        propertySubType:
+          type: string
+          x-go-name: PropertySubType
+        propertyType:
+          type: string
+          enum:
+          - PROPERTY_TYPE_UNSPECIFIED
+          - PROPERTY_TYPE_FLAT
+          - PROPERTY_TYPE_DETACHED
+          - PROPERTY_TYPE_SEMI_DETACHED
+          - PROPERTY_TYPE_TERRACED
+          - PROPERTY_TYPE_END_TERRACE
+          - PROPERTY_TYPE_DETACHED_BUNGALOW
+          - PROPERTY_TYPE_BUNGALOW
+          - PROPERTY_TYPE_STUDIO
+          - PROPERTY_TYPE_MAISONETTE
+          - PROPERTY_TYPE_TOWN_HOUSE
+          - PROPERTY_TYPE_COTTAGE
+          - PROPERTY_TYPE_SEMI_DETACHED_BUNGALOW
+          - PROPERTY_TYPE_LAND
+          - PROPERTY_TYPE_PARK_HOME
+          - PROPERTY_TYPE_LINK_DETACHED
+          - PROPERTY_TYPE_BARN_CONVERSION
+          - PROPERTY_TYPE_MEWS
+          - PROPERTY_TYPE_CHALET
+          - PROPERTY_TYPE_VILLA
+          - PROPERTY_TYPE_FARMHOUSE
+          - PROPERTY_TYPE_COUNTRY_HOUSE
+          - PROPERTY_TYPE_TERRACED_BUNGALOW
+          - PROPERTY_TYPE_PARKING
+          - PROPERTY_TYPE_BLOCK_OF_FLATS
+          - PROPERTY_TYPE_EQUESTRIAN
+          - PROPERTY_TYPE_LODGE
+          - PROPERTY_TYPE_HOUSEBOAT
+          - PROPERTY_TYPE_FARM
+          - PROPERTY_TYPE_CHATEAU
+          - PROPERTY_TYPE_FARM_BARN
+          - PROPERTY_TYPE_FINCA
+          - PROPERTY_TYPE_HOTEL
+          - PROPERTY_TYPE_INDUSTRIAL
+          - PROPERTY_TYPE_JUNK
+          - PROPERTY_TYPE_LEISURE
+          - PROPERTY_TYPE_LIGHT_INDUSTRIAL
+          - PROPERTY_TYPE_LONGERE
+          - PROPERTY_TYPE_OFFICE
+          - PROPERTY_TYPE_PUB_BAR
+          - PROPERTY_TYPE_RESTAURANT
+          - PROPERTY_TYPE_RETAIL
+          - PROPERTY_TYPE_RIAD
+          - PROPERTY_TYPE_WAREHOUSE
+          - PROPERTY_TYPE_MID_TERRACE
+          x-go-enum-desc: 'PROPERTY_TYPE_UNSPECIFIED Unspecified
+
+            PROPERTY_TYPE_FLAT Flat
+
+            PROPERTY_TYPE_DETACHED Detached
+
+            PROPERTY_TYPE_SEMI_DETACHED SemiDetached
+
+            PROPERTY_TYPE_TERRACED Terraced
+
+            PROPERTY_TYPE_END_TERRACE EndTerrace
+
+            PROPERTY_TYPE_DETACHED_BUNGALOW DetachedBungalow
+
+            PROPERTY_TYPE_BUNGALOW Bungalow
+
+            PROPERTY_TYPE_STUDIO Studio
+
+            PROPERTY_TYPE_MAISONETTE Maisonette
+
+            PROPERTY_TYPE_TOWN_HOUSE TownHouse
+
+            PROPERTY_TYPE_COTTAGE Cottage
+
+            PROPERTY_TYPE_SEMI_DETACHED_BUNGALOW SemiDetachedBungalow
+
+            PROPERTY_TYPE_LAND Land
+
+            PROPERTY_TYPE_PARK_HOME ParkHome
+
+            PROPERTY_TYPE_LINK_DETACHED LinkDetached
+
+            PROPERTY_TYPE_BARN_CONVERSION BarnConversion
+
+            PROPERTY_TYPE_MEWS Mews
+
+            PROPERTY_TYPE_CHALET Chalet
+
+            PROPERTY_TYPE_VILLA Villa
+
+            PROPERTY_TYPE_FARMHOUSE Farmhouse
+
+            PROPERTY_TYPE_COUNTRY_HOUSE CountryHouse
+
+            PROPERTY_TYPE_TERRACED_BUNGALOW TerracedBungalow
+
+            PROPERTY_TYPE_PARKING Parking
+
+            PROPERTY_TYPE_BLOCK_OF_FLATS BlockOfFlats
+
+            PROPERTY_TYPE_EQUESTRIAN Equestrian
+
+            PROPERTY_TYPE_LODGE Lodge
+
+            PROPERTY_TYPE_HOUSEBOAT Houseboat
+
+            PROPERTY_TYPE_FARM Farm
+
+            PROPERTY_TYPE_CHATEAU Chateau
+
+            PROPERTY_TYPE_FARM_BARN FarmBarn
+
+            PROPERTY_TYPE_FINCA Finca
+
+            PROPERTY_TYPE_HOTEL Hotel
+
+            PROPERTY_TYPE_INDUSTRIAL Industrial
+
+            PROPERTY_TYPE_JUNK Junk
+
+            PROPERTY_TYPE_LEISURE Leisure
+
+            PROPERTY_TYPE_LIGHT_INDUSTRIAL LightIndustrial
+
+            PROPERTY_TYPE_LONGERE Longere
+
+            PROPERTY_TYPE_OFFICE Office
+
+            PROPERTY_TYPE_PUB_BAR PubBar
+
+            PROPERTY_TYPE_RESTAURANT Restaurant
+
+            PROPERTY_TYPE_RETAIL Retail
+
+            PROPERTY_TYPE_RIAD Riad
+
+            PROPERTY_TYPE_WAREHOUSE Warehouse
+
+            PROPERTY_TYPE_MID_TERRACE MidTerrace'
+          x-go-name: PropertyType
+        radius:
+          type: number
+          format: double
+          x-go-name: Radius
+      x-go-name: View
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/internal/schemas/searchCriteria
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorContent'
+          x-go-name: Errors
+      x-go-name: ErrorResponse
+      x-go-package: gitlab.com/zoopla/internal/zoopla-software/leads/lead-services/services/lead-poll-service/internal/response
   securitySchemes:
     OAuth2:
       type: oauth2
