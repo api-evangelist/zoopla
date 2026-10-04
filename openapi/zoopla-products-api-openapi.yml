@@ -343,6 +343,35 @@ components:
             type: string
         required:
         - id
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            description: 'The possible errors:
+
+              * **1011003** - 101 premium listing api, severity level 1, code 003 create premium listing invalid request
+
+              '
+            properties:
+              reason:
+                type: string
+                description: The human readable reason of failure
+                example: JSON schema requirements not met
+              code:
+                type: integer
+                description: Comprising of the service identifier, severity and custom error code
+                example: 1011003
+    UpdateHighlights:
+      type: object
+      properties:
+        highlights:
+          $ref: '#/components/schemas/CreatePremiumListing/properties/highlights'
+          x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/HighlightsRequest.yaml
+      required:
+      - highlights
     PremiumListings:
       type: array
       items:
@@ -384,59 +413,6 @@ components:
             description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
         required:
         - listingId
-    HighlightsRequest:
-      type: array
-      items:
-        type: object
-        description: 'highlighted feature of a premium listing
-
-          '
-        properties:
-          id:
-            type: integer
-          description:
-            type: string
-        required:
-        - id
-    Errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            description: 'The possible errors:
-
-              * **1011003** - 101 premium listing api, severity level 1, code 003 create premium listing invalid request
-
-              '
-            properties:
-              reason:
-                type: string
-                description: The human readable reason of failure
-                example: JSON schema requirements not met
-              code:
-                type: integer
-                description: Comprising of the service identifier, severity and custom error code
-                example: 1011003
-    CreatePremiumListing:
-      type: object
-      properties:
-        listingId:
-          type: number
-          description: an internal zoopla identifier for a given listing which determines which listing should be made premium.
-        customerListingId:
-          type: string
-          example: 100219_CHS108334
-          description: an customer identifier of listing id (it has to be provided during listing creation) Zoopla is aware of.
-        highlights:
-          type: array
-          items:
-            $ref: '#/components/schemas/HighlightsRequest/items'
-            x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/HighlightRequest.yaml
-        customDetails:
-          type: object
-          description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
     Status:
       type: object
       description: 'Status of request with error response
@@ -528,14 +504,38 @@ components:
           description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
       required:
       - listingId
-    UpdateHighlights:
+    CreatePremiumListing:
       type: object
       properties:
+        listingId:
+          type: number
+          description: an internal zoopla identifier for a given listing which determines which listing should be made premium.
+        customerListingId:
+          type: string
+          example: 100219_CHS108334
+          description: an customer identifier of listing id (it has to be provided during listing creation) Zoopla is aware of.
         highlights:
-          $ref: '#/components/schemas/CreatePremiumListing/properties/highlights'
-          x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/HighlightsRequest.yaml
-      required:
-      - highlights
+          type: array
+          items:
+            $ref: '#/components/schemas/HighlightsRequest/items'
+            x-miro: /builds/13667159605/api-premium-listings/docs/api/schemas/HighlightRequest.yaml
+        customDetails:
+          type: object
+          description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
+    HighlightsRequest:
+      type: array
+      items:
+        type: object
+        description: 'highlighted feature of a premium listing
+
+          '
+        properties:
+          id:
+            type: integer
+          description:
+            type: string
+        required:
+        - id
     WeeklyFeaturedProperties:
       type: array
       items:
@@ -627,20 +627,6 @@ components:
               items:
                 $ref: '#/components/schemas/Errors/properties/errors/items'
                 x-miro: /builds/13634493756/api-weekly-featured-properties/docs/api/schemas/ServiceError.yaml
-    CreateWeeklyFeaturedProperty:
-      type: object
-      properties:
-        listingId:
-          type: number
-          example: 1234
-          description: An internal zoopla identifier for a given listing which determines which listing should be activated as a WFP.
-        customerListingId:
-          type: string
-          example: 100219_CHS108334
-          description: A customer identifier of listing id which Zoopla is aware of (it has to be provided during the listing creation).
-        customDetails:
-          type: object
-          description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
     WeeklyFeaturedProperty:
       type: object
       properties:
@@ -701,6 +687,20 @@ components:
       - expiryAt
       - startAt
       - listingId
+    CreateWeeklyFeaturedProperty:
+      type: object
+      properties:
+        listingId:
+          type: number
+          example: 1234
+          description: An internal zoopla identifier for a given listing which determines which listing should be activated as a WFP.
+        customerListingId:
+          type: string
+          example: 100219_CHS108334
+          description: A customer identifier of listing id which Zoopla is aware of (it has to be provided during the listing creation).
+        customDetails:
+          type: object
+          description: So customers can store additional information about a product activation - for example - CRM identifier or order number.
   securitySchemes:
     oAuthSample:
       type: oauth2
